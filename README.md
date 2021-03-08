@@ -6,7 +6,9 @@ This project provides the ability for users to login with their Spotify and crea
 
 #### Product Vision Statement
 
-You can find our Product Vision Statement [here](./ProductVisionStatement.md)
+You can find our Product Vision Statement [here](./ProductVisionStatement.md).
+
+You can find our Prototype [here](https://invis.io/ZN10EONYFAJE), our WireFrame [here](./Synthesize-TotalWireframe.png), and our AppMap [here](./Synthesize-AppMap.png)
 
 #### Team Members and Githubs
 
