@@ -283,14 +283,12 @@ const Landing = (props) => {
                           variant="h6"
                           className={classes.cardHeading}
                         >
-                          <b>Combine Music</b>
+                          <b>Sync Accounts</b>
                         </Typography>
                         <Divider style={{ margin: "2%" }}></Divider>
                         <Typography>
-                          It was popularised in the 1960s with the release of
-                          Letraset sheets containing Lorem Ipsum passages, and
-                          more recently with desktop publishing software like
-                          Aldus PageMaker including versions of Lorem Ipsum.
+                          Load in with your Spotify account. No need to make a
+                          new account.
                         </Typography>
                       </CardContent>
                     </Card>
