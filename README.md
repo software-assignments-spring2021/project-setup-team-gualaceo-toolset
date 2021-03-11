@@ -28,4 +28,12 @@ You can find out more information on the developers' roles and how to contribute
 
 #### Instructions for Building and Testing
 
-None yet. Just check our repo for information on the WireFrame and AppMap.
+In order to run the front end code, do the following:
+(Must have Node.js installed)
+
+- Download the code from GitHub
+- In the _project-setup-team-gualaceo-toolset_ directory, run _cd front-end_
+- Run _npm install_
+- After, run _npm start_
+- localhost will open in your default browser. Open DevTools
+- In the top left corner of DevTools, click on _Toggle Device Toolbar_ and choose the device you'd like to view the project on (I use the Pixel 2 view).

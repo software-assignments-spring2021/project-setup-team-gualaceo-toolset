@@ -36,6 +36,12 @@
 
 - If the designated person was unable to resolve the conflict or if a team member misses consecutive Scrum meetings, the issues will be raised to the management.
 
+### Group Meeting Times
+
+- Please note that this will be the Zoom ID for our meetings: 202 317 5679.
+
+- We will meet for the Daily Scrum on Tuesdays, Thursdays, and Saturdays at 11AM EST.
+
 ### Project Setup
 
 - Regarding our technologies, we will be using VS Code along with the extension Live Share to collaborate on this project.
