@@ -14,9 +14,12 @@ import VisibilitySensor from "react-visibility-sensor";
 import { AppBar, Toolbar } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
+import backgroundLight from "../media/background_light.png";
 
-import "./pulse.css";
+import "../styles/pulse.css";
 import { Redirect } from "react-router-dom";
+
+import Loading from "../components/loading";
 
 //  This is the styles for material ui elements
 const styles = (theme) => ({
@@ -67,12 +70,12 @@ const styles = (theme) => ({
     "&:hover": {
       boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
     },
-    cardHeading: {
-      fontWeight: "bolder",
-    },
-    footer: {
-      top: "20px",
-    },
+  },
+  cardHeading: {
+    fontWeight: "bolder",
+  },
+  footer: {
+    top: "20px",
   },
 });
 
@@ -99,18 +102,7 @@ const Landing = (props) => {
 
   // Like said above, the UI will automatically load, so on render, uiLoading will automatically be set to false
   if (uiLoading === true) {
-    return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className="pulse">
-          {uiLoading && (
-            <div>
-              <img alt="complex" src={loadingIcon} />
-            </div>
-          )}
-        </div>
-      </Container>
-    );
+    return <Loading />;
   } else {
     return (
       <Container component="main" maxWidth="xs">
@@ -119,7 +111,23 @@ const Landing = (props) => {
           <div className={classes.root}>
             <div style={{ width: "200px", height: "100px" }}>
               {/* Background Video */}
-              <video
+              <img
+                alt="complex"
+                src={backgroundLight}
+                style={{
+                  position: "absolute",
+                  width: "100%",
+                  left: "0%",
+                  top: "0%",
+                  // height: "100%",
+                  // opacity: "50%",
+                  objectFit: "cover",
+                  // transform: "transition(-50%,-50%)",
+                  zIndex: "-1",
+                  boxShadow: "0 16px 40px -12px rgba(0,0,0,0.3)",
+                }}
+              />
+              {/* <video
                 className="videoTag"
                 autoPlay
                 loop
@@ -142,7 +150,7 @@ const Landing = (props) => {
                   src={background}
                   type="video/mp4"
                 />
-              </video>
+              </video> */}
             </div>
             {/* Logo */}
             <div style={{ marginRight: "-7px" }}>
@@ -222,7 +230,7 @@ const Landing = (props) => {
                 duration={600}
               >
                 <div style={{ margin: "3px" }}>
-                  <Typography variant="h6">Learn about Synthesize</Typography>
+                  <Typography variant="h6">What is Synthesize?</Typography>
                 </div>
               </Link>
             </center>
@@ -337,8 +345,13 @@ const Landing = (props) => {
               </div>
             </div>
           </div>
-          <div style={{ margin: "0%" }}>
-            <AppBar position="sticky" fullWidth className={classes.footer}>
+          <div
+            style={{
+              margin: "0 -5%",
+              display: "flex",
+            }}
+          >
+            <AppBar position="static" fullWidth className={classes.footer}>
               <Toolbar>
                 <div style={{ marginTop: "15px" }}>
                   <Box display="flex" flexDirection="row">
@@ -363,28 +376,44 @@ const Landing = (props) => {
               </Toolbar>
               <div style={{ float: "right", display: "table-row" }}>
                 <div
-                  style={{ display: "flex", marginLeft: "4%", marginTop: "4%" }}
+                  style={{
+                    color: "#fff",
+                    display: "flex",
+                    marginLeft: "4%",
+                    marginTop: "4%",
+                  }}
                 >
                   <Link
                     to="About"
                     onClick={() => console.log("This will redirect to about")}
                   >
                     <Typography
-                      style={{ textDecoration: "underline", fontSize: "15px" }}
+                      style={{
+                        textDecoration: "underline",
+                        fontSize: "15px",
+                      }}
                     >
                       About
                     </Typography>
                   </Link>
                 </div>
                 <div
-                  style={{ display: "flex", marginTop: "4%", marginLeft: "4%" }}
+                  style={{
+                    display: "flex",
+                    marginTop: "4%",
+                    marginLeft: "4%",
+                  }}
                 >
                   <Link
                     to="About"
                     onClick={() => console.log("This will redirect to about")}
                   >
                     <Typography
-                      style={{ textDecoration: "underline", fontSize: "15px" }}
+                      style={{
+                        color: "#fff",
+                        textDecoration: "underline",
+                        fontSize: "15px",
+                      }}
                     >
                       Another Link
                     </Typography>
@@ -396,7 +425,11 @@ const Landing = (props) => {
                     onClick={() => console.log("This will redirect to about")}
                   >
                     <Typography
-                      style={{ textDecoration: "underline", fontSize: "15px" }}
+                      style={{
+                        color: "#fff",
+                        textDecoration: "underline",
+                        fontSize: "15px",
+                      }}
                     >
                       Yet Another Footer Link
                     </Typography>
