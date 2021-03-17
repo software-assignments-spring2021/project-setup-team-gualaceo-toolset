@@ -9,27 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { useHistory } from "react-router-dom";
-/* <Dialog
-open={open}
-onClose={setOpen(false)}
-aria-labelledby="alert-dialog-title"
-aria-describedby="alert-dialog-description"
->
-<DialogTitle id="alert-dialog-title">{"Logout?"}</DialogTitle>
-<DialogContent>
-  <DialogContentText id="alert-dialog-description">
-    Are you sure you want to logout?
-  </DialogContentText>
-</DialogContent>
-<DialogActions>
-  <Button onClick={setOpen(false)} color="primary">
-    Disagree
-  </Button>
-  <Button onClick={() => history.push("/landing")} color="primary" autoFocus>
-    Agree
-  </Button>
-</DialogActions>
-</Dialog>*/
+
 const styles = (theme) => (  {
   logout: { 
     color: theme.palette.secondary.contrastText,
