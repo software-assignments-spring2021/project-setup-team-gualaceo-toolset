@@ -1,0 +1,26 @@
+.pulse {
+  /* added for example reasons */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -100px;
+  margin-left: -100px;
+  width: 200px;
+  height: 200px;
+
+  /* ---------- */
+
+  animation: myPulse 20s linear infinite, Pulsate 3s linear infinite;
+}
+
+@keyframes Pulsate {
+  from {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 0.1;
+  }
+  to {
+    opacity: 0.75;
+  }
+}

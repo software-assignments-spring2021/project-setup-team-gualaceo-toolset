@@ -3,8 +3,7 @@ import React, { useEffect, useState } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
 import spotifyLogo from "../media/Spotify-Symbol.png";
-import s_circle_dark from "../media/s_circle_dark.png";
-import s_circle from "../media/s_circle.png";
+import synthesizeLogo from "../media/Synthesize.png";
 import Box from "@material-ui/core/Box";
 import ArrowDownwardOutlinedIcon from "@material-ui/icons/ArrowDownwardOutlined";
 import { Link } from "react-scroll";
@@ -15,6 +14,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import backgroundLight from "../media/background_light.png";
 
+import "../styles/pulse.css";
 import { Redirect } from "react-router-dom";
 
 import Loading from "../components/loading";
@@ -27,28 +27,77 @@ const styles = (theme) => ({
     borderRadius: "8px",
     backgroundSize: "contain",
   },
-  aboutLinkContainer: {
-    marginTop: "-20px",
-    flexGrow: 0.25,
+  heading: {
+    color: theme.palette.secondary.dark,
+    textAlign: "center",
+    fontWeight: 900,
   },
-  backgroundImg: {
-    position: "absolute",
-    width: "100%",
-    left: "0%",
-    top: "0%",
-    // height: "100%",
-    // opacity: "50%",
-    objectFit: "cover",
-    // transform: "rotateX(180deg)",
-    zIndex: "-1",
-    boxShadow: "0 16px 40px -12px rgba(0,0,0,0.3)",
+  aboutLinkContainer: {
+    flexGrow: .25,
+  },
+  backgroundVideo: {
+    height: "200px",
+    width: "100px",
+    zIndex: -1,
+    position: "fixed",
+    top: 0,
+    left: 0,
+    alignItems: "stretch",
+    bottom: 0,
+    right: 0,
   },
   buttonContainer: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     flexGrow: 1,
-    marginTop: "-300px",
+  },
+  landingContainer: {
+    height: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between"
+  },
+  logoBox: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  logoContainer: {
+    display: "flex",
+    justifyContent: "center",
+    flexGrow: 1.5,
+    padding: "10px",
+  },
+  logoImage: {
+    height: "50px",
+    marginBottom: "5px",
+  },
+  logoTextBox: {
+    height: "70px",
+  },
+  logoHeading: {
+    color: theme.palette.secondary.dark,
+    textAlign: "center",
+    fontWeight: 900,
+    fontSize:"50px",
+  },
+  login: {
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: "80%",
+    fontSize: "15px",
+    fontWeight: 1000,
+    maxWidth: "100%",
+    opacity: "80%",
+  },
+  img: {
+    marginLeft: "-7px",
+    width: "200%",
+  },
+  downArrow: {
+    width: "20%",
   },
   cards: {
     width: "106%",
@@ -62,101 +111,8 @@ const styles = (theme) => ({
   cardHeading: {
     fontWeight: "bolder",
   },
-  downArrow: {
-    width: "20%",
-  },
-  downText: { color: theme.palette.secondary.contrastText, opacity: "90%" },
   footer: {
     top: "20px",
-  },
-  footerContainer: {
-    margin: "0 -5%",
-    display: "flex",
-  },
-  footerLinkContainer: {
-    color: "#fff",
-    display: "flex",
-    marginLeft: "4%",
-    marginTop: "4%",
-  },
-  footerLinks: {
-    color: "#fff",
-    textDecoration: "underline",
-    fontSize: "15px",
-  },
-  heading: {
-    color: theme.palette.secondary.dark,
-    textAlign: "center",
-    fontWeight: 900,
-  },
-  img: {
-    marginLeft: "-7px",
-    width: "200%",
-  },
-  landingContainer: {
-    height: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  logoBottom: {
-    width: "40px",
-    marginRight: "-4px",
-    marginTop: "-1.5px",
-    transform: "rotate(15deg)",
-  },
-  logoBox: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  logoContainer: {
-    display: "flex",
-    justifyContent: "center",
-    flexGrow: 1.5,
-    padding: "10px",
-    marginTop: "-90px",
-  },
-  logoImage: {
-    height: "80px",
-    marginBottom: "5px",
-    display: "flex",
-    marginRight: "-10px",
-    transform: "rotate(15deg)",
-  },
-  logoTextBox: {
-    height: "70px",
-  },
-  logoHeading: {
-    color: theme.palette.secondary.dark,
-    textAlign: "center",
-    fontWeight: 900,
-    fontSize: "50px",
-  },
-  login: {
-    display: "block",
-    marginLeft: "auto",
-    marginRight: "auto",
-    width: "80%",
-    fontSize: "15px",
-    fontWeight: 1000,
-    maxWidth: "100%",
-    opacity: "80%",
-  },
-  spotifyLogo: {
-    width: "17%",
-    left: "0%",
-    marginTop: "3%",
-    opacity: "70%",
-    zIndex: "100",
-    marginRight: "-14px",
-  },
-  spotifyButtonText: {
-    float: "right",
-    marginRight: "15px",
-    padding: "6px",
-    textAlign: "center",
-    opacity: "100%",
   },
 });
 
@@ -167,8 +123,7 @@ const Landing = (props) => {
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [showCards, setShowCards] = useState(false);
-  const [spotifyRedirect, setSpotifyRedirect] = useState(false);
-  const [guestRedirect, setGuestRedirect] = useState(false);
+  const [redirect, setRedirect] = useState(false);
 
   // This is the componentDidMount method.
   /**
@@ -178,12 +133,8 @@ const Landing = (props) => {
     setuiLoading(false);
   }, []);
 
-  const handleSpotifyRedirect = () => {
-    setSpotifyRedirect(true);
-  };
-
-  const handleGuestRedirect = () => {
-    setGuestRedirect(true);
+  const handleSpotifyLogin = () => {
+    setRedirect(true);
   };
 
   // Like said above, the UI will automatically load, so on render, uiLoading will automatically be set to false
@@ -191,10 +142,10 @@ const Landing = (props) => {
     return <Loading />;
   } else {
     return (
-      <Container component="main" maxWidth="xs">
+      <Container style={{borderStyle: "solid"}} component="main" maxWidth="xs">
         <CssBaseline />
-        <div className={classes.root}>
-          <div className={classes.landingContainer}>
+        <div classname={classes.root}>
+          <div className={classes.landingContainer}> 
             {/* This is the container for the landing screen part of this page, 
             that is, what you will see upon loading*/}
             <div>
@@ -202,7 +153,18 @@ const Landing = (props) => {
               <img
                 alt="complex"
                 src={backgroundLight}
-                className={classes.backgroundImg}
+                style={{
+                  position: "absolute",
+                  width: "100%",
+                  left: "0%",
+                  top: "0%",
+                  // height: "100%",
+                  // opacity: "50%",
+                  objectFit: "cover",
+                  // transform: "transition(-50%,-50%)",
+                  zIndex: "-1",
+                  boxShadow: "0 16px 40px -12px rgba(0,0,0,0.3)",
+                }}
               />
             </div>
             {/* Logo */}
@@ -212,57 +174,61 @@ const Landing = (props) => {
                   <img
                     className={classes.logoImage}
                     alt="synthesize logo"
-                    src={s_circle_dark}
+                    src={synthesizeLogo}
                   />
                 </Box>
-                <Box className={classes.logoTextBox}>
-                  {/* styles for the box containing the logo text */}
-                  <Typography variant="h2" className={classes.logoHeading}>
-                    {/* styles for the text itself */}
+                <Box className={classes.logoTextBox}> {/* styles for the box containing the logo text */}
+                  <Typography variant="h2" className={classes.logoHeading}> {/* styles for the text itself */}
                     ynthesize
                   </Typography>
                 </Box>
               </Box>
             </div>
+            
             {/* Login Button with Spotify */}
-            <div className={classes.buttonContainer}>
-              {/*this container is used for spacing purposes */}
-              <div>
-                {/*Some more styling may need to be done here later*/}
+            <div className={classes.buttonContainer}> {/*this container is used for spacing purposes */}
+              <div> {/*Some more styling may need to be done here later*/}
                 <Button
                   variant="contained"
                   fullWidth
-                  onClick={handleSpotifyRedirect}
+                  onClick={handleSpotifyLogin}
                   className={classes.login}
                 >
                   <img
                     alt=""
                     src={spotifyLogo}
-                    className={classes.spotifyLogo}
+                    style={{
+                      width: "17%",
+                      left: "0%",
+                      marginTop: "3%",
+                      opacity: "70%",
+                      zIndex: "100",
+                      marginRight: "-14px",
+                    }}
                   />
-                  <div className={classes.spotifyButtonText}>
-                    {spotifyRedirect ? (
-                      <Redirect to="/placeholder" />
-                    ) : (
-                      "Login with Spotify"
-                    )}
+                  <div
+                    style={{
+                      float: "right",
+                      marginRight: "15px",
+                      padding: "6px",
+                      textAlign: "center",
+                      opacity: "100%",
+                    }}
+                  >
+                    Login with Spotify
                   </div>
                 </Button>
                 <br />
                 <Button
                   fullWidth
-                  onClick={handleGuestRedirect}
+                  onClick={handleSpotifyLogin}
                   className={classes.login}
                 >
-                  {guestRedirect ? (
-                    <Redirect to="/guest" />
-                  ) : (
-                    "Continue as guest"
-                  )}
+                  {redirect ? <Redirect to="/placeholder" /> : "Continue as guest"}
                 </Button>
               </div>
             </div>
-
+            
             <div className={classes.aboutLinkContainer}>
               <center>
                 <Link
@@ -273,9 +239,7 @@ const Landing = (props) => {
                   duration={600}
                 >
                   <div style={{ margin: "3px" }}>
-                    <Typography variant="h6" className={classes.downText}>
-                      What is Synthesize?
-                    </Typography>
+                    <Typography variant="h6">What is Synthesize?</Typography>
                   </div>
                 </Link>
               </center>
@@ -303,12 +267,14 @@ const Landing = (props) => {
               </center>
             </div>
           </div>
-
+            
           {/*This is where the landing page ends, and the about us page starts*/}
+
           {/* Shows info cards about the app */}
           <div id="About">
             <div>
               <br />
+
               {/* The cards will be displayed using custom <VisibilitySensor> element from react-visibility-sensor
           This will check if the cards are in the viewport  */}
               <VisibilitySensor partialVisibility={true}>
@@ -339,11 +305,11 @@ const Landing = (props) => {
                           </Typography>
                           <Divider style={{ margin: "2%" }}></Divider>
                           <Typography>
-                            Synthesize is a platform for finding music that both
-                            you and your friends can enjoy listening to
+                            Synthesize is a platform for finding music that
+                            both you and your friends can enjoy listening to
                             together! You could just listen alone, but with
-                            Synthesize, you can invite your friends to join your
-                            playlists too.
+                            Synthesize, you can invite your friends to join
+                            your playlists too.
                           </Typography>
                         </CardContent>
                       </Card>
@@ -358,8 +324,8 @@ const Landing = (props) => {
                           </Typography>
                           <Divider style={{ margin: "2%" }}></Divider>
                           <Typography>
-                            Get music recommendations that you and your friends
-                            will all enjoy.
+                            Get music recommendations that you and your
+                            friends will all enjoy.
                           </Typography>
                         </CardContent>
                       </Card>
@@ -374,9 +340,9 @@ const Landing = (props) => {
                           </Typography>
                           <Divider style={{ margin: "2%" }}></Divider>
                           <Typography>
-                            Login in with your Spotify account. No need to make
-                            a account. Be able to listen in-app and export
-                            playlist back into your Spotify.
+                            Login in with your Spotify account. No need to
+                            make a account. Be able to listen in-app and
+                            export playlist back into your Spotify.
                           </Typography>
                         </CardContent>
                       </Card>
@@ -388,16 +354,25 @@ const Landing = (props) => {
             </div>
           </div>
         </div>
-        <div className={classes.footerContainer}>
+        <div
+          style={{
+            margin: "0 -5%",
+            display: "flex",
+          }}
+        >
           <AppBar position="static" fullWidth className={classes.footer}>
             <Toolbar>
               <div style={{ marginTop: "15px" }}>
                 <Box display="flex" flexDirection="row">
                   <Box>
                     <img
-                      className={classes.logoBottom}
+                      style={{
+                        width: "40px",
+                        marginRight: "-15px",
+                        marginTop: "2px",
+                      }}
                       alt="complex"
-                      src={s_circle}
+                      src={synthesizeLogo}
                     />
                   </Box>
                   <Box>
@@ -409,12 +384,26 @@ const Landing = (props) => {
               </div>
             </Toolbar>
             <div style={{ float: "right", display: "table-row" }}>
-              <div className={classes.footerLinkContainer}>
+              <div
+                style={{
+                  color: "#fff",
+                  display: "flex",
+                  marginLeft: "4%",
+                  marginTop: "4%",
+                }}
+              >
                 <Link
                   to="About"
                   onClick={() => console.log("This will redirect to about")}
                 >
-                  <Typography className={classes.footerLinks}>About</Typography>
+                  <Typography
+                    style={{
+                      textDecoration: "underline",
+                      fontSize: "15px",
+                    }}
+                  >
+                    About
+                  </Typography>
                 </Link>
               </div>
               <div
@@ -428,19 +417,29 @@ const Landing = (props) => {
                   to="About"
                   onClick={() => console.log("This will redirect to about")}
                 >
-                  <Typography className={classes.footerLinks}>
+                  <Typography
+                    style={{
+                      color: "#fff",
+                      textDecoration: "underline",
+                      fontSize: "15px",
+                    }}
+                  >
                     Another Link
                   </Typography>
                 </Link>
               </div>
-              <div
-                style={{ display: "flex", margin: "4%", marginBottom: "10%" }}
-              >
+              <div style={{ display: "flex", margin: "4%" }}>
                 <Link
                   to="About"
                   onClick={() => console.log("This will redirect to about")}
                 >
-                  <Typography className={classes.footerLinks}>
+                  <Typography
+                    style={{
+                      color: "#fff",
+                      textDecoration: "underline",
+                      fontSize: "15px",
+                    }}
+                  >
                     Yet Another Footer Link
                   </Typography>
                 </Link>
