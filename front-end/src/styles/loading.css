@@ -24,3 +24,23 @@
     opacity: 0.75;
   }
 }
+
+.background {
+  position: absolute;
+  width: 100%;
+  left: 0%;
+  top: 0%;
+  height: 100%;
+  /* opacity: 50%; */
+  object-fit: cover;
+  transform: scaleY(-1);
+  z-index: -1;
+}
+
+.backgroundImg {
+  margin-top: -70%;
+  width: 100%;
+  left: 0%;
+  top: 0%;
+  height: 100%;
+}

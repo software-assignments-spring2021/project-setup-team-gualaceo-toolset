@@ -15,7 +15,7 @@ import Box from "@material-ui/core/Box";
 
 import backgroundWhite from "../media/background_white.png";
 
-import "../styles/pulse.css";
+// import "../styles/pulse.css";
 import { Redirect } from "react-router-dom";
 
 import Loading from "../components/loading";
@@ -74,7 +74,7 @@ const Home = (props) => {
     setuiLoading(false);
   }, []);
 
-  if (uiLoading === true) {
+  if (uiLoading === false) {
     return <Loading />;
   } else {
     return (

@@ -2,7 +2,6 @@ import Button from "@material-ui/core/Button";
 import React, { useEffect, useState } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
-import background from "../media/background.mp4";
 import spotifyLogo from "../media/Spotify-Symbol.png";
 import synthesizeLogo from "../media/Synthesize.png";
 import Box from "@material-ui/core/Box";
@@ -16,7 +15,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import backgroundLight from "../media/background_light.png";
 
-import "../styles/pulse.css";
+import "../styles/landing.css";
 import { Redirect } from "react-router-dom";
 
 import Loading from "../components/loading";
@@ -109,51 +108,16 @@ const Landing = (props) => {
         <CssBaseline />
         <div>
           <div className={classes.root}>
-            <div style={{ width: "200px", height: "100px" }}>
+            <div className="imgContainer">
               {/* Background Video */}
               <img
                 alt="complex"
                 src={backgroundLight}
-                style={{
-                  position: "absolute",
-                  width: "100%",
-                  left: "0%",
-                  top: "0%",
-                  // height: "100%",
-                  // opacity: "50%",
-                  objectFit: "cover",
-                  // transform: "transition(-50%,-50%)",
-                  zIndex: "-1",
-                  boxShadow: "0 16px 40px -12px rgba(0,0,0,0.3)",
-                }}
+                className="backgroundImg"
               />
-              {/* <video
-                className="videoTag"
-                autoPlay
-                loop
-                muted
-                style={{
-                  position: "absolute",
-                  width: "100%",
-                  left: "0%",
-                  top: "0%",
-                  height: "100%",
-                  opacity: "50%",
-                  objectFit: "cover",
-                  transform: "transition(-50%,-50%)",
-                  zIndex: "-1",
-                  boxShadow: "0 16px 40px -12px rgba(0,0,0,0.3)",
-                }}
-              >
-                <source
-                  // className={classes.backgroundVideo}
-                  src={background}
-                  type="video/mp4"
-                />
-              </video> */}
             </div>
             {/* Logo */}
-            <div style={{ marginRight: "-7px" }}>
+            <div className="logoContainer ">
               <Box display="flex" flexDirection="row">
                 <Box>
                   <img
