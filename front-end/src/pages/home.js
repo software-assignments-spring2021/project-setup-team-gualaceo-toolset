@@ -15,8 +15,7 @@ import Box from "@material-ui/core/Box";
 
 import backgroundWhite from "../media/background_white.png";
 
-import "../styles/pulse.css";
-import { Redirect } from "react-router-dom";
+// import { Redirect } from "react-router-dom";
 
 import Loading from "../components/loading";
 
@@ -24,19 +23,6 @@ const styles = (theme) => ({
   root: {
     padding: theme.spacing(2),
     backgroundSize: "contain",
-  },
-  cards: {
-    marginTop: "10px",
-    boxShadow: "0 8px 18px -12px rgba(0,0,0,0.3)",
-    "&:hover": {
-      boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
-    },
-    top: "10%",
-  },
-  heading: {
-    marginLeft: "-20px",
-    color: theme.palette.secondary.main,
-    fontWeight: "900",
   },
   accordion: {
     marginTop: "10px",
@@ -53,8 +39,34 @@ const styles = (theme) => ({
     borderRadius: "8px",
   },
   back: { color: theme.palette.secondary.main },
+  backgroundImg: {
+    position: "absolute",
+    width: "100%",
+    left: "0%",
+    top: "0%",
+    height: "100%",
+    objectFit: "cover",
+    zIndex: "-1",
+  },
+  cards: {
+    marginTop: "10px",
+    boxShadow: "0 8px 18px -12px rgba(0,0,0,0.3)",
+    "&:hover": {
+      boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
+    },
+    top: "10%",
+  },
+  heading: {
+    marginRight: "auto",
+    marginLeft: "-20px",
+    color: theme.palette.secondary.main,
+    fontWeight: "900",
+  },
   logout: { color: theme.palette.secondary.contrastText },
-  toolbar: { display: "flex", justifyContent: "space-between" },
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
 });
 
 const Home = (props) => {
@@ -86,15 +98,7 @@ const Home = (props) => {
             <img
               alt="complex"
               src={backgroundWhite}
-              style={{
-                position: "absolute",
-                width: "100%",
-                left: "0%",
-                top: "0%",
-                height: "100%",
-                objectFit: "cover",
-                zIndex: "-1",
-              }}
+              className={classes.backgroundImg}
             />
           </div>
           <AppBar>

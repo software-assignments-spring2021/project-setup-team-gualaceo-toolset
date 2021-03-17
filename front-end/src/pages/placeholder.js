@@ -12,7 +12,7 @@ const Placeholder = (props) => {
   return (
     <Container>
       <CssBaseline />
-      <AppBar>
+      <AppBar color="secondary">
         <Toolbar>
           <Button
             onClick={() => history.push("/")}
