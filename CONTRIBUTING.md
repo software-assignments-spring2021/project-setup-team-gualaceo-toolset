@@ -16,7 +16,11 @@
 
 ### Git Workflow
 
-- Mostly Centralized; upon making new changes, each member will create a new branch, edit their branch, and send a pull request to see if that branch should be merged to the main as the "current version."
+- We will follow the [feature branch version control workflow](https://knowledge.kitchen/Feature_branch_version_control_workflow), as specified for the course. A summary of some key points and our group rules is as follows, but I recommend reading the wiki post.
+- Do NOT push directly to the master branch.
+- Whenever making changes, create a new branch to work on. When you feel you've made enough changes, push your new branch to the github, and create a pull request. Assign someone on the team to review.
+- If you are assigned to review a pull request, do so as soon as you can, and if everything is ok, merge it. Otherwise, explain what is wrong.
+- Make sure to push your work frequenttly and make pull requests. Also, make sure to pull from the master branch before pushing.
 
 ### Some Rules
 

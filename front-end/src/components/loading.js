@@ -10,7 +10,7 @@ import "../styles/loading.css";
 const styles = (theme) => ({});
 
 const Loading = (props) => {
-  const { classes } = props;
+  // const { classes } = props;
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
