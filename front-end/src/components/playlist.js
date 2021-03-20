@@ -12,12 +12,27 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
+import AddIcon from '@material-ui/icons/Add';
 
-const Playlist = (playlist) => {
+const Playlist = (props) => {
+    const playlist = props.playlist //the data returned by Mockaroo is a JSON object, which contains the playlist
+
+    console.log("playlist name: " , playlist.name)
     return (
     <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            Playlist Name
+        <AccordionSummary className = 'playlistAccordion' expandIcon={<ExpandMoreIcon />}>
+            
+            <div className ='imageContainer'>
+                <img src ={playlist.images[0].url} alt ='playlist'/> 
+            </div>
+            <div className='playlistNameContainer'>
+                {playlist.name}
+            </div>
+            <div className='addButtonContainer'>
+                <Button variant="contained" color = "primary" startIcon={<AddIcon color='secondary'/>}>
+                    
+                </Button>
+            </div>
         </AccordionSummary>
 
         <Divider />

@@ -12,6 +12,7 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
+import axios from 'axios'
 
 import backgroundWhite from "../media/background_white.png";
 
@@ -21,23 +22,43 @@ import Playlist from "../components/playlist";
 import '../styles/addMyMusic.css';
 
 const AddMyMusic = (props) => {
-    
+    const [playlists, setPlaylists] = useState([])
     let history = useHistory();
     const { classes } = props;
     const [uiLoading, setuiLoading] = useState(true);
 
     useEffect(() => {
         setuiLoading(false);
-    }, []);
+        console.log("fetching 2 playlists")
 
-    const playlists = [
-        "Work Buddies",
-        "Alexa's Party",
-        "Gaming Friends",
-        "Grandma's House",
-        "Grandpa's House",
-        "Josh's Party",
-      ];
+        axios('https://my.api.mockaroo.com/playlist.json?key=032af9d0')
+            .then((response) => {
+                setPlaylists(response.data)
+                console.log(playlists)
+            })
+            .catch((err) => {
+                console.log("Something went wrong, perhaps you reached your limit for API requests?")
+                console.error(err)
+
+                const backupPlaylists = [
+                   {
+                       name: "My Playlist",
+                       images: {
+                           url: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi1.wp.com%2Fwww.gardeningknowhow.com%2Fwp-content%2Fuploads%2F2017%2F01%2Fprune-mock-orange.jpg%3Ffit%3D1254%252C836%26ssl%3D1&f=1&nofb=1',
+                       },
+                       tracks: {
+                           items: [
+                               {artists: [{name: "Jack"}], name: 'Good Song'},
+                               {artists: [{name: "Jill"}], name: 'The Hill'},
+                           ]
+                       }
+                   }
+                ]
+
+                setPlaylists(backupPlaylists)
+            })
+
+    }, []); //only run once
 
     if (uiLoading === true){
         return <Loading />
@@ -45,24 +66,25 @@ const AddMyMusic = (props) => {
         return (
             <div className="body">
                 <Container component="main" maxWidth="xs">
-                    Hello!
                     <AppBar>
                         <Toolbar className="toolbar">
-                        <Button
-                            onClick={() => history.push("/placeholder")}
-                            startIcon={<ArrowBackIosIcon className="back" />}
-                        ></Button>
-                        <Typography variant="h5" className="heading">
-                            Add My Music
-                        </Typography>
-                        <Button className="logout">
-                            Logout
-                        </Button>
+                            <Button
+                                onClick={() => history.push("/placeholder")}
+                                startIcon={<ArrowBackIosIcon className="back" />}
+                            ></Button>
+                            <Typography variant="h5" className="heading">
+                                Add My Music
+                            </Typography>
+                            <Button className="logout">
+                                Logout
+                            </Button>
                         </Toolbar>
                     </AppBar>
-                    {playlists.map((curPlaylist) => (
-                    <Playlist playlist={curPlaylist} />
-                    ))}
+                    <div className='playlistsContainer'>
+                        {playlists.map((item) => (
+                            <Playlist playlist={item}></Playlist>
+                        ))}
+                    </div>
                 </Container>
             </div>
         );
