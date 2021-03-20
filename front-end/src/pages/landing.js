@@ -74,7 +74,6 @@ const styles = (theme) => ({
     top: "20px",
   },
   footerContainer: {
-    margin: "0 -5%",
     display: "flex",
   },
   footerLinkContainer: {
@@ -138,22 +137,16 @@ const styles = (theme) => ({
     fontSize: "50px",
   },
   login: {
-    display: "block",
-    marginLeft: "auto",
-    marginRight: "auto",
-    width: "80%",
+    display: "flex",
     fontSize: "15px",
     fontWeight: 1000,
     maxWidth: "100%",
     opacity: "80%",
+    justifyContent: "space-around",
   },
   spotifyLogo: {
-    width: "17%",
-    left: "0%",
-    marginTop: "3%",
     opacity: "70%",
     zIndex: "100",
-    marginRight: "-14px",
   },
   spotifyButtonText: {
     float: "right",
@@ -202,14 +195,7 @@ const Landing = (props) => {
             <div className={classes.landingContainer}>
               {/* This is the container for the landing screen part of this page, 
               that is, what you will see upon loading*/}
-              <div>
-                {/* Background*/}
-                {/*<img
-                  alt="complex"
-                  src={backgroundLight}
-                  className={classes.backgroundImg}
-                />*/}
-              </div>
+
               {/* Logo */}
               <div className={classes.logoContainer}>
                 <Box className={classes.logoBox}>
@@ -229,6 +215,7 @@ const Landing = (props) => {
                   </Box>
                 </Box>
               </div>
+
               {/* Login Button with Spotify */}
               <div className={classes.buttonContainer}>
                 {/*this container is used for spacing purposes */}
@@ -241,6 +228,7 @@ const Landing = (props) => {
                     className={classes.login}
                   >
                     <img
+                      width="50px"
                       alt=""
                       src={spotifyLogo}
                       className={classes.spotifyLogo}
@@ -393,67 +381,69 @@ const Landing = (props) => {
               </div>
             </div>
           </div>
-          <div className={classes.footerContainer}>
-            <AppBar position="static" fullWidth className={classes.footer}>
-              <Toolbar>
-                <div style={{ marginTop: "15px" }}>
-                  <Box display="flex" flexDirection="row">
-                    <Box>
-                      <img
-                        className={classes.logoBottom}
-                        alt="complex"
-                        src={s_circle}
-                      />
-                    </Box>
-                    <Box>
-                      <Typography variant="h5" className={classes.heading}>
-                        ynthesize
-                      </Typography>
-                    </Box>
-                  </Box>
-                </div>
-              </Toolbar>
-              <div style={{ float: "right", display: "table-row" }}>
-                <div className={classes.footerLinkContainer}>
-                  <Link
-                    to="About"
-                    onClick={() => console.log("This will redirect to about")}
-                  >
-                    <Typography className={classes.footerLinks}>About</Typography>
-                  </Link>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    marginTop: "4%",
-                    marginLeft: "4%",
-                  }}
-                >
-                  <Link
-                    to="About"
-                    onClick={() => console.log("This will redirect to about")}
-                  >
-                    <Typography className={classes.footerLinks}>
-                      Another Link
-                    </Typography>
-                  </Link>
-                </div>
-                <div
-                  style={{ display: "flex", margin: "4%", marginBottom: "10%" }}
-                >
-                  <Link
-                    to="About"
-                    onClick={() => console.log("This will redirect to about")}
-                  >
-                    <Typography className={classes.footerLinks}>
-                      Yet Another Footer Link
-                    </Typography>
-                  </Link>
-                </div>
-              </div>
-            </AppBar>
-          </div>
         </Container>
+
+        {/* Footer */}
+        <div className={classes.footerContainer}>
+          <AppBar position="static" fullWidth className={classes.footer}>
+            <Toolbar>
+              <div style={{ marginTop: "15px" }}>
+                <Box display="flex" flexDirection="row">
+                  <Box>
+                    <img
+                      className={classes.logoBottom}
+                      alt="complex"
+                      src={s_circle}
+                    />
+                  </Box>
+                  <Box>
+                    <Typography variant="h5" className={classes.heading}>
+                      ynthesize
+                    </Typography>
+                  </Box>
+                </Box>
+              </div>
+            </Toolbar>
+            <div style={{ float: "right", display: "table-row" }}>
+              <div className={classes.footerLinkContainer}>
+                <Link
+                  to="About"
+                  onClick={() => console.log("This will redirect to about")}
+                >
+                  <Typography className={classes.footerLinks}>About</Typography>
+                </Link>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  marginTop: "4%",
+                  marginLeft: "4%",
+                }}
+              >
+                <Link
+                  to="About"
+                  onClick={() => console.log("This will redirect to about")}
+                >
+                  <Typography className={classes.footerLinks}>
+                    Another Link
+                  </Typography>
+                </Link>
+              </div>
+              <div
+                style={{ display: "flex", margin: "4%", marginBottom: "10%" }}
+              >
+                <Link
+                  to="About"
+                  onClick={() => console.log("This will redirect to about")}
+                >
+                  <Typography className={classes.footerLinks}>
+                    Yet Another Footer Link
+                  </Typography>
+                </Link>
+              </div>
+            </div>
+          </AppBar>
+        </div>
       </div>
     );
   }
