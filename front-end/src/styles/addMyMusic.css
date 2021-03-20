@@ -1,4 +1,25 @@
+/*Styling for the AppBar*/
+.back{
+    /* color: theme.palette.secondary.main */
+    color: #f73c4a;
+}
+.toolbar{
+    display: flex;
+    justify-content: space-between;
+}
+.heading {
+    margin-right: auto;
+    margin-left: -20px;
+    /* color: theme.palette.secondary.main, */
+    color: #f73c4a;
+    font-size: 100px;
+    font-weight: 900;
+}
+.logout{
+    color:white;
+}
+/* Main Page styling */
+
 .body{
-    font-size: 40px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 300px;
 }

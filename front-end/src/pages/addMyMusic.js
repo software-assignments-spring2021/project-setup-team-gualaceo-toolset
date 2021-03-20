@@ -35,6 +35,20 @@ const AddMyMusic = (props) => {
         return (
             <div className="body">
                 Hello!
+                <AppBar>
+                    <Toolbar className="toolbar">
+                    <Button
+                        onClick={() => history.push("/placeholder")}
+                        startIcon={<ArrowBackIosIcon className="back" />}
+                    ></Button>
+                    <Typography variant="h5" className="heading">
+                        Add My Music
+                    </Typography>
+                    <Button className="logout">
+                        Logout
+                    </Button>
+                    </Toolbar>
+                </AppBar>
             </div>
         );
     }
