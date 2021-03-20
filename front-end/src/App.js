@@ -4,6 +4,7 @@ import landing from "./pages/landing";
 import placeholder from "./pages/placeholder";
 import home from "./pages/home";
 import guest from "./pages/guest";
+import addMyMusic from "./pages/addMyMusic.js";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route exact path="/placeholder" component={placeholder} />
           <Route exact path="/home" component={home} />
           <Route exact path="/guest" component={guest} />
+          <Route exact path = "/addMyMusic" component = {addMyMusic} />
         </Switch>
       </div>
     </Router>
