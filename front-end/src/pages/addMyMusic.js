@@ -16,6 +16,7 @@ import Box from "@material-ui/core/Box";
 import backgroundWhite from "../media/background_white.png";
 
 import Loading from "../components/loading";
+import Playlist from "../components/playlist";
 
 import '../styles/addMyMusic.css';
 
@@ -29,26 +30,40 @@ const AddMyMusic = (props) => {
         setuiLoading(false);
     }, []);
 
+    const playlists = [
+        "Work Buddies",
+        "Alexa's Party",
+        "Gaming Friends",
+        "Grandma's House",
+        "Grandpa's House",
+        "Josh's Party",
+      ];
+
     if (uiLoading === true){
         return <Loading />
     } else {
         return (
             <div className="body">
-                Hello!
-                <AppBar>
-                    <Toolbar className="toolbar">
-                    <Button
-                        onClick={() => history.push("/placeholder")}
-                        startIcon={<ArrowBackIosIcon className="back" />}
-                    ></Button>
-                    <Typography variant="h5" className="heading">
-                        Add My Music
-                    </Typography>
-                    <Button className="logout">
-                        Logout
-                    </Button>
-                    </Toolbar>
-                </AppBar>
+                <Container component="main" maxWidth="xs">
+                    Hello!
+                    <AppBar>
+                        <Toolbar className="toolbar">
+                        <Button
+                            onClick={() => history.push("/placeholder")}
+                            startIcon={<ArrowBackIosIcon className="back" />}
+                        ></Button>
+                        <Typography variant="h5" className="heading">
+                            Add My Music
+                        </Typography>
+                        <Button className="logout">
+                            Logout
+                        </Button>
+                        </Toolbar>
+                    </AppBar>
+                    {playlists.map((curPlaylist) => (
+                    <Playlist playlist={curPlaylist} />
+                    ))}
+                </Container>
             </div>
         );
     }
