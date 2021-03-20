@@ -17,9 +17,9 @@ import axios from 'axios'
 import backgroundWhite from "../media/background_white.png";
 
 import Loading from "../components/loading";
-import Playlist from "../components/playlist";
+import Playlist from "../components/playlistComponent.js";
 
-import '../styles/addMyMusic.css';
+import styles from "../styles/addMyMusicStyles.js";
 
 const AddMyMusic = (props) => {
     const [playlists, setPlaylists] = useState([])
@@ -29,7 +29,7 @@ const AddMyMusic = (props) => {
 
     useEffect(() => {
         setuiLoading(false);
-        console.log("fetching 2 playlists")
+        console.log("fetching 10 playlists")
 
         axios('https://my.api.mockaroo.com/playlist.json?key=032af9d0')
             .then((response) => {
@@ -64,23 +64,23 @@ const AddMyMusic = (props) => {
         return <Loading />
     } else {
         return (
-            <div className="body">
+            <div className={classes.body}>
                 <Container component="main" maxWidth="xs">
-                    <AppBar>
-                        <Toolbar className="toolbar">
+                    <AppBar className={classes.appBar}>
+                        <Toolbar className={classes.toolbar}>
                             <Button
                                 onClick={() => history.push("/placeholder")}
-                                startIcon={<ArrowBackIosIcon className="back" />}
+                                startIcon={<ArrowBackIosIcon className={classes.back} />}
                             ></Button>
-                            <Typography variant="h5" className="heading">
+                            <Typography variant="h5" className={classes.heading}>
                                 Add My Music
                             </Typography>
-                            <Button className="logout">
+                            <Button className={classes.logout}>
                                 Logout
                             </Button>
                         </Toolbar>
                     </AppBar>
-                    <div className='playlistsContainer'>
+                    <div className={classes.playlistContainer}>
                         {playlists.map((item) => (
                             <Playlist playlist={item}></Playlist>
                         ))}
@@ -91,4 +91,4 @@ const AddMyMusic = (props) => {
     }
 }
 
-export default AddMyMusic;
+export default withStyles(styles)(AddMyMusic);
