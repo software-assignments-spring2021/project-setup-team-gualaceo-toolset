@@ -19,17 +19,19 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import styles from "../styles/playlistComponentStyles.js"
 
 const pressButton = (event, added, setAdded) => {
-    event.stopPropagation()
-    setAdded(!added);
+    event.stopPropagation() //Prevents dropdown from opening when button is pressed
+    setAdded(!added); 
+
+    //In a later sprint (2 or 3), we should also actually add the playlist to the pool
 }
 
 const Playlist = (props) => {
-    const playlist = props.playlist //the data returned by Mockaroo is a JSON object, which contains the playlist
+    const playlist = props.playlist 
     const { classes } = props
-    const [added, setAdded] = useState(false);
+    const [added, setAdded] = useState(false); //keeps track of whether the playlist has been added to the pool or not. 
     let buttonIcon;
 
-    if (!added) {
+    if (!added) { /*Icon must update depending on whether the playlist is added or not*/
         buttonIcon = <AddIcon color = 'secondary' />    
     } else {
         buttonIcon = <RemoveIcon color = 'secondary' />
@@ -41,6 +43,7 @@ const Playlist = (props) => {
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <div className={classes.summaryContainer}>
                 <div className ={classes.imageContainer}>
+                    {/*This should be the playlist image pulled from Spotify*/}
                     <img className={classes.playlistImage} src ={playlist.images[0].url} alt ='playlist'/> 
                 </div>
                 <div className={classes.playlistNameContainer}>
@@ -48,7 +51,7 @@ const Playlist = (props) => {
                 </div>
                 <div className={classes.buttonContainer}>
                     <IconButton className={classes.button} color = "primary"  onFocus={(event) => event.stopPropagation()} onClick={(event) => pressButton(event, added, setAdded)}>
-                        {buttonIcon}
+                        {buttonIcon} 
                     </IconButton>
                 </div>
             </div>
@@ -57,7 +60,7 @@ const Playlist = (props) => {
         <AccordionDetails className={classes.accordionDetails}>
             <div className={classes.tracklistContainer}>
                 {playlist.tracks.items.map((curSong) => (
-                    <Song classes={classes} song={curSong} />
+                    <Song classes={classes} song={curSong} /> //Creates a song card for each song in the playlist
                 ))}
             </div>
         </AccordionDetails>

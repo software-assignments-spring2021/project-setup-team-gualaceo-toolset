@@ -31,9 +31,9 @@ const AddMyMusic = (props) => {
         setuiLoading(false);
         console.log("fetching 10 playlists")
 
-        axios('https://my.api.mockaroo.com/playlist.json?key=032af9d0')
+        axios('https://my.api.mockaroo.com/playlist.json?key=032af9d0') //makes a call to the mock api
             .then((response) => {
-                setPlaylists(response.data)
+                setPlaylists(response.data) //stores the result from the api call in playlists
                 console.log(playlists)
             })
             .catch((err) => {
@@ -61,7 +61,7 @@ const AddMyMusic = (props) => {
     }, []); //only run once
 
     if (uiLoading === true){
-        return <Loading />
+        return <Loading /> //If still waiting for an api request to return, will show the loading screen instead
     } else {
         return (
             <div className={classes.body}>
