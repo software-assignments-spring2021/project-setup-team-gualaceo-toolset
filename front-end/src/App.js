@@ -5,6 +5,8 @@ import placeholder from "./pages/placeholder";
 import home from "./pages/home";
 import guest from "./pages/guest";
 
+import { Notifications } from 'react-push-notification';
+
 function App() {
   return (
     <Router>
