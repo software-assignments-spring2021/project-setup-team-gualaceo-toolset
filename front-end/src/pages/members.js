@@ -15,6 +15,13 @@ import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
 
 const styles = (theme) => ({
+  body: {
+    backgroundSize: "100%",
+    background: `url(${backgroundWhite})`,
+    backgroundRepeat: "repeat",
+    minHeight: "100vh",
+    height: "100%",
+  },
   root: {
     padding: theme.spacing(2),
     backgroundSize: "contain",
@@ -90,55 +97,51 @@ const Members = (props) => {
     return <Loading />;
   } else {
     return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.root}>
-          <div style={{ width: "200px", height: "100px" }}>
-            {/* Background */}
-            <img
-              alt="complex"
-              src={backgroundWhite}
-              className={classes.backgroundImg}
-            />
+      <div className={classes.body}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.root}>
+            <div style={{ width: "200px", height: "100px" }}>
+            </div>
+            <AppBar>
+              <Toolbar className={classes.toolbar}>
+                <Button
+                  onClick={() => history.push("/placeholder")}
+                  startIcon={<ArrowBackIosIcon className={classes.back} />}
+                ></Button>
+                <Typography variant="h5" className={classes.heading}>
+                  Member List
+                </Typography>
+              </Toolbar>
+            </AppBar>
+            {memberlist.map((member) => (
+              <Card fullWidth className={member.owner ? classes.cardsALT : classes.cards}>
+                <CardContent style={{ marginBottom: "-10px" }}>
+                  <Box display="flex" flexDirection="row">
+                    <Box>
+                      <Avatar className={classes.avatar} variant="rounded" />
+                    </Box>
+                    <Box>
+                      <Typography
+                        style={{ marginLeft: "15px", marginTop: "10px" }}
+                      >
+                        {member.self?"You":member.name}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography
+                      style={{marginLeft:"200px",fontSize:"10px"}}
+                      >
+                        {member.owner?"O":""}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-          <AppBar>
-            <Toolbar className={classes.toolbar}>
-              <Button
-                onClick={() => history.push("/placeholder")}
-                startIcon={<ArrowBackIosIcon className={classes.back} />}
-              ></Button>
-              <Typography variant="h5" className={classes.heading}>
-                Member List
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          {memberlist.map((member) => (
-             <Card fullWidth className={member.owner ? classes.cardsALT : classes.cards}>
-              <CardContent style={{ marginBottom: "-10px" }}>
-                <Box display="flex" flexDirection="row">
-                  <Box>
-                    <Avatar className={classes.avatar} variant="rounded" />
-                  </Box>
-                  <Box>
-                    <Typography
-                      style={{ marginLeft: "15px", marginTop: "10px" }}
-                    >
-                      {member.self?"You":member.name}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <Typography
-                     style={{marginLeft:"200px",fontSize:"10px"}}
-                    >
-                      {member.owner?"O":""}
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </Container>
+        </Container>
+      </div>
     );
   }
 };
