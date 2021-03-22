@@ -5,7 +5,8 @@ import placeholder from "./pages/placeholder";
 import home from "./pages/home";
 import guest from "./pages/guest";
 import groupmenu from "./pages/groupmenu";
-import playlist from "./pages/playlist";
+import generatedPlaylist from "./pages/generatedPlaylist";
+import addMyMusic from "./pages/addMyMusic";
 
 function App() {
   return (
@@ -17,7 +18,12 @@ function App() {
           <Route exact path="/home" component={home} />
           <Route exact path="/guest" component={guest} />
           <Route exact path="/groupmenu" component={groupmenu} />
-          <Route exact path="/playlist" component={playlist} />
+          <Route
+            exact
+            path="/generatedPlaylist"
+            component={generatedPlaylist}
+          />
+          <Route exact path="/addMyMusic" component={addMyMusic} />
         </Switch>
       </div>
     </Router>
