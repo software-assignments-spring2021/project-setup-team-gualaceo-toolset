@@ -4,13 +4,13 @@ import landing from "./pages/landing";
 import placeholder from "./pages/placeholder";
 import home from "./pages/home";
 import guest from "./pages/guest";
-
 import { Notifications } from 'react-push-notification';
 
-function App() {
+const App = () => {
   return (
     <Router>
       <div>
+        <Notifications />
         <Switch>
           <Route exact path="/" component={landing} />
           <Route exact path="/placeholder" component={placeholder} />
