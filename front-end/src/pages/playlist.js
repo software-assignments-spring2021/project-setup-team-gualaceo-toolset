@@ -88,6 +88,7 @@ const Playlist = (props) => {
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [expandPlayer, setExpandPlayer] = useState(false);
+  const [currentSong, setCurrentSong] = useState("");
 
   const songs = [
     {
@@ -151,6 +152,10 @@ const Playlist = (props) => {
     }
   };
 
+  const handleSongChange = (song) => {
+    setCurrentSong(song);
+  };
+
   if (uiLoading === true) {
     return <Loading />;
   } else {
@@ -206,8 +211,12 @@ const Playlist = (props) => {
             </center>
           </div>
           <div className={classes.songContainer}>
-            {songs.map((song) => (
-              <div className={classes.cards}>
+            {songs.map((song, i) => (
+              <div
+                className={classes.cards}
+                key={i}
+                onClick={() => handleSongChange(song)}
+              >
                 <CardContent style={{ marginBottom: "-10px" }}>
                   <Box display="flex" flexDirection="row">
                     <Box>
@@ -231,7 +240,12 @@ const Playlist = (props) => {
             ))}
           </div>
           <div style={{ marginTop: "50px" }} onClick={handleExpandPlayer}>
-            <MusicController expanded={expandPlayer} />
+            <MusicController
+              expanded={expandPlayer}
+              setExpanded={setExpandPlayer}
+              currentSong={currentSong}
+              setCurrentSong={setCurrentSong}
+            />
           </div>
         </div>
       </Container>
