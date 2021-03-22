@@ -74,12 +74,12 @@ const Members = (props) => {
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const memberlist = [
-    {name:"Ryan B", owner:false},
-    {name:"Alexa H", owner:true},
-    {name:"Dennis K", owner:false},
-    {name:"Chris Z", owner:false},
-    {name:"Calvin L", owner:false},
-    {name:"Mo L", owner:false},
+    {name:"Ryan B", owner:false, self:false},
+    {name:"Alexa H", owner:true, self:false},
+    {name:"Dennis K", owner:false, self:false},
+    {name:"Chris Z", owner:false, self:false},
+    {name:"Calvin L", owner:false, self:false},
+    {name:"Mo L", owner:false, self:true},
   ];
 
   useEffect(() => {
@@ -123,7 +123,7 @@ const Members = (props) => {
                     <Typography
                       style={{ marginLeft: "15px", marginTop: "10px" }}
                     >
-                      {member.name}
+                      {member.self?"You":member.name}
                     </Typography>
                   </Box>
                   <Box>
