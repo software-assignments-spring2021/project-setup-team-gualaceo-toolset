@@ -101,7 +101,7 @@ const Members = (props) => {
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.root}>
-            <div style={{ width: "200px", height: "100px" }}>
+            <div style={{ width: "200px", height: "70px" }}>
             </div>
             <AppBar>
               <Toolbar className={classes.toolbar}>
