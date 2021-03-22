@@ -4,6 +4,8 @@ import landing from "./pages/landing";
 import placeholder from "./pages/placeholder";
 import home from "./pages/home";
 import guest from "./pages/guest";
+import groupMenu from "./pages/groupMenu";
+import generatedPlaylist from "./pages/generatedPlaylist";
 import addMyMusic from "./pages/addMyMusic";
 
 function App() {
@@ -15,7 +17,13 @@ function App() {
           <Route exact path="/placeholder" component={placeholder} />
           <Route exact path="/home" component={home} />
           <Route exact path="/guest" component={guest} />
-          <Route exact path = "/addMyMusic" component={addMyMusic} />
+          <Route exact path="/groupMenu" component={groupMenu} />
+          <Route
+            exact
+            path="/generatedPlaylist"
+            component={generatedPlaylist}
+          />
+          <Route exact path="/addMyMusic" component={addMyMusic} />
         </Switch>
       </div>
     </Router>

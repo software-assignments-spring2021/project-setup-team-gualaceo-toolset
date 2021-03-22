@@ -26,6 +26,7 @@ const styles = (theme) => ({
   backgroundSize: "100%",
   background: `url(${backgroundLight})`,
   backgroundRepeat: "repeat",
+  height: "100%",
   },
   root: {
     padding: theme.spacing(4),
@@ -145,8 +146,7 @@ const styles = (theme) => ({
     justifyContent: "space-around",
   },
   spotifyLogo: {
-    opacity: "70%",
-    zIndex: "100",
+    opacity: "70%", 
   },
   spotifyButtonText: {
     float: "right",

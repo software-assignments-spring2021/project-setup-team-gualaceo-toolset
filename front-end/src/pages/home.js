@@ -12,18 +12,24 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 import backgroundWhite from "../media/background_white.png";
 
-// import { Redirect } from "react-router-dom";
-
 import Loading from "../components/loading";
+// import Logout from "../components/logout";
 
 const styles = (theme) => ({
   body: {
     backgroundSize: "100%",
     background: `url(${backgroundWhite})`,
     backgroundRepeat: "repeat",
+    minHeight: "100vh",
+    height: "100%",
   },
   root: {
     padding: theme.spacing(2),
@@ -76,6 +82,9 @@ const Home = (props) => {
   let history = useHistory();
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
+
+  const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
+
   const playlists = [
     "Work Buddies",
     "Alexa's Party",
@@ -89,74 +98,117 @@ const Home = (props) => {
     setuiLoading(false);
   }, []);
 
+  const handleJoin = () => {
+    // if (isValidID) {
+    history.push("/groupmenu");
+
+    // }
+  };
+
   if (uiLoading === true) {
     return <Loading />;
   } else {
     return (
       <div className={classes.body}>
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <div className={classes.root}>
-            <div style={{ width: "200px", height: "100px" }}>
-            </div>
-            <AppBar>
-              <Toolbar className={classes.toolbar}>
-                <Button
-                  onClick={() => history.push("/placeholder")}
-                  startIcon={<ArrowBackIosIcon className={classes.back} />}
-                ></Button>
-                <Typography variant="h5" className={classes.heading}>
-                  Your Groups
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.root}>
+          <div style={{ width: "200px", height: "100px" }}>
+          </div>
+          <AppBar>
+            <Toolbar className={classes.toolbar}>
+              <Button
+                onClick={() => history.push("/placeholder")}
+                startIcon={<ArrowBackIosIcon className={classes.back} />}
+              ></Button>
+              <Typography variant="h5" className={classes.heading}>
+                Your Groups
+              </Typography>
+              <Button
+                color="inherit"
+                onClick={() => {
+                  setOpenConfirmLogout(!openConfirmLogout);
+                }}
+                className={classes.logout}
+              >
+                Logout
+              </Button>
+              <div style={{ position: "absolute" }}>
+                <Dialog
+                  open={openConfirmLogout}
+                  onClose={() => {
+                    setOpenConfirmLogout(false);
+                  }}
+                  disableBackdropClick={false}
+                >
+                  <DialogTitle id="alert-dialog-title">{"Logout?"}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Are you sure you want to logout?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      onClick={() => setOpenConfirmLogout(false)}
+                      color="primary"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={() => history.push("/")}
+                      color="primary"
+                      autoFocus
+                    >
+                      Logout
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+            </Toolbar>
+          </AppBar>
+          <div style={{ marginTop: "-30px" }}>
+            <Accordion square={true} className={classes.accordion}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>
+                  <div style={{ margin: "7px" }}>Create Group</div>
                 </Typography>
-                <Button color="inherit" className={classes.logout}>
-                  Logout
+              </AccordionSummary>
+              <Divider></Divider>
+              <AccordionDetails style={{ marginTop: "10px" }}>
+                <Typography>Enter Group Name:</Typography>
+                <TextField
+                  style={{ width: "90%" }}
+                  label="Group Name"
+                  variant="outlined"
+                />
+              </AccordionDetails>
+              <AccordionDetails style={{ marginTop: "-10px" }}>
+                <Button variant="outlined" fullWidth>
+                  Create
                 </Button>
-              </Toolbar>
-            </AppBar>
-            <div style={{ marginTop: "-30px" }}>
-              <Accordion square={true} className={classes.accordion}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>
-                    <div style={{ margin: "7px" }}>Create Group</div>
-                  </Typography>
-                </AccordionSummary>
-                <Divider></Divider>
-                <AccordionDetails style={{ marginTop: "10px" }}>
-                  <Typography>Enter Group Name:</Typography>
-                  <TextField
-                    style={{ width: "90%" }}
-                    label="Group Name"
-                    variant="outlined"
-                  />
-                </AccordionDetails>
-                <AccordionDetails style={{ marginTop: "-10px" }}>
-                  <Button variant="outlined" fullWidth>
-                    Create
-                  </Button>
-                </AccordionDetails>
-              </Accordion>
-              <Accordion square={true} className={classes.accordion}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>
-                    <div style={{ margin: "7px" }}>Join Group</div>
-                  </Typography>
-                </AccordionSummary>
-                <Divider></Divider>
-                <AccordionDetails style={{ marginTop: "10px" }}>
-                  <Typography>Enter Group ID:</Typography>
-                  <TextField
-                    style={{ width: "90%" }}
-                    label="Group ID"
-                    variant="outlined"
-                  />
-                </AccordionDetails>
-                <AccordionDetails style={{ marginTop: "-10px" }}>
-                  <Button variant="outlined" fullWidth>
-                    Join
-                  </Button>
-                </AccordionDetails>
-              </Accordion>
-            </div>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion square={true} className={classes.accordion}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>
+                  <div style={{ margin: "7px" }}>Join Group</div>
+                </Typography>
+              </AccordionSummary>
+              <Divider></Divider>
+              <AccordionDetails style={{ marginTop: "10px" }}>
+                <Typography>Enter Group ID:</Typography>
+                <TextField
+                  style={{ width: "90%" }}
+                  label="Group ID"
+                  variant="outlined"
+                />
+              </AccordionDetails>
+              <AccordionDetails style={{ marginTop: "-10px" }}>
+                <Button variant="outlined" fullWidth onClick={handleJoin}>
+                  Join
+                </Button>
+              </AccordionDetails>
+            </Accordion>
             <br />
             {playlists.map((playlistName) => (
               <Card fullWidth className={classes.cards}>
@@ -177,6 +229,7 @@ const Home = (props) => {
               </Card>
             ))}
           </div>
+        </div>
         </Container>
       </div>
     );
