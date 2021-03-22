@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
-import Avatar from "@material-ui/core/avatar";
-import Accordion from "@material-ui/core/Accordion";
-import TextField from "@material-ui/core/TextField";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
-import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -21,26 +14,14 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import backgroundWhite from "../media/background_white.png";
 
 import Loading from "../components/loading";
-// import Logout from "../components/logout";
 
 const styles = (theme) => ({
   root: {
-    padding: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    marginTop: "-10%",
     backgroundSize: "contain",
-  },
-  accordion: {
-    marginTop: "10px",
-    boxShadow: "0 8px 18px -12px rgba(0,0,0,0.3)",
-    borderRadius: "10px",
-    top: "10%",
-    border: "0px solid rgba(0, 0, 0, .125)",
-  },
-  avatar: {
-    height: 50,
-    width: 40,
-    flexShrink: 0,
-    flexGrow: 0,
-    borderRadius: "8px",
   },
   back: { color: theme.palette.secondary.main },
   backgroundImg: {
@@ -60,11 +41,9 @@ const styles = (theme) => ({
     },
     top: "10%",
   },
+  cardText: { marginLeft: "15px", margin: "10px" },
   heading: {
-    // marginRight: "auto",
-    // marginLeft: "-20px",
     color: theme.palette.secondary.main,
-    fontWeight: "900",
   },
   logout: { color: theme.palette.secondary.contrastText },
   toolbar: {
@@ -73,32 +52,30 @@ const styles = (theme) => ({
   },
 });
 
-const Home = (props) => {
+const GroupMenu = (props) => {
   let history = useHistory();
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
-
+  const [groupID, setGroupID] = useState("");
+  const [groupName, setGroupName] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
 
-  const playlists = [
-    "Work Buddies",
-    "Alexa's Party",
-    "Gaming Friends",
-    "Grandma's House",
-    "Grandpa's House",
-    "Josh's Party",
-  ];
+  const handleViewAllMusic = () => {
+    console.log("You've clicked on view all music");
+  };
+  const handleViewAllMembers = () => {
+    console.log("You've clicked on view all members");
+  };
+  const handleViewPlaylist = () => {
+    history.push("/playlist");
+  };
 
   useEffect(() => {
+    // get group id
+    setGroupID("#4529-9915");
+    setGroupName("Alexa's Party");
     setuiLoading(false);
   }, []);
-
-  const handleJoin = () => {
-    // if (isValidID) {
-    history.push("/groupmenu");
-
-    // }
-  };
 
   if (uiLoading === true) {
     return <Loading />;
@@ -115,14 +92,14 @@ const Home = (props) => {
               className={classes.backgroundImg}
             />
           </div>
-          <AppBar>
+          <AppBar style={{ boxShadow: "none" }}>
             <Toolbar className={classes.toolbar}>
               <Button
-                onClick={() => history.push("/placeholder")}
+                onClick={() => history.push("/home")}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
-              <Typography variant="h5" className={classes.heading}>
-                Your Groups
+              <Typography className={classes.heading}>
+                Group ID: {groupID}
               </Typography>
               <Button
                 color="inherit"
@@ -142,6 +119,7 @@ const Home = (props) => {
                   disableBackdropClick={false}
                 >
                   <DialogTitle id="alert-dialog-title">{"Logout?"}</DialogTitle>
+
                   <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                       Are you sure you want to logout?
@@ -166,73 +144,51 @@ const Home = (props) => {
               </div>
             </Toolbar>
           </AppBar>
-          <div style={{ marginTop: "-30px" }}>
-            <Accordion square={true} className={classes.accordion}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>
-                  <div style={{ margin: "7px" }}>Create Group</div>
-                </Typography>
-              </AccordionSummary>
-              <Divider></Divider>
-              <AccordionDetails style={{ marginTop: "10px" }}>
-                <Typography>Enter Group Name:</Typography>
-                <TextField
-                  style={{ width: "90%" }}
-                  label="Group Name"
-                  variant="outlined"
-                />
-              </AccordionDetails>
-              <AccordionDetails style={{ marginTop: "-10px" }}>
-                <Button variant="outlined" fullWidth>
-                  Create
-                </Button>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion square={true} className={classes.accordion}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>
-                  <div style={{ margin: "7px" }}>Join Group</div>
-                </Typography>
-              </AccordionSummary>
-              <Divider></Divider>
-              <AccordionDetails style={{ marginTop: "10px" }}>
-                <Typography>Enter Group ID:</Typography>
-                <TextField
-                  style={{ width: "90%" }}
-                  label="Group ID"
-                  variant="outlined"
-                />
-              </AccordionDetails>
-              <AccordionDetails style={{ marginTop: "-10px" }}>
-                <Button variant="outlined" fullWidth onClick={handleJoin}>
-                  Join
-                </Button>
-              </AccordionDetails>
-            </Accordion>
-          </div>
-          <br />
-          {playlists.map((playlistName) => (
-            <Card fullWidth className={classes.cards}>
-              <CardContent style={{ marginBottom: "-10px" }}>
-                <Box display="flex" flexDirection="row">
-                  <Box>
-                    <Avatar className={classes.avatar} variant="rounded" />
-                  </Box>
-                  <Box>
-                    <Typography
-                      style={{ marginLeft: "15px", marginTop: "10px" }}
-                    >
-                      {playlistName}
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          ))}
+          <Card fullWidth className={classes.cards}>
+            <CardContent style={{ marginBottom: "-10px" }}>
+              <Typography className={classes.cardText}>
+                <center>Group Name: {groupName}</center>
+              </Typography>
+            </CardContent>
+          </Card>
+
+          <Card
+            fullWidth
+            className={classes.cards}
+            onClick={handleViewAllMusic}
+          >
+            <CardContent style={{ marginBottom: "-10px" }}>
+              <Typography className={classes.cardText}>
+                <center>View All Music</center>
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card
+            fullWidth
+            className={classes.cards}
+            onClick={handleViewAllMembers}
+          >
+            <CardContent style={{ marginBottom: "-10px" }}>
+              <Typography className={classes.cardText}>
+                <center>View Members</center>
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card
+            fullWidth
+            className={classes.cards}
+            onClick={handleViewPlaylist}
+          >
+            <CardContent style={{ marginBottom: "-10px" }}>
+              <Typography className={classes.cardText}>
+                <center>View Generated Playlist</center>
+              </Typography>
+            </CardContent>
+          </Card>
         </div>
       </Container>
     );
   }
 };
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(GroupMenu);
