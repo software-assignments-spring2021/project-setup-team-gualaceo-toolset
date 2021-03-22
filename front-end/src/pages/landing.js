@@ -140,7 +140,7 @@ const styles = (theme) => ({
     width: "80%",
     fontSize: "15px",
     fontWeight: 1000,
-    maxWidth: "100%",
+    maxWidth: "80%",
     opacity: "80%",
   },
   spotifyLogo: {
