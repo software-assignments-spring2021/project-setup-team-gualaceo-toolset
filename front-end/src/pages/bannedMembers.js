@@ -56,7 +56,7 @@ const BannedMembers = (props) => {
             <AppBar>
               <Toolbar className={classes.toolbar}>
                 <Button
-                  onClick={() => history.push("/placeholder")}
+                  onClick={() => history.push("/members")}
                   startIcon={<ArrowBackIosIcon className={classes.back} />}
                 ></Button>
                 <Typography variant="h5" className={classes.heading}>
@@ -67,7 +67,7 @@ const BannedMembers = (props) => {
             {BannedMembers.map((member) => (
               <Card fullWidth className={classes.cards}>
                 <CardContent className={classes.cardContent}>
-                  <Box display="flex" flexDirection="row">
+                  <Box className={classes.member}>
                     <Box>
                       <Avatar className={classes.avatar} variant="rounded" />
                     </Box>

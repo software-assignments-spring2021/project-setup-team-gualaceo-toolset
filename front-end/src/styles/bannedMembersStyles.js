@@ -8,6 +8,7 @@ const styles = (theme) => ({
     minHeight: "100vh",
     height: "100%",
   },
+
   root: {
     padding: theme.spacing(2),
     backgroundSize: "contain",
@@ -49,6 +50,10 @@ const styles = (theme) => ({
     fontWeight: "900",
   },
   padding: { width: "200px", height: "70px" },
+  member: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
 });
 
 export default styles;
