@@ -7,6 +7,7 @@ import guest from "./pages/guest";
 import groupMenu from "./pages/groupMenu";
 import generatedPlaylist from "./pages/generatedPlaylist";
 import addMyMusic from "./pages/addMyMusic";
+import members from "./pages/members.js";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             component={generatedPlaylist}
           />
           <Route exact path="/addMyMusic" component={addMyMusic} />
+          <Route exact path="/members" component={members} />
         </Switch>
       </div>
     </Router>
