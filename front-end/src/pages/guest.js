@@ -73,6 +73,10 @@ const Guest = (props) => {
     setuiLoading(false);
   }, []);
 
+  const handleJoinButton = () => {
+    history.push("/groupMenuGuest");
+  }
+
   if (uiLoading === true) {
     return <Loading />;
   } else {
@@ -120,7 +124,7 @@ const Guest = (props) => {
                 />
               </AccordionDetails>
               <AccordionDetails style={{ marginTop: "-10px" }}>
-                <Button variant="outlined" fullWidth>
+                <Button variant="outlined" fullWidth onClick = {handleJoinButton}>
                   Join
                 </Button>
               </AccordionDetails>

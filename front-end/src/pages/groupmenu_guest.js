@@ -10,12 +10,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import addNotification from 'react-push-notification';
 import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
 import styles from "../styles/groupmenuStyles.js"
 
-const GroupMenu = (props) => {
+const GroupMenuGuest = (props) => {
   let history = useHistory();
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
@@ -23,27 +22,11 @@ const GroupMenu = (props) => {
   const [groupName, setGroupName] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
 
-  const handleViewAllMusic = () => {
-    console.log("You've clicked on view all music");
-  };
   const handleViewAllMembers = () => {
-    console.log("You've clicked on view all members");
+    history.push("/membersGuest");
   };
   const handleViewPlaylist = () => {
-    history.push("/playlist");
-  };
-
-  const handleTestNotification = () => {
-
-    
-    let notifMessage = 'A user within the group ' + groupName + ' has requested that you generate/regenerate the playlist for that group'
-    addNotification({
-      title: 'User requested new playlist generation',
-      subtitle: 'New playlist request',
-      message: notifMessage,
-      theme: 'darkblue',
-      native: true,
-    });
+    history.push("/generatedPlaylistGuest");
   };
 
   useEffect(() => {
@@ -71,21 +54,13 @@ const GroupMenu = (props) => {
           <AppBar style={{ boxShadow: "none" }}>
             <Toolbar className={classes.toolbar}>
               <Button
-                onClick={() => history.push("/home")}
+                onClick={() => history.push("/guest")}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
               <Typography className={classes.heading}>
                 Group ID: {groupID}
               </Typography>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  setOpenConfirmLogout(!openConfirmLogout);
-                }}
-                className={classes.logout}
-              >
-                Logout
-              </Button>
+              
               <div style={{ position: "absolute" }}>
                 <Dialog
                   open={openConfirmLogout}
@@ -127,18 +102,6 @@ const GroupMenu = (props) => {
               </Typography>
             </CardContent>
           </Card>
-
-          <Card
-            fullWidth
-            className={classes.cards}
-            onClick={handleViewAllMusic}
-          >
-            <CardContent style={{ marginBottom: "-10px" }}>
-              <Typography className={classes.cardText}>
-                <center>View All Music</center>
-              </Typography>
-            </CardContent>
-          </Card>
           <Card
             fullWidth
             className={classes.cards}
@@ -161,22 +124,10 @@ const GroupMenu = (props) => {
               </Typography>
             </CardContent>
           </Card>
-          <Card
-            fullWidth
-            className={classes.cards}
-            onClick={handleTestNotification}
-          >
-            <CardContent style={{ marginBottom: "-10px" }}>
-              <Typography className={classes.cardText}>
-                <center>Test Notifications (not intended for final product)</center>
-              </Typography>
-            </CardContent>
-          </Card>
-
         </div>
       </Container>
     );
   }
 };
 
-export default withStyles(styles)(GroupMenu);
+export default withStyles(styles)(GroupMenuGuest);
