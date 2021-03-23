@@ -63,7 +63,7 @@ const GroupMenu = (props) => {
     console.log("You've clicked on view all members");
   };
   const handleViewPlaylist = () => {
-    history.push("/playlist");
+    history.push("/generatedPlaylist");
   };
 
   useEffect(() => {
