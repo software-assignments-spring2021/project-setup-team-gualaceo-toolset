@@ -22,9 +22,6 @@ const GroupMenuGuest = (props) => {
   const [groupName, setGroupName] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
 
-  const handleViewAllMusic = () => {
-    console.log("You've clicked on view all music");
-  };
   const handleViewAllMembers = () => {
     console.log("You've clicked on view all members");
   };
@@ -57,7 +54,7 @@ const GroupMenuGuest = (props) => {
           <AppBar style={{ boxShadow: "none" }}>
             <Toolbar className={classes.toolbar}>
               <Button
-                onClick={() => history.push("/home")}
+                onClick={() => history.push("/guest")}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
               <Typography className={classes.heading}>
