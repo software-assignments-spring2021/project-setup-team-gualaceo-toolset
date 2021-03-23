@@ -12,13 +12,9 @@ import addMyMusic from "./pages/addMyMusic";
 import members from "./pages/members.js";
 import membersGuest from "./pages/membersGuest.js";
 import bannedMembers from "./pages/bannedMembers.js";
-<<<<<<< HEAD
 import generatedPlaylistGuest from "./pages/generatedPlaylistGuest";
 
-function App() {
-=======
 const App = () => {
->>>>>>> master
   return (
     <Router>
       <div>
@@ -29,7 +25,6 @@ const App = () => {
           <Route exact path="/home" component={home} />
           <Route exact path="/guest" component={guest} />
           <Route exact path="/groupmenu" component={groupmenu} />
-<<<<<<< HEAD
           <Route exact path="/groupMenuGuest" component= {groupMenuGuest}/>
           <Route
             exact
@@ -37,9 +32,6 @@ const App = () => {
             component={generatedPlaylist}
           />
           <Route exact path = "/generatedPlaylistGuest" component = {generatedPlaylistGuest} />
-=======
-          <Route exact path="/generatedPlaylist" component={generatedPlaylist}/>
->>>>>>> master
           <Route exact path="/addMyMusic" component={addMyMusic} />
           <Route exact path="/bannedMembers" component={bannedMembers} />
           <Route exact path="/members" component={members} />
