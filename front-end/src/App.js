@@ -4,27 +4,24 @@ import landing from "./pages/landing";
 import placeholder from "./pages/placeholder";
 import home from "./pages/home";
 import guest from "./pages/guest";
+import { Notifications } from 'react-push-notification';
 import groupmenu from "./pages/groupmenu";
 import generatedPlaylist from "./pages/generatedPlaylist";
 import addMyMusic from "./pages/addMyMusic";
 import members from "./pages/members.js";
 import bannedMembers from "./pages/bannedMembers.js";
-
-function App() {
+const App = () => {
   return (
     <Router>
       <div>
+        <Notifications />
         <Switch>
           <Route exact path="/" component={landing} />
           <Route exact path="/placeholder" component={placeholder} />
           <Route exact path="/home" component={home} />
           <Route exact path="/guest" component={guest} />
           <Route exact path="/groupmenu" component={groupmenu} />
-          <Route
-            exact
-            path="/generatedPlaylist"
-            component={generatedPlaylist}
-          />
+          <Route exact path="/generatedPlaylist" component={generatedPlaylist}/>
           <Route exact path="/addMyMusic" component={addMyMusic} />
           <Route exact path="/bannedMembers" component={bannedMembers} />
           <Route exact path="/members" component={members} />
