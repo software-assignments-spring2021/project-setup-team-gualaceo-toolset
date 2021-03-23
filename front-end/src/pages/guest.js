@@ -16,6 +16,13 @@ import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
 
 const styles = (theme) => ({
+  body: {
+    backgroundSize: "100%",
+    background: `url(${backgroundWhite})`,
+    backgroundRepeat: "repeat",
+    minHeight: "100vh",
+    height: "100%",
+  },
   root: {
     padding: theme.spacing(2),
     backgroundSize: "contain",
@@ -35,15 +42,6 @@ const styles = (theme) => ({
     borderRadius: "8px",
   },
   back: { color: theme.palette.secondary.main },
-  backgroundImg: {
-    position: "absolute",
-    width: "100%",
-    left: "0%",
-    top: "0%",
-    height: "100%",
-    objectFit: "cover",
-    zIndex: "-1",
-  },
   cards: {
     marginTop: "10px",
     boxShadow: "0 8px 18px -12px rgba(0,0,0,0.3)",
@@ -77,58 +75,53 @@ const Guest = (props) => {
     return <Loading />;
   } else {
     return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.root}>
-          <div style={{ width: "200px", height: "100px" }}>
-            {/* Background */}
-            <img
-              alt="complex"
-              src={backgroundWhite}
-              className={classes.backgroundImg}
-            />
-          </div>
-          <AppBar>
-            <Toolbar className={classes.toolbar}>
-              <Button
-                onClick={() => history.push("/")}
-                startIcon={<ArrowBackIosIcon className={classes.back} />}
-              ></Button>
-              <Typography variant="h5" className={classes.heading}>
-                Join Group As Guest
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <div style={{ marginTop: "-30px" }}>
-            <Accordion
-              defaultExpanded={true}
-              square={true}
-              className={classes.accordion}
-            >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>
-                  <div style={{ margin: "7px" }}>Join Group</div>
+      <div className={classes.body}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.root}>
+            <div style={{ width: "200px", height: "100px" }}>
+            </div>
+            <AppBar>
+              <Toolbar className={classes.toolbar}>
+                <Button
+                  onClick={() => history.push("/")}
+                  startIcon={<ArrowBackIosIcon className={classes.back} />}
+                ></Button>
+                <Typography variant="h5" className={classes.heading}>
+                  Join Group As Guest
                 </Typography>
-              </AccordionSummary>
-              <Divider></Divider>
-              <AccordionDetails style={{ marginTop: "10px" }}>
-                <Typography>Enter Group ID:</Typography>
-                <TextField
-                  style={{ width: "90%" }}
-                  label="Group ID"
-                  variant="outlined"
-                />
-              </AccordionDetails>
-              <AccordionDetails style={{ marginTop: "-10px" }}>
-                <Button variant="outlined" fullWidth>
-                  Join
-                </Button>
-              </AccordionDetails>
-            </Accordion>
+              </Toolbar>
+            </AppBar>
+            <div style={{ marginTop: "-30px" }}>
+              <Accordion
+                defaultExpanded={true}
+                square={true}
+                className={classes.accordion}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>
+                    <div style={{ margin: "7px" }}>Join Group</div>
+                  </Typography>
+                </AccordionSummary>
+                <Divider></Divider>
+                <AccordionDetails style={{ marginTop: "10px" }}>
+                  <Typography>Enter Group ID:</Typography>
+                  <TextField
+                    style={{ width: "90%" }}
+                    label="Group ID"
+                    variant="outlined"
+                  />
+                </AccordionDetails>
+                <AccordionDetails style={{ marginTop: "-10px" }}>
+                  <Button variant="outlined" fullWidth>
+                    Join
+                  </Button>
+                </AccordionDetails>
+              </Accordion>
+            </div>
           </div>
-          <br />
-        </div>
-      </Container>
+        </Container>
+      </div>
     );
   }
 };

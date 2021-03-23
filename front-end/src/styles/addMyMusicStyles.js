@@ -1,6 +1,7 @@
+import backgroundWhite from "../media/background_white.png";
+
 const styles = (theme) => ({
   /* AppBar Styling*/
-
   back: {
     color: theme.palette.secondary.main,
   },
@@ -23,6 +24,11 @@ const styles = (theme) => ({
   body: {
     padding: theme.spacing(2),
     fontSize: "20px",
+    backgroundSize: "100%",
+    background: `url(${backgroundWhite})`,
+    backgroundRepeat: "repeat",
+    minHeight: "100vh",
+    height: "100%",
   },
 
   playlistContainer: {

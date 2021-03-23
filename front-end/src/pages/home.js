@@ -24,6 +24,13 @@ import Loading from "../components/loading";
 // import Logout from "../components/logout";
 
 const styles = (theme) => ({
+  body: {
+    backgroundSize: "100%",
+    background: `url(${backgroundWhite})`,
+    backgroundRepeat: "repeat",
+    minHeight: "100vh",
+    height: "100%",
+  },
   root: {
     padding: theme.spacing(2),
     backgroundSize: "contain",
@@ -61,8 +68,6 @@ const styles = (theme) => ({
     top: "10%",
   },
   heading: {
-    // marginRight: "auto",
-    // marginLeft: "-20px",
     color: theme.palette.secondary.main,
     fontWeight: "900",
   },
@@ -86,7 +91,7 @@ const Home = (props) => {
     "Gaming Friends",
     "Grandma's House",
     "Grandpa's House",
-    "Josh's Party",
+    "Josh's Parteey",
   ];
 
   useEffect(() => {
@@ -104,16 +109,11 @@ const Home = (props) => {
     return <Loading />;
   } else {
     return (
+      <div className={classes.body}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.root}>
           <div style={{ width: "200px", height: "100px" }}>
-            {/* Background */}
-            <img
-              alt="complex"
-              src={backgroundWhite}
-              className={classes.backgroundImg}
-            />
           </div>
           <AppBar>
             <Toolbar className={classes.toolbar}>
@@ -209,28 +209,29 @@ const Home = (props) => {
                 </Button>
               </AccordionDetails>
             </Accordion>
+            <br />
+            {playlists.map((playlistName) => (
+              <Card fullWidth className={classes.cards}>
+                <CardContent style={{ marginBottom: "-10px" }}>
+                  <Box display="flex" flexDirection="row">
+                    <Box>
+                      <Avatar className={classes.avatar} variant="rounded" />
+                    </Box>
+                    <Box>
+                      <Typography
+                        style={{ marginLeft: "15px", marginTop: "10px" }}
+                      >
+                        {playlistName}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-          <br />
-          {playlists.map((playlistName) => (
-            <Card fullWidth className={classes.cards}>
-              <CardContent style={{ marginBottom: "-10px" }}>
-                <Box display="flex" flexDirection="row">
-                  <Box>
-                    <Avatar className={classes.avatar} variant="rounded" />
-                  </Box>
-                  <Box>
-                    <Typography
-                      style={{ marginLeft: "15px", marginTop: "10px" }}
-                    >
-                      {playlistName}
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          ))}
         </div>
-      </Container>
+        </Container>
+      </div>
     );
   }
 };

@@ -18,8 +18,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import backgroundWhite from "../media/background_white.png";
-
 import Loading from "../components/loading";
 import Logout from "../components/logout";
 import MusicController from "../components/musiccontroller";
@@ -104,95 +102,91 @@ const Playlist = (props) => {
     return <Loading />;
   } else {
     return (
-      <Container component="main" disableGutters={true} maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.root}>
-          <div style={{ width: "200px", height: "100px" }}>
-            {/* Background */}
-            <img
-              alt="complex"
-              src={backgroundWhite}
-              className={classes.backgroundImg}
-            />
-          </div>
-          <AppBar>
-            <Toolbar className={classes.toolbar}>
-              <Button
-                onClick={() => history.push("/groupmenu")}
-                startIcon={<ArrowBackIosIcon className={classes.back} />}
-              ></Button>
-              <Typography variant="h5" className={classes.heading}>
-                Playlist
-              </Typography>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  setOpenConfirmLogout(!openConfirmLogout);
-                }}
-                className={classes.logout}
-              >
-                Logout
-              </Button>
-              <div style={{ position: "absolute" }}>
-                <Logout
-                  open={openConfirmLogout}
-                  setOpen={setOpenConfirmLogout}
-                />
-              </div>
-            </Toolbar>
-          </AppBar>
-          <div>
-            <center>
-              <Avatar className={classes.playlistAvatar} variant="rounded" />
-            </center>
-            <center>
-              <Typography className={classes.contributors}>
-                Contributors:
-                {
-                  " Ryan Bello, Mohammad Abualhassan, Dennis Kuzminer, Chris Zheng, Calvin Liang"
-                }
-              </Typography>
-            </center>
-          </div>
-          <div className={classes.songContainer}>
-            {songs.map((song, i) => (
-              <div
-                className={classes.cards}
-                key={i}
-                onClick={() => handleSongChange(song)}
-              >
-                <CardContent style={{ marginBottom: "-10px" }}>
-                  <Box display="flex" flexDirection="row">
-                    <Box>
-                      <Avatar
-                        className={classes.albumCover}
-                        variant="rounded"
-                      />
+      <div className={classes.body}>
+        <Container component="main" disableGutters={true} maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.root}>
+            <div style={{ width: "200px", height: "100px" }}>
+            </div>
+            <AppBar>
+              <Toolbar className={classes.toolbar}>
+                <Button
+                  onClick={() => history.push("/groupmenu")}
+                  startIcon={<ArrowBackIosIcon className={classes.back} />}
+                ></Button>
+                <Typography variant="h5" className={classes.heading}>
+                  Playlist
+                </Typography>
+                <Button
+                  color="inherit"
+                  onClick={() => {
+                    setOpenConfirmLogout(!openConfirmLogout);
+                  }}
+                  className={classes.logout}
+                >
+                  Logout
+                </Button>
+                <div style={{ position: "absolute" }}>
+                  <Logout
+                    open={openConfirmLogout}
+                    setOpen={setOpenConfirmLogout}
+                  />
+                </div>
+              </Toolbar>
+            </AppBar>
+            <div>
+              <center>
+                <Avatar className={classes.playlistAvatar} variant="rounded" />
+              </center>
+              <center>
+                <Typography className={classes.contributors}>
+                  Contributors:
+                  {
+                    " Ryan Bello, Mohammad Abualhassan, Dennis Kuzminer, Chris Zheng, Calvin Liang"
+                  }
+                </Typography>
+              </center>
+            </div>
+            <div className={classes.songContainer}>
+              {songs.map((song, i) => (
+                <div
+                  className={classes.cards}
+                  key={i}
+                  onClick={() => handleSongChange(song)}
+                >
+                  <CardContent style={{ marginBottom: "-10px" }}>
+                    <Box display="flex" flexDirection="row">
+                      <Box>
+                        <Avatar
+                          className={classes.albumCover}
+                          variant="rounded"
+                        />
+                      </Box>
+                      <Box>
+                        <Typography style={{ marginLeft: "15px" }}>
+                          {song.title}
+                        </Typography>
+                        <Typography className={classes.artist}>
+                          {song.artist}
+                        </Typography>
+                      </Box>
                     </Box>
-                    <Box>
-                      <Typography style={{ marginLeft: "15px" }}>
-                        {song.title}
-                      </Typography>
-                      <Typography className={classes.artist}>
-                        {song.artist}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </CardContent>
-                {/* <Divider style={{ opacity: "100%" }}></Divider> */}
-              </div>
-            ))}
+                  </CardContent>
+                  {/* <Divider style={{ opacity: "100%" }}></Divider> */}
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: "50px" }} onClick={handleExpandPlayer}>
+              <MusicController
+                expanded={expandPlayer}
+                setExpanded={setExpandPlayer}
+                currentSong={currentSong}
+                setCurrentSong={setCurrentSong}
+              />
+            </div>
           </div>
-          <div style={{ marginTop: "50px" }} onClick={handleExpandPlayer}>
-            <MusicController
-              expanded={expandPlayer}
-              setExpanded={setExpandPlayer}
-              currentSong={currentSong}
-              setCurrentSong={setCurrentSong}
-            />
-          </div>
-        </div>
-      </Container>
+        </Container>
+      </div>
     );
   }
 };

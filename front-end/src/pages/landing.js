@@ -22,10 +22,15 @@ import Loading from "../components/loading";
 //  This is the styles for material ui elements
 const styles = (theme) => ({
   // backgroundColor: theme.palette.background.paper,
+  body: {
+  backgroundSize: "100%",
+  background: `url(${backgroundLight})`,
+  backgroundRepeat: "repeat",
+  height: "100%",
+  },
   root: {
     padding: theme.spacing(4),
     borderRadius: "8px",
-    backgroundSize: "contain",
   },
   aboutLinkContainer: {
     marginTop: "-20px",
@@ -70,7 +75,6 @@ const styles = (theme) => ({
     top: "20px",
   },
   footerContainer: {
-    margin: "0 -5%",
     display: "flex",
   },
   footerLinkContainer: {
@@ -128,28 +132,21 @@ const styles = (theme) => ({
     height: "70px",
   },
   logoHeading: {
-    color: theme.palette.secondary.dark,
+    color: theme.palette.primary.main,
     textAlign: "center",
     fontWeight: 900,
     fontSize: "50px",
   },
   login: {
-    display: "block",
-    marginLeft: "auto",
-    marginRight: "auto",
-    width: "80%",
+    display: "flex",
     fontSize: "15px",
     fontWeight: 1000,
-    maxWidth: "80%",
+    maxWidth: "100%",
     opacity: "80%",
+    justifyContent: "space-around",
   },
   spotifyLogo: {
-    width: "17%",
-    left: "0%",
-    marginTop: "3%",
-    opacity: "70%",
-    zIndex: "100",
-    marginRight: "-14px",
+    opacity: "70%", 
   },
   spotifyButtonText: {
     float: "right",
@@ -191,103 +188,76 @@ const Landing = (props) => {
     return <Loading />;
   } else {
     return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.root}>
-          <div className={classes.landingContainer}>
-            {/* This is the container for the landing screen part of this page, 
-            that is, what you will see upon loading*/}
-            <div>
-              {/* Background*/}
-              <img
-                alt="complex"
-                src={backgroundLight}
-                className={classes.backgroundImg}
-              />
-            </div>
-            {/* Logo */}
-            <div className={classes.logoContainer}>
-              <Box className={classes.logoBox}>
-                <Box>
-                  <img
-                    className={classes.logoImage}
-                    alt="synthesize logo"
-                    src={s_circle_dark}
-                  />
-                </Box>
-                <Box className={classes.logoTextBox}>
-                  {/* styles for the box containing the logo text */}
-                  <Typography variant="h2" className={classes.logoHeading}>
-                    {/* styles for the text itself */}
-                    ynthesize
-                  </Typography>
-                </Box>
-              </Box>
-            </div>
-            {/* Login Button with Spotify */}
-            <div className={classes.buttonContainer}>
-              {/*this container is used for spacing purposes */}
-              <div>
-                {/*Some more styling may need to be done here later*/}
-                <Button
-                  variant="contained"
-                  fullWidth
-                  onClick={handleSpotifyRedirect}
-                  className={classes.login}
-                >
-                  <img
-                    alt=""
-                    src={spotifyLogo}
-                    className={classes.spotifyLogo}
-                  />
-                  <div className={classes.spotifyButtonText}>
-                    {spotifyRedirect ? (
-                      <Redirect to="/placeholder" />
-                    ) : (
-                      "Login with Spotify"
-                    )}
-                  </div>
-                </Button>
-                <br />
-                <Button
-                  fullWidth
-                  onClick={handleGuestRedirect}
-                  className={classes.login}
-                >
-                  {guestRedirect ? (
-                    <Redirect to="/guest" />
-                  ) : (
-                    "Continue as guest"
-                  )}
-                </Button>
-              </div>
-            </div>
+      <div className={classes.body}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.root}>
+            <div className={classes.landingContainer}>
+              {/* This is the container for the landing screen part of this page, 
+              that is, what you will see upon loading*/}
 
-            <div className={classes.aboutLinkContainer}>
-              <center>
-                <Link
-                  activeClass="active"
-                  to="About"
-                  spy={true}
-                  smooth={true}
-                  duration={600}
-                >
-                  <div style={{ margin: "3px" }}>
-                    <Typography variant="h6" className={classes.downText}>
-                      What is Synthesize?
+              {/* Logo */}
+              <div className={classes.logoContainer}>
+                <Box className={classes.logoBox}>
+                  <Box>
+                    <img
+                      className={classes.logoImage}
+                      alt="synthesize logo"
+                      src={s_circle_dark}
+                    />
+                  </Box>
+                  <Box className={classes.logoTextBox}>
+                    {/* styles for the box containing the logo text */}
+                    <Typography variant="h2" className={classes.logoHeading}>
+                      {/* styles for the text itself */}
+                      ynthesize
                     </Typography>
-                  </div>
-                </Link>
-              </center>
+                  </Box>
+                </Box>
+              </div>
 
-              {/* Down Arrow Button that pushes the page down using custom <Link> element from react-scroll */}
-              <center>
-                <Button
-                  className={classes.downArrow}
-                  color="primary"
-                  size="large"
-                  fullWidth
-                >
+              {/* Login Button with Spotify */}
+              <div className={classes.buttonContainer}>
+                {/*this container is used for spacing purposes */}
+                <div>
+                  {/*Some more styling may need to be done here later*/}
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    onClick={handleSpotifyRedirect}
+                    className={classes.login}
+                  >
+                    <img
+                      width="50px"
+                      alt=""
+                      src={spotifyLogo}
+                      className={classes.spotifyLogo}
+                    />
+                    <div className={classes.spotifyButtonText}>
+                      {spotifyRedirect ? (
+                        <Redirect to="/placeholder" />
+                      ) : (
+                        "Login with Spotify"
+                      )}
+                    </div>
+                  </Button>
+                  <br />
+                  <Button
+                    fullWidth
+                    onClick={handleGuestRedirect}
+                    className={classes.login}
+                  >
+                    {guestRedirect ? (
+                      <Redirect to="/guest" />
+                    ) : (
+                      "Continue as guest"
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <div className={classes.aboutLinkContainer}>
+                <center>
                   <Link
                     activeClass="active"
                     to="About"
@@ -296,98 +266,124 @@ const Landing = (props) => {
                     duration={600}
                   >
                     <div style={{ margin: "3px" }}>
-                      <ArrowDownwardOutlinedIcon />
+                      <Typography variant="h6" className={classes.downText}>
+                        What is Synthesize?
+                      </Typography>
                     </div>
                   </Link>
-                </Button>
-              </center>
-            </div>
-          </div>
+                </center>
 
-          {/*This is where the landing page ends, and the about us page starts*/}
-          {/* Shows info cards about the app */}
-          <div id="About">
-            <div>
-              <br />
-              {/* The cards will be displayed using custom <VisibilitySensor> element from react-visibility-sensor
-          This will check if the cards are in the viewport  */}
-              <VisibilitySensor partialVisibility={true}>
-                {({ isVisible }) => (
-                  <div>
-                    {/* This is some dummy code  */}
-                    <div>{setShowCards(isVisible)}</div>
-                    <div style={{ opacity: "0%" }}>
-                      I am {isVisible ? "visible" : "invisible"}
-                    </div>
-                    {/* Custom <Fade> component from react-reveal */}
-                    {/* **spy is the rerender display prop** */}
-                    <Fade
-                      bottom
-                      cascade={true}
-                      spy={showCards}
-                      mountOnEnter
-                      unmountOnExit={false}
-                      // delay={40}
+                {/* Down Arrow Button that pushes the page down using custom <Link> element from react-scroll */}
+                <center>
+                  <Button
+                    className={classes.downArrow}
+                    color="primary"
+                    size="large"
+                    fullWidth
+                  >
+                    <Link
+                      activeClass="active"
+                      to="About"
+                      spy={true}
+                      smooth={true}
+                      duration={600}
                     >
-                      <Card fullWidth className={classes.cards}>
-                        <CardContent>
-                          <Typography
-                            variant="h6"
-                            className={classes.cardHeading}
-                          >
-                            <b>Combine Music</b>
-                          </Typography>
-                          <Divider style={{ margin: "2%" }}></Divider>
-                          <Typography>
-                            Synthesize is a platform for finding music that both
-                            you and your friends can enjoy listening to
-                            together! You could just listen alone, but with
-                            Synthesize, you can invite your friends to join your
-                            playlists too.
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                      <br />
-                      <Card fullWidth className={classes.cards}>
-                        <CardContent>
-                          <Typography
-                            variant="h6"
-                            className={classes.cardHeading}
-                          >
-                            <b>Get Recommendations</b>
-                          </Typography>
-                          <Divider style={{ margin: "2%" }}></Divider>
-                          <Typography>
-                            Get music recommendations that you and your friends
-                            will all enjoy.
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                      <br />
-                      <Card fullWidth className={classes.cards}>
-                        <CardContent>
-                          <Typography
-                            variant="h6"
-                            className={classes.cardHeading}
-                          >
-                            <b>Sync With Spotify</b>
-                          </Typography>
-                          <Divider style={{ margin: "2%" }}></Divider>
-                          <Typography>
-                            Login in with your Spotify account. No need to make
-                            a account. Be able to listen in-app and export
-                            playlist back into your Spotify.
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Fade>
-                  </div>
-                )}
-              </VisibilitySensor>
-              <br />
+                      <div style={{ margin: "3px" }}>
+                        <ArrowDownwardOutlinedIcon />
+                      </div>
+                    </Link>
+                  </Button>
+                </center>
+              </div>
+            </div>
+
+            {/*This is where the landing page ends, and the about us page starts*/}
+            {/* Shows info cards about the app */}
+            <div id="About">
+              <div>
+                <br />
+                {/* The cards will be displayed using custom <VisibilitySensor> element from react-visibility-sensor
+            This will check if the cards are in the viewport  */}
+                <VisibilitySensor partialVisibility={true}>
+                  {({ isVisible }) => (
+                    <div>
+                      {/* This is some dummy code  */}
+                      <div>{setShowCards(isVisible)}</div>
+                      <div style={{ opacity: "0%" }}>
+                        I am {isVisible ? "visible" : "invisible"}
+                      </div>
+                      {/* Custom <Fade> component from react-reveal */}
+                      {/* **spy is the rerender display prop** */}
+                      <Fade
+                        bottom
+                        cascade={true}
+                        spy={showCards}
+                        mountOnEnter
+                        unmountOnExit={false}
+                        // delay={40}
+                      >
+                        <Card fullWidth className={classes.cards}>
+                          <CardContent>
+                            <Typography
+                              variant="h6"
+                              className={classes.cardHeading}
+                            >
+                              <b>Combine Music</b>
+                            </Typography>
+                            <Divider style={{ margin: "2%" }}></Divider>
+                            <Typography>
+                              Synthesize is a platform for finding music that both
+                              you and your friends can enjoy listening to
+                              together! You could just listen alone, but with
+                              Synthesize, you can invite your friends to join your
+                              playlists too.
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                        <br />
+                        <Card fullWidth className={classes.cards}>
+                          <CardContent>
+                            <Typography
+                              variant="h6"
+                              className={classes.cardHeading}
+                            >
+                              <b>Get Recommendations</b>
+                            </Typography>
+                            <Divider style={{ margin: "2%" }}></Divider>
+                            <Typography>
+                              Get music recommendations that you and your friends
+                              will all enjoy.
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                        <br />
+                        <Card fullWidth className={classes.cards}>
+                          <CardContent>
+                            <Typography
+                              variant="h6"
+                              className={classes.cardHeading}
+                            >
+                              <b>Sync With Spotify</b>
+                            </Typography>
+                            <Divider style={{ margin: "2%" }}></Divider>
+                            <Typography>
+                              Login in with your Spotify account. No need to make
+                              a account. Be able to listen in-app and export
+                              playlist back into your Spotify.
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      </Fade>
+                    </div>
+                  )}
+                </VisibilitySensor>
+                <br />
+              </div>
             </div>
           </div>
-        </div>
+        </Container>
+
+        {/* Footer */}
         <div className={classes.footerContainer}>
           <AppBar position="static" fullWidth className={classes.footer}>
             <Toolbar>
@@ -448,7 +444,7 @@ const Landing = (props) => {
             </div>
           </AppBar>
         </div>
-      </Container>
+      </div>
     );
   }
 };
