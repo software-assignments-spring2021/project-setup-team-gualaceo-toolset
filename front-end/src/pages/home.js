@@ -99,7 +99,7 @@ const Home = (props) => {
 
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
 
-  const playlists = [
+  const groups = [
     {
       name: "Work Buddies",
       owner: true,
@@ -256,7 +256,7 @@ const Home = (props) => {
             </Accordion>
           </div>
           <br />
-          {playlists.map((group) => (
+          {groups.map((group) => (
             <Card fullWidth className={classes.cards}>
               <CardContent style={{ marginBottom: "-10px" }}>
                 <Box className={classes.groupBox}>
