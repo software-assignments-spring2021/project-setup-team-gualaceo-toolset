@@ -26,7 +26,7 @@ const GroupMenuGuest = (props) => {
     console.log("You've clicked on view all members");
   };
   const handleViewPlaylist = () => {
-    history.push("/generatedPlaylist");
+    history.push("/generatedPlaylistGuest");
   };
 
   useEffect(() => {
@@ -60,15 +60,7 @@ const GroupMenuGuest = (props) => {
               <Typography className={classes.heading}>
                 Group ID: {groupID}
               </Typography>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  setOpenConfirmLogout(!openConfirmLogout);
-                }}
-                className={classes.logout}
-              >
-                Logout
-              </Button>
+              
               <div style={{ position: "absolute" }}>
                 <Dialog
                   open={openConfirmLogout}
