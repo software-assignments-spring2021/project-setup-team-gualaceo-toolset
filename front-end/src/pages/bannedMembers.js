@@ -60,7 +60,7 @@ const BannedMembers = (props) => {
                   startIcon={<ArrowBackIosIcon className={classes.back} />}
                 ></Button>
                 <Typography variant="h5" className={classes.heading}>
-                  Member List
+                  Banned Members
                 </Typography>
               </Toolbar>
             </AppBar>
