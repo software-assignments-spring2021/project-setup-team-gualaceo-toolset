@@ -4,7 +4,7 @@ import landing from "./pages/landing";
 import placeholder from "./pages/placeholder";
 import home from "./pages/home";
 import guest from "./pages/guest";
-import groupMenu from "./pages/groupMenu";
+import groupMenu from "./pages/groupmenu";
 import generatedPlaylist from "./pages/generatedPlaylist";
 import addMyMusic from "./pages/addMyMusic";
 import members from "./pages/members.js";
