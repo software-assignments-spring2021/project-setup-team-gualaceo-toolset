@@ -8,6 +8,7 @@ import groupmenu from "./pages/groupmenu";
 import generatedPlaylist from "./pages/generatedPlaylist";
 import addMyMusic from "./pages/addMyMusic";
 import members from "./pages/members.js";
+import bannedMembers from "./pages/bannedMembers.js";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             component={generatedPlaylist}
           />
           <Route exact path="/addMyMusic" component={addMyMusic} />
+          <Route exact path="/bannedMembers" component={bannedMembers} />
           <Route exact path="/members" component={members} />
         </Switch>
       </div>

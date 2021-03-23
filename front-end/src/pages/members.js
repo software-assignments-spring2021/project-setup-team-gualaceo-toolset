@@ -5,12 +5,10 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { Typography, Card, CardContent} from "@material-ui/core";
+import { Typography, Card, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 
 import backgroundWhite from "../media/background_white.png";
-
-// import { Redirect } from "react-router-dom";
 
 import Loading from "../components/loading";
 
@@ -81,12 +79,12 @@ const Members = (props) => {
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const memberlist = [
-    {name:"Ryan B", owner:false, self:false},
-    {name:"Alexa H", owner:true, self:false},
-    {name:"Dennis K", owner:false, self:false},
-    {name:"Chris Z", owner:false, self:false},
-    {name:"Calvin L", owner:false, self:false},
-    {name:"Mo L", owner:false, self:true},
+    { name: "Ryan B", owner: false, self: false },
+    { name: "Alexa H", owner: true, self: false },
+    { name: "Dennis K", owner: false, self: false },
+    { name: "Chris Z", owner: false, self: false },
+    { name: "Calvin L", owner: false, self: false },
+    { name: "Mo L", owner: false, self: true },
   ];
 
   useEffect(() => {
@@ -101,8 +99,7 @@ const Members = (props) => {
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.root}>
-            <div style={{ width: "200px", height: "70px" }}>
-            </div>
+            <div style={{ width: "200px", height: "70px" }}></div>
             <AppBar>
               <Toolbar className={classes.toolbar}>
                 <Button
@@ -115,7 +112,10 @@ const Members = (props) => {
               </Toolbar>
             </AppBar>
             {memberlist.map((member) => (
-              <Card fullWidth className={member.owner ? classes.cardsALT : classes.cards}>
+              <Card
+                fullWidth
+                className={member.owner ? classes.cardsALT : classes.cards}
+              >
                 <CardContent style={{ marginBottom: "-10px" }}>
                   <Box display="flex" flexDirection="row">
                     <Box>
@@ -125,14 +125,14 @@ const Members = (props) => {
                       <Typography
                         style={{ marginLeft: "15px", marginTop: "10px" }}
                       >
-                        {member.self?"You":member.name}
+                        {member.self ? "You" : member.name}
                       </Typography>
                     </Box>
                     <Box>
                       <Typography
-                      style={{marginLeft:"200px",fontSize:"10px"}}
+                        style={{ marginLeft: "200px", fontSize: "10px" }}
                       >
-                        {member.owner?"O":""}
+                        {member.owner ? "O" : ""}
                       </Typography>
                     </Box>
                   </Box>
