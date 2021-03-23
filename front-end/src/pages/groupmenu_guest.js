@@ -23,7 +23,7 @@ const GroupMenuGuest = (props) => {
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
 
   const handleViewAllMembers = () => {
-    console.log("You've clicked on view all members");
+    history.push("/membersGuest");
   };
   const handleViewPlaylist = () => {
     history.push("/generatedPlaylistGuest");
