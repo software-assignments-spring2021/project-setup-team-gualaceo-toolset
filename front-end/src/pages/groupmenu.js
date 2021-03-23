@@ -10,6 +10,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import addNotification from 'react-push-notification';
 import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
 import styles from "../styles/groupmenuStyles.js"
@@ -30,6 +31,19 @@ const GroupMenu = (props) => {
   };
   const handleViewPlaylist = () => {
     history.push("/playlist");
+  };
+
+  const handleTestNotification = () => {
+
+    
+    let notifMessage = 'A user within the group ' + groupName + ' has requested that you generate/regenerate the playlist for that group'
+    addNotification({
+      title: 'User requested new playlist generation',
+      subtitle: 'New playlist request',
+      message: notifMessage,
+      theme: 'darkblue',
+      native: true,
+    });
   };
 
   useEffect(() => {
@@ -147,6 +161,18 @@ const GroupMenu = (props) => {
               </Typography>
             </CardContent>
           </Card>
+          <Card
+            fullWidth
+            className={classes.cards}
+            onClick={handleTestNotification}
+          >
+            <CardContent style={{ marginBottom: "-10px" }}>
+              <Typography className={classes.cardText}>
+                <center>Test Notifications (not intended for final product)</center>
+              </Typography>
+            </CardContent>
+          </Card>
+
         </div>
       </Container>
     );
