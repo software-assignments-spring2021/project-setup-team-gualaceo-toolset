@@ -26,7 +26,7 @@ const GroupMenuGuest = (props) => {
     history.push("/membersGuest");
   };
   const handleViewPlaylist = () => {
-    history.push("/generatedPlaylistGuest");
+    history.push("/generatedPlaylist/guest");
   };
 
   useEffect(() => {

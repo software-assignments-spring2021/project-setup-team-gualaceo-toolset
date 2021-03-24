@@ -72,6 +72,9 @@ const styles = (theme) => ({
     display: "flex",
     justifyContent: "space-between",
   },
+  removeButtonContainer: {
+    width: "60px",
+  },
 });
 
 export default styles;
