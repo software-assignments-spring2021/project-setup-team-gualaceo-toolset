@@ -25,6 +25,11 @@ const styles = (theme) => ({
     objectFit: "cover",
     zIndex: "-1",
   },
+  buttonContainer: {
+    margin: "5px 5px 20px 5px",
+    display: "flex",
+    justifyContent: "center",
+  },
   cards: {
     top: "10%",
     backgroundColor: "#fff",

@@ -28,11 +28,17 @@ import styles from "../styles/generatedPlaylistStyles";
 
 const Playlist = (props) => {
   let history = useHistory();
+  const { match: { params } } = props;
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [expandPlayer, setExpandPlayer] = useState(false);
   const [currentSong, setCurrentSong] = useState("");
+  let [isOwner, setIsOwner] = useState(params.userStatus === 'owner'); //params.userStatus is whatever comes after /generatedPlaylist/ in the url
+
+  const handleAddMusic = () => {
+    console.log("Take to add music page")
+  }
 
   const songs = [
     {
@@ -155,6 +161,13 @@ const Playlist = (props) => {
             </center>
           </div>
           <div className={classes.songContainer}>
+            {isOwner && 
+              <div className={classes.buttonContainer}>
+                <Button variant="contained" color="primary">
+                  Add music
+                </Button>
+              </div>
+            }
             {songs.map((song, i) => (
               <div
                 className={classes.cards}

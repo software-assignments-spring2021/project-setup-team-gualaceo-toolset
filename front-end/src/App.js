@@ -37,6 +37,11 @@ const App = () => {
             path="/generatedPlaylist"
             component={generatedPlaylist}
           />
+          <Route
+            exact
+            path="/generatedPlaylist/:userStatus"
+            component={generatedPlaylist}
+          />
           <Route exact path = "/generatedPlaylistGuest" component = {generatedPlaylistGuest} />
           <Route exact path="/addMyMusic" component={addMyMusic} />
           <Route exact path="/bannedMembers" component={bannedMembers} />
