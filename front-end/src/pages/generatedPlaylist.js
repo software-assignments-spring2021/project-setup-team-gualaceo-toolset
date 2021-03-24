@@ -17,6 +17,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import IconButton from "@material-ui/core/IconButton";
+import RemoveIcon from '@material-ui/icons/Remove';
 
 import backgroundWhite from "../media/background_white.png";
 
@@ -40,7 +42,7 @@ const Playlist = (props) => {
     console.log("Take to add music page")
   }
 
-  const songs = [
+  const startSongs = [
     {
       artist: "Aphex Twin",
       title: "Xtal",
@@ -86,6 +88,26 @@ const Playlist = (props) => {
       title: "Guillotine",
     },
   ];
+
+  const [songs, setSongs] = useState(startSongs)
+
+  const handleRemoveSong = (delIndex, event) => {
+    event.stopPropagation() //Prevents song from opening when remove button is pressed
+
+    console.log("removing song with key ", delIndex)
+
+    let newSongs = []; //create a new array with every element except for the one we want to delete
+    let curIndex = 0
+    songs.forEach((song, i) => {
+      if (i !== delIndex){ //will not concatenate the element at the specified "delete index"
+        newSongs[curIndex] = song
+        curIndex++
+      }
+    }) 
+
+    setSongs(newSongs) //this will cause the page to rerender, with the song deleted
+  }
+
 
   useEffect(() => {
     setuiLoading(false);
@@ -175,20 +197,25 @@ const Playlist = (props) => {
                 onClick={() => handleSongChange(song)}
               >
                 <CardContent style={{ marginBottom: "-10px" }}>
-                  <Box display="flex" flexDirection="row">
+                  <Box display="flex" flexDirection="row" justifyContent="space-between">
                     <Box>
                       <Avatar
                         className={classes.albumCover}
                         variant="rounded"
                       />
                     </Box>
-                    <Box>
-                      <Typography style={{ marginLeft: "15px" }}>
+                    <Box className={classes.songDetails}>
+                      <Typography className={classes.songTitle}>
                         {song.title}
                       </Typography>
                       <Typography className={classes.artist}>
                         {song.artist}
                       </Typography>
+                    </Box>
+                    <Box>
+                      <IconButton className={classes.button} color = "primary" onClick={(event) => handleRemoveSong(i, event)}>
+                        <RemoveIcon color = 'secondary' />
+                      </IconButton>
                     </Box>
                   </Box>
                 </CardContent>
