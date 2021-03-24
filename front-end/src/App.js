@@ -5,7 +5,7 @@ import placeholder from "./pages/placeholder";
 import home from "./pages/home";
 import guest from "./pages/guest";
 import { Notifications } from "react-push-notification";
-import groupMenu from "./pages/groupMenu";
+import groupMenu from "./pages/groupmenu";
 import groupMenuGuest from "./pages/groupmenu_guest";
 import generatedPlaylist from "./pages/generatedPlaylist";
 import addMyMusic from "./pages/addMyMusic";
