@@ -113,7 +113,7 @@ const GeneratedPlaylistGuest = (props) => {
           <AppBar>
             <Toolbar className={classes.toolbar}>
               <Button
-                onClick={() => history.push("/groupMenuGuest")}
+                onClick={() => history.push("/groupMenuGuest/generated")}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
               <Typography variant="h5" className={classes.heading}>
