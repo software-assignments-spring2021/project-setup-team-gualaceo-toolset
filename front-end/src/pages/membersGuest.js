@@ -7,8 +7,10 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
+
 import Loading from "../components/loading";
-import styles from "../styles/members.js";
+
+import styles from "../styles/membersStyles.js";
 
 const MembersGuest = (props) => {
   let history = useHistory();

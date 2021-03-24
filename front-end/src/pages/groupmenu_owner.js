@@ -33,7 +33,7 @@ const GroupMenuOwner = (props) => {
     history.push("/membersOwner")
   };
   const handleViewPlaylist = () => {
-    history.push("/generatedPlaylist");
+    history.push("/generatedPlaylist/owner");
   };
   const handleGeneratePlaylist = () => {
     setPlaylistGenerated(true)

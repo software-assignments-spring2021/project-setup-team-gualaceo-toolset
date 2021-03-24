@@ -4,7 +4,7 @@ import landing from "./pages/landing";
 import placeholder from "./pages/placeholder";
 import home from "./pages/home";
 import guest from "./pages/guest";
-import { Notifications } from 'react-push-notification';
+import { Notifications } from "react-push-notification";
 import groupmenu from "./pages/groupmenu";
 import groupMenuGuest from "./pages/groupmenu_guest";
 import groupMenuOwner from "./pages/groupmenu_owner";
@@ -15,6 +15,7 @@ import membersGuest from "./pages/membersGuest.js";
 import membersOwner from "./pages/membersOwner.js";
 import bannedMembers from "./pages/bannedMembers.js";
 import generatedPlaylistGuest from "./pages/generatedPlaylistGuest";
+import addSongs from "./pages/addSongs";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         <Notifications />
         <Switch>
           <Route exact path="/" component={landing} />
+          <Route exact path="/addSongs" component={addSongs}/>
           <Route exact path="/placeholder" component={placeholder} />
           <Route exact path="/home" component={home} />
           <Route exact path="/guest" component={guest} />
@@ -48,9 +50,9 @@ const App = () => {
           <Route exact path="/members" component={members} />
           <Route exact path="/membersGuest" component={membersGuest} />
           <Route exact path="/membersOwner" component={membersOwner} />
-        </Switch>
+         </Switch>
       </div>
     </Router>
   );
-}
+};
 export default App;

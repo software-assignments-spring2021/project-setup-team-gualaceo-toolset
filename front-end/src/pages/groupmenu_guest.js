@@ -4,15 +4,13 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { Typography, Card, CardContent, Divider } from "@material-ui/core";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import { Typography, Card, CardContent } from "@material-ui/core";
+
 import backgroundWhite from "../media/background_white.png";
+
 import Loading from "../components/loading";
-import styles from "../styles/groupmenuStyles.js"
+
+import styles from "../styles/groupmenuStyles";
 
 const GroupMenuGuest = (props) => {
   let history = useHistory();
@@ -22,7 +20,6 @@ const GroupMenuGuest = (props) => {
   const [uiLoading, setuiLoading] = useState(true);
   const [groupID, setGroupID] = useState("");
   const [groupName, setGroupName] = useState("");
-  const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [playlistGenerated, setPlaylistGenerated] = useState(false);
 
   const handleViewAllMembers = () => {
@@ -89,39 +86,6 @@ const GroupMenuGuest = (props) => {
               <Typography className={classes.heading}>
                 Group ID: {groupID}
               </Typography>
-              
-              <div style={{ position: "absolute" }}>
-                <Dialog
-                  open={openConfirmLogout}
-                  onClose={() => {
-                    setOpenConfirmLogout(false);
-                  }}
-                  disableBackdropClick={false}
-                >
-                  <DialogTitle id="alert-dialog-title">{"Logout?"}</DialogTitle>
-
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Are you sure you want to logout?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      onClick={() => setOpenConfirmLogout(false)}
-                      color="primary"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={() => history.push("/")}
-                      color="primary"
-                      autoFocus
-                    >
-                      Logout
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </div>
             </Toolbar>
           </AppBar>
           <Card fullWidth className={classes.cards}>

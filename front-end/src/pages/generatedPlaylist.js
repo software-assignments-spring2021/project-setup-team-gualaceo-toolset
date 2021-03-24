@@ -1,32 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
 import Avatar from "@material-ui/core/avatar";
-import Accordion from "@material-ui/core/Accordion";
-import TextField from "@material-ui/core/TextField";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { Typography, Card, CardContent, Divider } from "@material-ui/core";
+import { Typography, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import IconButton from "@material-ui/core/IconButton";
-import RemoveIcon from '@material-ui/icons/Remove';
 
 import backgroundWhite from "../media/background_white.png";
 
 import Loading from "../components/loading";
 import Logout from "../components/logout";
 import MusicController from "../components/musiccontroller";
-
+import IconButton from '@material-ui/core/IconButton';
+import RemoveIcon from '@material-ui/icons/Remove';
 import styles from "../styles/generatedPlaylistStyles";
+
 
 const Playlist = (props) => {
   let history = useHistory();
@@ -39,7 +29,16 @@ const Playlist = (props) => {
   let [isOwner, setIsOwner] = useState(params.userStatus === 'owner'); //params.userStatus is whatever comes after /generatedPlaylist/ in the url
 
   const handleAddMusic = () => {
-    console.log("Take to add music page")
+    console.log("add songs")
+    history.push("/addSongs")
+  }
+
+  const handleGoBack = () => {
+    if(isOwner){
+      history.push("/groupMenuOwner")
+    } else {
+     history.push("/groupmenu")
+    }
   }
 
   const startSongs = [
@@ -146,7 +145,7 @@ const Playlist = (props) => {
           <AppBar>
             <Toolbar className={classes.toolbar}>
               <Button
-                onClick={() => history.push("/groupmenu")}
+                onClick={handleGoBack}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
               <Typography variant="h5" className={classes.heading}>
@@ -185,7 +184,7 @@ const Playlist = (props) => {
           <div className={classes.songContainer}>
             {isOwner && 
               <div className={classes.buttonContainer}>
-                <Button variant="contained" color="primary">
+                <Button variant="contained" color="primary" onClick={handleAddMusic}>
                   Add music
                 </Button>
               </div>
@@ -212,11 +211,13 @@ const Playlist = (props) => {
                         {song.artist}
                       </Typography>
                     </Box>
-                    <Box>
-                      <IconButton className={classes.button} color = "primary" onClick={(event) => handleRemoveSong(i, event)}>
-                        <RemoveIcon color = 'secondary' />
-                      </IconButton>
-                    </Box>
+                    {isOwner &&
+                      <Box>
+                        <IconButton className={classes.button} color = "primary" onClick={(event) => handleRemoveSong(i, event)}>
+                          <RemoveIcon color = 'secondary' />
+                        </IconButton>
+                      </Box>
+                    }
                   </Box>
                 </CardContent>
                 {/* <Divider style={{ opacity: "100%" }}></Divider> */}

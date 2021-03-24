@@ -8,7 +8,7 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import Loading from "../components/loading";
-import styles from "../styles/members.js";
+import styles from "../styles/membersStyles";
 import members from "./members";
 
 const MembersOwner = (props) => {
