@@ -7,8 +7,10 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
+
 import Loading from "../components/loading";
-import styles from "../styles/members.js";
+
+import styles from "../styles/membersStyles";
 
 const Members = (props) => {
   let history = useHistory();
@@ -39,7 +41,7 @@ const Members = (props) => {
             <AppBar>
               <Toolbar className={classes.toolbar}>
                 <Button
-                  onClick={() => history.push("/placeholder")}
+                  onClick={() => history.push("/groupMenu")}
                   startIcon={<ArrowBackIosIcon className={classes.back} />}
                 ></Button>
                 <Typography variant="h5" className={classes.heading}>

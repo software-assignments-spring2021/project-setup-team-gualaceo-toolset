@@ -1,22 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
 import Avatar from "@material-ui/core/avatar";
-import Accordion from "@material-ui/core/Accordion";
-import TextField from "@material-ui/core/TextField";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { Typography, Card, CardContent, Divider } from "@material-ui/core";
+import { Typography, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 
 import backgroundWhite from "../media/background_white.png";
 

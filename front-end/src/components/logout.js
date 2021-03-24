@@ -1,6 +1,6 @@
 import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
-// import CssBaseline from "@material-ui/core/CssBaseline";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -10,22 +10,15 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { useHistory } from "react-router-dom";
 
-const styles = (theme) => ({
-  logout: {
-    color: theme.palette.secondary.contrastText,
-  },
-  toolbar: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-});
+const styles = (theme) => ({});
 
 const Logout = (props) => {
   const [open, setOpen] = [props.open, props.setOpen];
   let history = useHistory();
-  const { classes } = props;
+  // const { classes } = props;
   return (
     <Container>
+      <CssBaseline />
       <Dialog open={open} disableBackdropClick={false}>
         <DialogTitle id="alert-dialog-title">{"Logout?"}</DialogTitle>
         <DialogContent>

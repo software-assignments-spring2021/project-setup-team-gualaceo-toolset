@@ -5,7 +5,7 @@ import placeholder from "./pages/placeholder";
 import home from "./pages/home";
 import guest from "./pages/guest";
 import { Notifications } from "react-push-notification";
-import groupmenu from "./pages/groupmenu";
+import groupMenu from "./pages/groupMenu";
 import groupMenuGuest from "./pages/groupmenu_guest";
 import generatedPlaylist from "./pages/generatedPlaylist";
 import addMyMusic from "./pages/addMyMusic";
@@ -25,7 +25,7 @@ const App = () => {
           <Route exact path="/placeholder" component={placeholder} />
           <Route exact path="/home" component={home} />
           <Route exact path="/guest" component={guest} />
-          <Route exact path="/groupmenu" component={groupmenu} />
+          <Route exact path="/groupMenu" component={groupMenu} />
           <Route exact path="/groupMenuGuest" component={groupMenuGuest} />
           <Route
             exact
