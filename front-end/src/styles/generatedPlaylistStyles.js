@@ -11,7 +11,7 @@ const styles = (theme) => ({
     borderRadius: "8px",
   },
   artist: {
-    marginLeft: "15px",
+    alignText: "center",
     fontSize: "12.5px",
     color: theme.palette.primary.main,
   },
@@ -24,6 +24,11 @@ const styles = (theme) => ({
     height: "100%",
     objectFit: "cover",
     zIndex: "-1",
+  },
+  buttonContainer: {
+    margin: "5px 5px 20px 5px",
+    display: "flex",
+    justifyContent: "center",
   },
   cards: {
     top: "10%",
@@ -48,6 +53,19 @@ const styles = (theme) => ({
     flexShrink: 0,
     flexGrow: 0,
     borderRadius: "8px",
+  },
+  songTitle: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    alignText: "center",
+  },
+  songDetails: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    alignText: "center",
   },
   songContainer: { marginTop: "30px" },
   toolbar: {

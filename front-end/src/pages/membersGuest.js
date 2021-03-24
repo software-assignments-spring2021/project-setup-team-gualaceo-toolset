@@ -12,7 +12,7 @@ import Loading from "../components/loading";
 
 import styles from "../styles/membersStyles.js";
 
-const Members = (props) => {
+const MembersGuest = (props) => {
   let history = useHistory();
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
@@ -41,7 +41,7 @@ const Members = (props) => {
             <AppBar>
               <Toolbar className={classes.toolbar}>
                 <Button
-                  onClick={() => history.push("/groupMenu")}
+                  onClick={() => history.push("/groupMenuGuest")}
                   startIcon={<ArrowBackIosIcon className={classes.back} />}
                 ></Button>
                 <Typography variant="h5" className={classes.heading}>
@@ -84,4 +84,4 @@ const Members = (props) => {
   }
 };
 
-export default withStyles(styles)(Members);
+export default withStyles(styles)(MembersGuest);
