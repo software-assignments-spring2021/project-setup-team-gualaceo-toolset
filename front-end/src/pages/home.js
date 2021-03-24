@@ -27,14 +27,40 @@ const Home = (props) => {
 
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
 
-  const playlists = [
-    "Work Buddies",
-    "Alexa's Party",
-    "Gaming Friends",
-    "Grandma's House",
-    "Grandpa's House",
-    "Josh's Party",
+  const groups = [
+    {
+      name: "Work Buddies",
+      owner: true,
+      generationRequested: true,
+    },
+    {
+      name: "Alexa's Party",
+      owner: false,
+      generationRequested: true,
+    },
+    {
+      name: "Gaming Friends",
+      owner: true,
+      generationRequested: false,
+    },
+    {
+      name: "Grandma's House",
+      owner: false,
+      generationRequested: false,
+    },
+    {
+      name: "Grandpa's House",
+      owner: false,
+      generationRequested: false,
+    },
+    {
+      name: "Josh's Party",
+      owner: false,
+      generationRequested: false,
+    },
   ];
+
+  
 
   useEffect(() => {
     setuiLoading(false);
@@ -137,10 +163,10 @@ const Home = (props) => {
             </Accordion>
           </div>
           <br />
-          {playlists.map((playlistName) => (
+          {groups.map((group) => (
             <Card fullWidth className={classes.cards}>
               <CardContent style={{ marginBottom: "-10px" }}>
-                <Box display="flex" flexDirection="row">
+                <Box className={classes.groupBox}>
                   <Box>
                     <Avatar className={classes.avatar} variant="rounded" />
                   </Box>
@@ -148,8 +174,12 @@ const Home = (props) => {
                     <Typography
                       style={{ marginLeft: "15px", marginTop: "10px" }}
                     >
-                      {playlistName}
+                      {group.name}
                     </Typography>
+                  </Box>
+                  <Box className={classes.playlistInfo}>
+                    <IsOwner group={group} classes={classes}/>
+                    <RegenerateRequested group={group} classes={classes}/>
                   </Box>
                 </Box>
               </CardContent>
@@ -160,5 +190,33 @@ const Home = (props) => {
     );
   }
 };
+
+const IsOwner = (props) => {
+  if (props.group.owner === true){
+    return (
+      <div className={props.classes.owner}>
+        Owner
+      </div>
+    );
+  } else {
+    return (
+      <div className={props.classes.owner}></div>
+    );
+  }
+}
+
+const RegenerateRequested = (props) => {
+  if (props.group.generationRequested === true){
+    return (
+      <div className={props.classes.generateRequested}>
+        Playlist generation requested
+      </div>
+    );
+  } else {
+    return (
+      <div className={props.classes.generateRequested}></div>
+    );
+  }
+}
 
 export default withStyles(styles)(Home);

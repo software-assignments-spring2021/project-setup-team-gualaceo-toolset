@@ -46,6 +46,24 @@ const styles = (theme) => ({
     display: "flex",
     justifyContent: "space-between",
   },
+  playlistInfo: {
+    display: "flex",
+    width: "30%",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    textAlign: "right",
+  },
+  groupBox: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  owner: {
+    color: theme.palette.secondary.main,
+  },
+  generateRequested:{
+    fontSize: "10px",
+    color: theme.palette.primary.main,
+  }
 });
 
 export default styles;
