@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
-import {
-  Typography,
-  Card,
-  CardContent,
-  Divider,
-  DialogTitle,
-} from "@material-ui/core";
+import { Typography, DialogTitle } from "@material-ui/core";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
 import Avatar from "@material-ui/core/avatar";
 import Box from "@material-ui/core/Box";
 import Slider from "@material-ui/core/Slider";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import Slide from "@material-ui/core/Slide";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -28,9 +21,9 @@ const TransitionUp = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const TransitionDown = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="down" ref={ref} {...props} />;
-});
+// const TransitionDown = React.forwardRef(function Transition(props, ref) {
+//   return <Slide direction="down" ref={ref} {...props} />;
+// });
 
 const CollapsedSlider = withStyles({
   root: {
@@ -97,6 +90,7 @@ const MusicController = (props) => {
     if (currentSong) {
       return (
         <div style={{ position: "fixed", bottom: 0, width: "100%" }}>
+          <CssBaseline />
           <CollapsedSlider
             value={currentTime}
             max={duration}

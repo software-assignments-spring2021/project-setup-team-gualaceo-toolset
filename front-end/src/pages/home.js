@@ -12,66 +12,13 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 
 import backgroundWhite from "../media/background_white.png";
 
 import Loading from "../components/loading";
-// import Logout from "../components/logout";
+import Logout from "../components/logout";
 
-const styles = (theme) => ({
-  root: {
-    padding: theme.spacing(2),
-    backgroundSize: "contain",
-  },
-  accordion: {
-    marginTop: "10px",
-    boxShadow: "0 8px 18px -12px rgba(0,0,0,0.3)",
-    borderRadius: "10px",
-    top: "10%",
-    border: "0px solid rgba(0, 0, 0, .125)",
-  },
-  avatar: {
-    height: 50,
-    width: 40,
-    flexShrink: 0,
-    flexGrow: 0,
-    borderRadius: "8px",
-  },
-  back: { color: theme.palette.secondary.main },
-  backgroundImg: {
-    position: "absolute",
-    width: "100%",
-    left: "0%",
-    top: "0%",
-    height: "100%",
-    objectFit: "cover",
-    zIndex: "-1",
-  },
-  cards: {
-    marginTop: "10px",
-    boxShadow: "0 8px 18px -12px rgba(0,0,0,0.3)",
-    "&:hover": {
-      boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
-    },
-    top: "10%",
-  },
-  heading: {
-    // marginRight: "auto",
-    // marginLeft: "-20px",
-    color: theme.palette.secondary.main,
-    fontWeight: "900",
-  },
-  logout: { color: theme.palette.secondary.contrastText },
-  toolbar: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-});
+import styles from "../styles/homeStyles";
 
 const Home = (props) => {
   let history = useHistory();
@@ -95,7 +42,7 @@ const Home = (props) => {
 
   const handleJoin = () => {
     // if (isValidID) {
-    history.push("/groupmenu");
+    history.push("/groupMenu");
 
     // }
   };
@@ -134,35 +81,10 @@ const Home = (props) => {
                 Logout
               </Button>
               <div style={{ position: "absolute" }}>
-                <Dialog
+                <Logout
                   open={openConfirmLogout}
-                  onClose={() => {
-                    setOpenConfirmLogout(false);
-                  }}
-                  disableBackdropClick={false}
-                >
-                  <DialogTitle id="alert-dialog-title">{"Logout?"}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Are you sure you want to logout?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      onClick={() => setOpenConfirmLogout(false)}
-                      color="primary"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={() => history.push("/")}
-                      color="primary"
-                      autoFocus
-                    >
-                      Logout
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+                  setOpen={setOpenConfirmLogout}
+                />
               </div>
             </Toolbar>
           </AppBar>
