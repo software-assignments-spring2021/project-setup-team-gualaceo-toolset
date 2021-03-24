@@ -30,7 +30,7 @@ const GroupMenuOwner = (props) => {
     console.log("You've clicked on view all music");
   };
   const handleViewAllMembers = () => {
-    console.log("You've clicked on view all members");
+    history.push("/membersOwner")
   };
   const handleViewPlaylist = () => {
     history.push("/generatedPlaylist");

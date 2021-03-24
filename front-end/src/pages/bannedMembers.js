@@ -56,7 +56,7 @@ const BannedMembers = (props) => {
             <AppBar>
               <Toolbar className={classes.toolbar}>
                 <Button
-                  onClick={() => history.push("/members")}
+                  onClick={() => history.push("/membersOwner")}
                   startIcon={<ArrowBackIosIcon className={classes.back} />}
                 ></Button>
                 <Typography variant="h5" className={classes.heading}>
