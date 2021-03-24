@@ -26,6 +26,7 @@ const App = () => {
           <Route exact path="/home" component={home} />
           <Route exact path="/guest" component={guest} />
           <Route exact path="/groupmenu" component={groupmenu} />
+          <Route exact path="/groupmenu/:playlistGenerated" component= {groupmenu}/>
           <Route exact path="/groupMenuGuest" component= {groupMenuGuest}/>
           <Route exact path="/groupMenuGuest/:playlistGenerated" component= {groupMenuGuest}/>
           <Route exact path="/groupMenuOwner" component ={groupMenuOwner}/>

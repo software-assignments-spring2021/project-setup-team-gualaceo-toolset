@@ -17,11 +17,15 @@ import styles from "../styles/groupmenuStyles.js"
 
 const GroupMenu = (props) => {
   let history = useHistory();
+  let playlistCard;
+  const { match: { params } } = props;
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [groupID, setGroupID] = useState("");
   const [groupName, setGroupName] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
+  const [playlistGenerated, setPlaylistGenerated] = useState(false);
+
 
   const handleViewAllMusic = () => {
     console.log("You've clicked on view all music");
@@ -30,7 +34,13 @@ const GroupMenu = (props) => {
     console.log("You've clicked on view all members");
   };
   const handleViewPlaylist = () => {
-    history.push("/playlist");
+    history.push("/generatedPlaylist");
+  };
+
+  const handleGenerateRequest = () => {
+    console.log("playlist generate request made")
+    //When we implement the backend, this should send a notification
+    //to the owner of the group.
   };
 
   const handleTestNotification = () => {
@@ -51,7 +61,33 @@ const GroupMenu = (props) => {
     setGroupID("#4529-9915");
     setGroupName("Alexa's Party");
     setuiLoading(false);
+    if (params.playlistGenerated === "generated"){ //If the route '/groupMenuOwner/generated' is accessed
+      setPlaylistGenerated(true)
+    }
   }, []);
+
+  if(playlistGenerated) { // Determines whether to show the user "view generated playlist" or "generate playlist"
+    playlistCard = (
+      <Card fullWidth className={classes.cards} onClick={handleViewPlaylist}>
+        <CardContent style={{ marginBottom: "-10px" }}>
+          <Typography className={classes.cardText}>
+            <center>View Generated Playlist</center>
+          </Typography>
+        </CardContent>
+      </Card>
+    )
+  } else {
+    playlistCard = (
+      <Card fullWidth className={classes.cards}>
+        <CardContent style={{ marginBottom: "-10px" }}>
+          <Typography className={classes.cardText} onClick = {handleGenerateRequest}>
+            <center>Request Playlist generation (append '/generated' to url to simulate owner generating new playlist)</center>
+          </Typography>
+        </CardContent>
+      </Card>
+    )
+  
+  }
 
   if (uiLoading === true) {
     return <Loading />;
@@ -150,28 +186,8 @@ const GroupMenu = (props) => {
               </Typography>
             </CardContent>
           </Card>
-          <Card
-            fullWidth
-            className={classes.cards}
-            onClick={handleViewPlaylist}
-          >
-            <CardContent style={{ marginBottom: "-10px" }}>
-              <Typography className={classes.cardText}>
-                <center>View Generated Playlist</center>
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card
-            fullWidth
-            className={classes.cards}
-            onClick={handleTestNotification}
-          >
-            <CardContent style={{ marginBottom: "-10px" }}>
-              <Typography className={classes.cardText}>
-                <center>Test Notifications (not intended for final product)</center>
-              </Typography>
-            </CardContent>
-          </Card>
+          {playlistCard}
+          
 
         </div>
       </Container>
