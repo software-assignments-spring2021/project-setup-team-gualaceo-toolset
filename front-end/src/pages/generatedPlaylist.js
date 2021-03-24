@@ -13,18 +13,35 @@ import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
 import Logout from "../components/logout";
 import MusicController from "../components/musiccontroller";
-
+import IconButton from '@material-ui/core/IconButton';
+import RemoveIcon from '@material-ui/icons/Remove';
 import styles from "../styles/generatedPlaylistStyles";
+
 
 const Playlist = (props) => {
   let history = useHistory();
+  const { match: { params } } = props;
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [expandPlayer, setExpandPlayer] = useState(false);
   const [currentSong, setCurrentSong] = useState("");
+  let [isOwner, setIsOwner] = useState(params.userStatus === 'owner'); //params.userStatus is whatever comes after /generatedPlaylist/ in the url
 
-  const songs = [
+  const handleAddMusic = () => {
+    console.log("add songs")
+    history.push("/addSongs")
+  }
+
+  const handleGoBack = () => {
+    if(isOwner){
+      history.push("/groupMenuOwner")
+    } else {
+     history.push("/groupmenu")
+    }
+  }
+
+  const startSongs = [
     {
       artist: "Aphex Twin",
       title: "Xtal",
@@ -71,6 +88,26 @@ const Playlist = (props) => {
     },
   ];
 
+  const [songs, setSongs] = useState(startSongs)
+
+  const handleRemoveSong = (delIndex, event) => {
+    event.stopPropagation() //Prevents song from opening when remove button is pressed
+
+    console.log("removing song with key ", delIndex)
+
+    let newSongs = []; //create a new array with every element except for the one we want to delete
+    let curIndex = 0
+    songs.forEach((song, i) => {
+      if (i !== delIndex){ //will not concatenate the element at the specified "delete index"
+        newSongs[curIndex] = song
+        curIndex++
+      }
+    }) 
+
+    setSongs(newSongs) //this will cause the page to rerender, with the song deleted
+  }
+
+
   useEffect(() => {
     setuiLoading(false);
   }, []);
@@ -108,7 +145,7 @@ const Playlist = (props) => {
           <AppBar>
             <Toolbar className={classes.toolbar}>
               <Button
-                onClick={() => history.push("/groupmenu")}
+                onClick={handleGoBack}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
               <Typography variant="h5" className={classes.heading}>
@@ -145,6 +182,13 @@ const Playlist = (props) => {
             </center>
           </div>
           <div className={classes.songContainer}>
+            {isOwner && 
+              <div className={classes.buttonContainer}>
+                <Button variant="contained" color="primary" onClick={handleAddMusic}>
+                  Add music
+                </Button>
+              </div>
+            }
             {songs.map((song, i) => (
               <div
                 className={classes.cards}
@@ -152,21 +196,28 @@ const Playlist = (props) => {
                 onClick={() => handleSongChange(song)}
               >
                 <CardContent style={{ marginBottom: "-10px" }}>
-                  <Box display="flex" flexDirection="row">
+                  <Box display="flex" flexDirection="row" justifyContent="space-between">
                     <Box>
                       <Avatar
                         className={classes.albumCover}
                         variant="rounded"
                       />
                     </Box>
-                    <Box>
-                      <Typography style={{ marginLeft: "15px" }}>
+                    <Box className={classes.songDetails}>
+                      <Typography className={classes.songTitle}>
                         {song.title}
                       </Typography>
                       <Typography className={classes.artist}>
                         {song.artist}
                       </Typography>
                     </Box>
+                    {isOwner &&
+                      <Box>
+                        <IconButton className={classes.button} color = "primary" onClick={(event) => handleRemoveSong(i, event)}>
+                          <RemoveIcon color = 'secondary' />
+                        </IconButton>
+                      </Box>
+                    }
                   </Box>
                 </CardContent>
                 {/* <Divider style={{ opacity: "100%" }}></Divider> */}

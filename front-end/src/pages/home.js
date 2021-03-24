@@ -47,6 +47,10 @@ const Home = (props) => {
     // }
   };
 
+  const handleCreate = () => {
+    history.push("/groupMenuOwner")
+  }
+
   if (uiLoading === true) {
     return <Loading />;
   } else {
@@ -105,7 +109,7 @@ const Home = (props) => {
                 />
               </AccordionDetails>
               <AccordionDetails style={{ marginTop: "-10px" }}>
-                <Button variant="outlined" fullWidth>
+                <Button variant="outlined" fullWidth onClick={handleCreate}>
                   Create
                 </Button>
               </AccordionDetails>

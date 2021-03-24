@@ -14,10 +14,13 @@ import styles from "../styles/groupmenuStyles";
 
 const GroupMenuGuest = (props) => {
   let history = useHistory();
+  let playlistCard;
+  const { match: { params } } = props;
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [groupID, setGroupID] = useState("");
   const [groupName, setGroupName] = useState("");
+  const [playlistGenerated, setPlaylistGenerated] = useState(false);
 
   const handleViewAllMembers = () => {
     history.push("/membersGuest");
@@ -31,7 +34,33 @@ const GroupMenuGuest = (props) => {
     setGroupID("#4529-9915");
     setGroupName("Alexa's Party");
     setuiLoading(false);
+    if (params.playlistGenerated === "generated"){ //If the route '/groupMenuOwner/generated' is accessed
+      setPlaylistGenerated(true)
+    }
   }, []);
+
+  if(playlistGenerated) { // Determines whether to show the user "view generated playlist" or "generate playlist"
+    playlistCard = (
+      <Card fullWidth className={classes.cards} onClick={handleViewPlaylist}>
+        <CardContent style={{ marginBottom: "-10px" }}>
+          <Typography className={classes.cardText}>
+            <center>View Generated Playlist</center>
+          </Typography>
+        </CardContent>
+      </Card>
+    )
+  } else {
+    playlistCard = (
+      <Card fullWidth className={classes.cards}>
+        <CardContent style={{ marginBottom: "-10px" }}>
+          <Typography className={classes.cardText}>
+            <center>No playlist generated yet (append /generated to url)</center>
+          </Typography>
+        </CardContent>
+      </Card>
+    )
+  
+  }
 
   if (uiLoading === true) {
     return <Loading />;
@@ -77,17 +106,7 @@ const GroupMenuGuest = (props) => {
               </Typography>
             </CardContent>
           </Card>
-          <Card
-            fullWidth
-            className={classes.cards}
-            onClick={handleViewPlaylist}
-          >
-            <CardContent style={{ marginBottom: "-10px" }}>
-              <Typography className={classes.cardText}>
-                <center>View Generated Playlist</center>
-              </Typography>
-            </CardContent>
-          </Card>
+          {playlistCard}
         </div>
       </Container>
     );

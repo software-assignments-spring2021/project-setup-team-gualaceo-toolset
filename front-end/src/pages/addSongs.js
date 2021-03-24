@@ -100,7 +100,7 @@ const AddSongs = (props) => {
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
             <Button
-              onClick={() => history.push("/placeholder")}
+              onClick={() => history.push("/generatedPlaylist/owner")}
               startIcon={<ArrowBackIosIcon className={classes.back} />}
             ></Button>
             <Typography variant="h5" className={classes.heading}>

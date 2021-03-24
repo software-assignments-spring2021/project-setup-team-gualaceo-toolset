@@ -10,7 +10,7 @@ import Box from "@material-ui/core/Box";
 
 import Loading from "../components/loading";
 
-import styles from "../styles/membersStyles";
+import styles from "../styles/membersStyles.js";
 
 const MembersGuest = (props) => {
   let history = useHistory();

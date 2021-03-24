@@ -5,13 +5,15 @@ import placeholder from "./pages/placeholder";
 import home from "./pages/home";
 import guest from "./pages/guest";
 import { Notifications } from "react-push-notification";
-import groupMenu from "./pages/groupmenu";
+import groupmenu from "./pages/groupmenu";
 import groupMenuGuest from "./pages/groupmenu_guest";
+import groupMenuOwner from "./pages/groupmenu_owner";
 import generatedPlaylist from "./pages/generatedPlaylist";
 import addMyMusic from "./pages/addMyMusic";
-import members from "./pages/members";
-import membersGuest from "./pages/membersGuest";
-import bannedMembers from "./pages/bannedMembers";
+import members from "./pages/members.js";
+import membersGuest from "./pages/membersGuest.js";
+import membersOwner from "./pages/membersOwner.js";
+import bannedMembers from "./pages/bannedMembers.js";
 import generatedPlaylistGuest from "./pages/generatedPlaylistGuest";
 import addSongs from "./pages/addSongs";
 
@@ -22,11 +24,16 @@ const App = () => {
         <Notifications />
         <Switch>
           <Route exact path="/" component={landing} />
+          <Route exact path="/addSongs" component={addSongs}/>
           <Route exact path="/placeholder" component={placeholder} />
           <Route exact path="/home" component={home} />
           <Route exact path="/guest" component={guest} />
-          <Route exact path="/groupMenu" component={groupMenu} />
-          <Route exact path="/groupMenuGuest" component={groupMenuGuest} />
+          <Route exact path="/groupmenu" component={groupmenu} />
+          <Route exact path="/groupmenu/:playlistGenerated" component= {groupmenu}/>
+          <Route exact path="/groupMenuGuest" component= {groupMenuGuest}/>
+          <Route exact path="/groupMenuGuest/:playlistGenerated" component= {groupMenuGuest}/>
+          <Route exact path="/groupMenuOwner" component ={groupMenuOwner}/>
+          <Route exact path="/groupMenuOwner/:playlistGenerated" component= {groupMenuOwner}/>
           <Route
             exact
             path="/generatedPlaylist"
@@ -34,15 +41,16 @@ const App = () => {
           />
           <Route
             exact
-            path="/generatedPlaylistGuest"
-            component={generatedPlaylistGuest}
+            path="/generatedPlaylist/:userStatus"
+            component={generatedPlaylist}
           />
+          <Route exact path = "/generatedPlaylistGuest" component = {generatedPlaylistGuest} />
           <Route exact path="/addMyMusic" component={addMyMusic} />
           <Route exact path="/bannedMembers" component={bannedMembers} />
           <Route exact path="/members" component={members} />
           <Route exact path="/membersGuest" component={membersGuest} />
-          <Route exact path="/addSongs" component={addSongs} />
-        </Switch>
+          <Route exact path="/membersOwner" component={membersOwner} />
+         </Switch>
       </div>
     </Router>
   );

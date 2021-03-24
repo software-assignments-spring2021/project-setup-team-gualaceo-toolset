@@ -37,21 +37,22 @@ const styles = (theme) => ({
       zIndex: "-1",
     },
     cards: {
+      display: "flex",
+      justifyContent: "space-between",
       marginTop: "10px",
-      boxShadow: "0 8px 18px -12px rgba(0,0,0,0.3)",
-      "&:hover": {
-        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
-      },
       top: "10%",
+      
+    },
+    kickBanContainer: {
+      display: "flex",
+      justifyContent: "center",
     },
     cardsALT: {
+      display: "flex",
+      justifyContent: "space-between",
       backgroundColor: theme.palette.primary.dark,
       color: theme.palette.secondary.light,
       marginTop: "10px",
-      boxShadow: "0 8px 18px -12px rgba(0,0,0,0.3)",
-      "&:hover": {
-        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
-      },
       top: "10%",
     },
     heading: {
@@ -60,6 +61,31 @@ const styles = (theme) => ({
       color: theme.palette.secondary.main,
       fontWeight: "900",
     },
+
+    member: {
+      display: "flex",
+      justifyContent: "space-between",
+    },
+
+    mainContainer: {
+      width: "100%",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center"
+    },
+    mainCard: {
+      width: "100%",
+      height: "100%",
+    },
+    button: {
+      margin: "4px",
+    },
+    ownerIndicator: {
+      alignSelf: "flex-start",
+    },
+    banButton: {
+      color: theme.palette.secondary.contrastText
+    }
   });
 
   export default styles

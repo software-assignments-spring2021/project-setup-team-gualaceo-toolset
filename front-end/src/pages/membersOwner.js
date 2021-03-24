@@ -7,23 +7,34 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
-
 import Loading from "../components/loading";
+import styles from "../styles/membersStyles";
+import members from "./members";
 
-import styles from "../styles/membersStyles.js";
-
-const Members = (props) => {
+const MembersOwner = (props) => {
   let history = useHistory();
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const memberlist = [
     { name: "Ryan B", owner: false, self: false },
-    { name: "Alexa H", owner: true, self: false },
+    { name: "Alexa H", owner: true, self: true },
     { name: "Dennis K", owner: false, self: false },
     { name: "Chris Z", owner: false, self: false },
     { name: "Calvin L", owner: false, self: false },
-    { name: "Mo L", owner: false, self: true },
+    { name: "Mo L", owner: false, self: false },
   ];
+
+  const handleBan = (member) => {
+    console.log(member.name + " is banned")
+  }
+
+  const handleKick = (member) => {
+    console.log(member.name + " has been kicked")
+  }
+
+  const goToBanList = () => {
+    history.push("/bannedMembers")
+  }
 
   useEffect(() => {
     setuiLoading(false);
@@ -41,12 +52,15 @@ const Members = (props) => {
             <AppBar>
               <Toolbar className={classes.toolbar}>
                 <Button
-                  onClick={() => history.push("/groupMenu")}
+                  onClick={() => history.push("/groupMenuOwner")}
                   startIcon={<ArrowBackIosIcon className={classes.back} />}
                 ></Button>
                 <Typography variant="h5" className={classes.heading}>
                   Member List
                 </Typography>
+                <Button className={classes.banButton} onClick={goToBanList}>
+                  View Ban List
+                </Button>
               </Toolbar>
             </AppBar>
             {memberlist.map((member) => (
@@ -54,28 +68,56 @@ const Members = (props) => {
                 fullWidth
                 className={member.owner ? classes.cardsALT : classes.cards}
               >
-                <CardContent style={{ marginBottom: "-10px" }}>
-                  <Box display="flex" flexDirection="row">
+                <CardContent className={classes.mainCard}>
+                  <div className={classes.mainContainer}>
                     <Box>
                       <Avatar className={classes.avatar} variant="rounded" />
                     </Box>
                     <Box>
                       <Typography
-                        style={{ marginLeft: "15px", marginTop: "10px" }}
                       >
                         {member.self ? "You" : member.name}
                       </Typography>
                     </Box>
-                    <Box>
-                      <Typography
-                        style={{ marginLeft: "200px", fontSize: "10px" }}
-                      >
-                        {member.owner ? "O" : ""}
-                      </Typography>
+                    
+                    <Box className={classes.kickBanContainer}>
+                      {!member.owner &&
+                        <div>
+                            <Button
+                              className={classes.button}
+                              color="primary"
+                              size="small"
+                              variant="contained"
+                              onClick={() => handleKick(member)}
+                            >
+                              <Typography color="secondary">Kick</Typography>
+                            </Button>
+                          <Box>
+                            <Button
+                              className={classes.button}
+                              color="primary"
+                              size="small"
+                              variant="contained"
+                              onClick={() => handleBan(member)}
+                            >
+                              <Typography color="secondary">Ban</Typography>
+                            </Button>
+                          </Box>
+                        </div>
+                      }
                     </Box>
-                  </Box>
+                    {member.owner && 
+                      <Box>
+                        <Typography className={classes.ownerIndicator}>
+                          O
+                        </Typography>
+                      </Box>
+                    }
+                    
+                  </div>
                 </CardContent>
               </Card>
+              
             ))}
           </div>
         </Container>
@@ -84,4 +126,4 @@ const Members = (props) => {
   }
 };
 
-export default withStyles(styles)(Members);
+export default withStyles(styles)(MembersOwner);
