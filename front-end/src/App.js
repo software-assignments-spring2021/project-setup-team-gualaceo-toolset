@@ -7,6 +7,7 @@ import guest from "./pages/guest";
 import { Notifications } from 'react-push-notification';
 import groupmenu from "./pages/groupmenu";
 import groupMenuGuest from "./pages/groupmenu_guest";
+import groupMenuOwner from "./pages/groupmenu_owner";
 import generatedPlaylist from "./pages/generatedPlaylist";
 import addMyMusic from "./pages/addMyMusic";
 import members from "./pages/members.js";
@@ -26,6 +27,8 @@ const App = () => {
           <Route exact path="/guest" component={guest} />
           <Route exact path="/groupmenu" component={groupmenu} />
           <Route exact path="/groupMenuGuest" component= {groupMenuGuest}/>
+          <Route exact path="/groupMenuOwner/:playlistGenerated" component= {groupMenuOwner}/>
+          <Route exact path="/groupMenuOwner" component ={groupMenuOwner}/>
           <Route
             exact
             path="/generatedPlaylist"
