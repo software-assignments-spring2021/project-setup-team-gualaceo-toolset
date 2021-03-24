@@ -24,9 +24,25 @@ const styles = (theme) => ({
     },
     top: "10%",
   },
+  flexCard: {
+    display: "flex",
+    flexDirection: "column",
+    marginTop: "10px",
+    boxShadow: "0 8px 18px -12px rgba(0,0,0,0.3)",
+    "&:hover": {
+      boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
+    },
+    top: "10%",
+    alignItems: "center",
+  },
   cardText: { marginLeft: "15px", margin: "10px" },
   heading: {
     color: theme.palette.secondary.main,
+  },
+  editContainer: {
+    color: theme.palette.primary.main,
+    display: "flex",
+    alignItems: "center",
   },
   logout: { color: theme.palette.secondary.contrastText },
   toolbar: {

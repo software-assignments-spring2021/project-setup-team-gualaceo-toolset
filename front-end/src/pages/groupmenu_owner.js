@@ -14,6 +14,7 @@ import addNotification from 'react-push-notification';
 import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
 import styles from "../styles/groupmenuStyles.js"
+import EdiText from 'react-editext'
 
 const GroupMenuOwner = (props) => {
   let history = useHistory();
@@ -152,10 +153,20 @@ const GroupMenuOwner = (props) => {
               </div>
             </Toolbar>
           </AppBar>
-          <Card fullWidth className={classes.cards}>
+          <Card fullWidth className={classes.flexCard}>
             <CardContent style={{ marginBottom: "-10px" }}>
-              <Typography className={classes.cardText}>
-                <center>Group Name: {groupName}</center>
+              <div>
+                Group Name:
+              </div>
+              <Typography className={classes.flexCard}>
+                
+                <div>
+                  <EdiText
+                    type="text"
+                    value={groupName}
+                    onSave={setGroupName}
+                  />
+                </div>
               </Typography>
             </CardContent>
           </Card>
@@ -167,7 +178,7 @@ const GroupMenuOwner = (props) => {
           >
             <CardContent style={{ marginBottom: "-10px" }}>
               <Typography className={classes.cardText}>
-                <center>View All Music</center>
+                <center>View/Edit All Music</center>
               </Typography>
             </CardContent>
           </Card>
@@ -178,7 +189,7 @@ const GroupMenuOwner = (props) => {
           >
             <CardContent style={{ marginBottom: "-10px" }}>
               <Typography className={classes.cardText}>
-                <center>View Members</center>
+                <center>View/Kick Members</center>
               </Typography>
             </CardContent>
           </Card>
