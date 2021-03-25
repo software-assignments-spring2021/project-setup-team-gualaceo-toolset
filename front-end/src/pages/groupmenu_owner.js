@@ -27,7 +27,8 @@ const GroupMenuOwner = (props) => {
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [playlistGenerated, setPlaylistGenerated] = useState(false);
   const handleViewAllMusic = () => {
-    console.log("You've clicked on view all music");
+    //console.log("You've clicked on view all music");
+    history.push("/viewMusicOwner")
   };
   const handleViewAllMembers = () => {
     history.push("/membersOwner")
@@ -38,6 +39,7 @@ const GroupMenuOwner = (props) => {
   const handleGeneratePlaylist = () => {
     setPlaylistGenerated(true)
   }
+  
 
   const handleTestNotification = () => {
 
