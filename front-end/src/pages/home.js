@@ -77,6 +77,10 @@ const Home = (props) => {
     history.push("/groupMenuOwner")
   }
 
+  const handleVisit = (pageLink) => {
+    history.push(pageLink)
+  }
+
   if (uiLoading === true) {
     return <Loading />;
   } else {
@@ -164,26 +168,7 @@ const Home = (props) => {
           </div>
           <br />
           {groups.map((group) => (
-            <Card fullWidth className={classes.cards}>
-              <CardContent style={{ marginBottom: "-10px" }}>
-                <Box className={classes.groupBox}>
-                  <Box>
-                    <Avatar className={classes.avatar} variant="rounded" />
-                  </Box>
-                  <Box>
-                    <Typography
-                      style={{ marginLeft: "15px", marginTop: "10px" }}
-                    >
-                      {group.name}
-                    </Typography>
-                  </Box>
-                  <Box className={classes.playlistInfo}>
-                    <IsOwner group={group} classes={classes}/>
-                    <RegenerateRequested group={group} classes={classes}/>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
+            <Group group={group} classes={classes} handleVisit={handleVisit} />
           ))}
         </div>
       </Container>
@@ -217,6 +202,40 @@ const RegenerateRequested = (props) => {
       <div className={props.classes.generateRequested}></div>
     );
   }
+}
+
+const Group = (props) => {
+  let group = props.group
+  let classes = props.classes
+  let handleVisit = props.handleVisit
+  console.log(group)
+  let pageLink = "/groupmenu"
+  if (group.owner){
+    pageLink = "/groupMenuOwner"
+  }
+  
+  return (
+  <Card fullWidth className={classes.cards}>
+    <CardContent style={{ marginBottom: "-10px" }} onClick={() => handleVisit(pageLink)}>
+      <Box className={classes.groupBox}>
+        <Box>
+          <Avatar className={classes.avatar} variant="rounded" />
+        </Box>
+        <Box>
+          <Typography
+            style={{ marginLeft: "15px", marginTop: "10px" }}
+          >
+            {group.name}
+          </Typography>
+        </Box>
+        <Box className={classes.playlistInfo}>
+          <IsOwner group={group} classes={classes}/>
+          <RegenerateRequested group={group} classes={classes}/>
+        </Box>
+      </Box>
+    </CardContent>
+  </Card>
+  )
 }
 
 export default withStyles(styles)(Home);
