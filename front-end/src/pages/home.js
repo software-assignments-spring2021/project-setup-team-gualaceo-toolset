@@ -99,7 +99,7 @@ const Home = (props) => {
           <AppBar>
             <Toolbar className={classes.toolbar}>
               <Button
-                onClick={() => history.push("/placeholder")}
+                onClick={() => history.push("/")}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
               <Typography variant="h5" className={classes.heading}>

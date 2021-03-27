@@ -103,7 +103,7 @@ const Landing = (props) => {
                   />
                   <div className={classes.spotifyButtonText}>
                     {spotifyRedirect ? (
-                      <Redirect to="/placeholder" />
+                      <Redirect to="/home" />
                     ) : (
                       "Login with Spotify"
                     )}
