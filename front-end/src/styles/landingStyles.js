@@ -107,7 +107,7 @@ const styles = (theme) => ({
     height: "70px",
   },
   logoHeading: {
-    color: theme.palette.secondary.dark,
+    color: theme.palette.primary.main,
     textAlign: "center",
     fontWeight: 900,
     fontSize: "50px",
