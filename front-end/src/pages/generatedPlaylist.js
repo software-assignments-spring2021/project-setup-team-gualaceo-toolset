@@ -27,7 +27,7 @@ const Playlist = (props) => {
   const [expandPlayer, setExpandPlayer] = useState(false);
   const [currentSong, setCurrentSong] = useState("");
   let [isOwner, setIsOwner] = useState(params.userStatus === 'owner'); //params.userStatus is whatever comes after /generatedPlaylist/ in the url
-
+  let [isGuest, setIsGuest] = useState(params.userStatus === 'guest')
   const handleAddMusic = () => {
     console.log("add songs")
     history.push("/addSongs")
@@ -35,9 +35,12 @@ const Playlist = (props) => {
 
   const handleGoBack = () => {
     if(isOwner){
-      history.push("/groupMenuOwner")
-    } else {
-     history.push("/groupmenu")
+      history.push("/groupMenuOwner/generated")
+    } else if (isGuest) {
+     history.push("/groupMenuGuest/generated")
+    }
+    else {
+      history.push("groupMenu/generated")
     }
   }
 
@@ -211,13 +214,13 @@ const Playlist = (props) => {
                         {song.artist}
                       </Typography>
                     </Box>
-                    {isOwner &&
-                      <Box>
+                    <Box className={classes.removeButtonContainer}>
+                      {isOwner &&
                         <IconButton className={classes.button} color = "primary" onClick={(event) => handleRemoveSong(i, event)}>
                           <RemoveIcon color = 'secondary' />
                         </IconButton>
-                      </Box>
-                    }
+                      }
+                    </Box>
                   </Box>
                 </CardContent>
                 {/* <Divider style={{ opacity: "100%" }}></Divider> */}

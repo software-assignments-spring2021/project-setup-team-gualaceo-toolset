@@ -14,8 +14,9 @@ import members from "./pages/members.js";
 import membersGuest from "./pages/membersGuest.js";
 import membersOwner from "./pages/membersOwner.js";
 import bannedMembers from "./pages/bannedMembers.js";
-import generatedPlaylistGuest from "./pages/generatedPlaylistGuest";
 import addSongs from "./pages/addSongs";
+import viewMusic from "./pages/viewMusic";
+import viewMusicOwner from "./pages/viewMusicOwner";
 
 const App = () => {
   return (
@@ -44,12 +45,13 @@ const App = () => {
             path="/generatedPlaylist/:userStatus"
             component={generatedPlaylist}
           />
-          <Route exact path = "/generatedPlaylistGuest" component = {generatedPlaylistGuest} />
           <Route exact path="/addMyMusic" component={addMyMusic} />
           <Route exact path="/bannedMembers" component={bannedMembers} />
           <Route exact path="/members" component={members} />
           <Route exact path="/membersGuest" component={membersGuest} />
           <Route exact path="/membersOwner" component={membersOwner} />
+          <Route exact path="/viewMusic" component={viewMusic} />
+          <Route exact path="/viewMusicOwner" component={viewMusicOwner} />
          </Switch>
       </div>
     </Router>

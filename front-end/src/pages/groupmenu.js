@@ -26,7 +26,8 @@ const GroupMenu = (props) => {
 
 
   const handleViewAllMusic = () => {
-    console.log("You've clicked on view all music");
+    //console.log("You've clicked on view all music");
+    history.push("/viewMusic");
   };
   const handleViewAllMembers = () => {
     history.push("/members");
