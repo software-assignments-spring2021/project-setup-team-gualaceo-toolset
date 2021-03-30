@@ -1,6 +1,6 @@
 //import and instantiate express
 const express = require("express")
-const app = expess()
+const app = express()
 
 //Server logic will go here
 
