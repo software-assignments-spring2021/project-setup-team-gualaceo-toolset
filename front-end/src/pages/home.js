@@ -12,6 +12,7 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
+import _ from "lodash";
 
 import backgroundWhite from "../media/background_white.png";
 
@@ -19,6 +20,8 @@ import Loading from "../components/loading";
 import Logout from "../components/logout";
 
 import styles from "../styles/homeStyles";
+
+import axios from "axios";
 
 const Home = (props) => {
   let history = useHistory();
@@ -60,10 +63,52 @@ const Home = (props) => {
     },
   ];
 
-  
+  const getParamValues = (url) => {
+    return url
+      .slice(1)
+      .split("&")
+      .reduce((prev, curr) => {
+        const [title, value] = curr.split("=");
+        prev[title] = value;
+        return prev;
+      }, {});
+  };
 
   useEffect(() => {
-    setuiLoading(false);
+    const { setExpiryTime, history, location } = props;
+    try {
+      if (_.isEmpty(location.hash)) {
+        return history.push("/");
+      }
+      const access_token = getParamValues(location.hash);
+      const expiryTime = new Date().getTime() + access_token.expires_in * 1000;
+      localStorage.setItem("params", JSON.stringify(access_token));
+      localStorage.setItem("expiry_time", expiryTime);
+    } catch (error) {
+      history.push("/");
+    }
+
+    const params = JSON.parse(localStorage.getItem("params"));
+    if (params) {
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${params.access_token}`;
+    }
+
+    // const authToken =
+    //   ; //localStorage.getItem("AuthToken");
+
+    axios({
+      method: "get",
+      url: "https://api.spotify.com/v1/me/playlists",
+    })
+      .then((res) => {
+        console.log(res);
+        setuiLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   const handleJoin = () => {
@@ -74,8 +119,8 @@ const Home = (props) => {
   };
 
   const handleCreate = () => {
-    history.push("/groupMenuOwner")
-  }
+    history.push("/groupMenuOwner");
+  };
 
   if (uiLoading === true) {
     return <Loading />;
@@ -178,8 +223,8 @@ const Home = (props) => {
                     </Typography>
                   </Box>
                   <Box className={classes.playlistInfo}>
-                    <IsOwner group={group} classes={classes}/>
-                    <RegenerateRequested group={group} classes={classes}/>
+                    <IsOwner group={group} classes={classes} />
+                    <RegenerateRequested group={group} classes={classes} />
                   </Box>
                 </Box>
               </CardContent>
@@ -192,31 +237,23 @@ const Home = (props) => {
 };
 
 const IsOwner = (props) => {
-  if (props.group.owner === true){
-    return (
-      <div className={props.classes.owner}>
-        Owner
-      </div>
-    );
+  if (props.group.owner === true) {
+    return <div className={props.classes.owner}>Owner</div>;
   } else {
-    return (
-      <div className={props.classes.owner}></div>
-    );
+    return <div className={props.classes.owner}></div>;
   }
-}
+};
 
 const RegenerateRequested = (props) => {
-  if (props.group.generationRequested === true){
+  if (props.group.generationRequested === true) {
     return (
       <div className={props.classes.generateRequested}>
         Playlist generation requested
       </div>
     );
   } else {
-    return (
-      <div className={props.classes.generateRequested}></div>
-    );
+    return <div className={props.classes.generateRequested}></div>;
   }
-}
+};
 
 export default withStyles(styles)(Home);
