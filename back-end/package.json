@@ -2,9 +2,10 @@
   "name": "back-end",
   "version": "1.0.0",
   "description": "Synthesize back-end",
-  "main": "server.js",
+  "main": "nodemon server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devStart": "nodemon server.js" 
   },
   "author": "",
   "license": "ISC",
