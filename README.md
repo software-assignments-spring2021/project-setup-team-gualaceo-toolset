@@ -28,6 +28,8 @@ You can find out more information on the developers' roles and how to contribute
 
 #### Instructions for Building and Testing
 
+#### Front-end
+
 In order to run the front end code, do the following:
 (Must have Node.js installed)
 
@@ -37,3 +39,15 @@ In order to run the front end code, do the following:
 - After, run _npm start_
 - localhost will open in your default browser. Open DevTools
 - In the top left corner of DevTools, click on _Toggle Device Toolbar_ and choose the device you'd like to view the project on (I use the Pixel 2 view).
+
+#### Back-end
+
+To build the back-end code:
+
+- run _cd back-end_ from the root directory
+- run _npm install_
+
+To run the back-end:
+
+- Run _nodemon server_, or, if that doesn't work, _npm run devStart_.
+- Press Ctrl+C to stop the server.
