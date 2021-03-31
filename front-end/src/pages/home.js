@@ -22,7 +22,7 @@ import Logout from "../components/logout";
 import styles from "../styles/homeStyles";
 
 import axios from "axios";
-import set_authentication from "../components/authentication.js"
+import {set_authentication, get_bearer} from "../components/authentication.js"
 
 const Home = (props) => {
   let history = useHistory();
@@ -96,7 +96,7 @@ const Home = (props) => {
       ] = `Bearer ${auth_data.access_token}`;
     }*/
 
-    set_authentication(localStorage, axios) //sets authentication in axios
+    //set_authentication(localStorage, axios) //sets authentication in axios
 
     // const authToken =
     //   ; //localStorage.getItem("AuthToken");

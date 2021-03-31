@@ -8,7 +8,7 @@ import { Typography, Card, CardContent } from "@material-ui/core";
 import addNotification from "react-push-notification";
 import backgroundWhite from "../media/background_white.png";
 import axios from "axios";
-import set_authentication from "../components/authentication.js"
+import {set_authentication, get_bearer} from "../components/authentication.js"
 
 import Logout from "../components/logout";
 import Loading from "../components/loading";
@@ -69,9 +69,10 @@ const GroupMenu = (props) => {
 
     //set access token if available in local storage
     set_authentication(localStorage, axios)
+    console.log(`Bearer = ${get_bearer(localStorage)}`)
 
     // Test method to show Bearer token is functional when retrieved from local storage.
-    /*axios({
+    axios({
       method: "get",
       url: "https://api.spotify.com/v1/me/playlists",
     })
@@ -81,7 +82,7 @@ const GroupMenu = (props) => {
       })
       .catch((err) => {
         console.log(err);
-      });*/
+      });
       
   }, []);
 
