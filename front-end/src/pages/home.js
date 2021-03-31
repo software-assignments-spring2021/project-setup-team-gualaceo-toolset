@@ -78,13 +78,19 @@ const Home = (props) => {
   useEffect(() => {
     const { setExpiryTime, history, location } = props;
     try {
-      if (_.isEmpty(location.hash)) {
-        return history.push("/");
+      if (_.isEmpty(location.hash)) { //If no new authorization data is provided from spotify, check if the old data is good
+        let expiry_time = localStorage.getItem('expiry_time')
+        let cur_time = new Date().getTime()
+        if (!expiry_time || cur_time >= expiry_time)
+        {
+          return history.push("/"); //should this just be history.push("/")?
+        }
+      } else {
+        const access_token = getParamValues(location.hash);
+        const expiryTime = new Date().getTime() + access_token.expires_in * 1000;
+        localStorage.setItem("auth_data", JSON.stringify(access_token));
+        localStorage.setItem("expiry_time", expiryTime);
       }
-      const access_token = getParamValues(location.hash);
-      const expiryTime = new Date().getTime() + access_token.expires_in * 1000;
-      localStorage.setItem("auth_data", JSON.stringify(access_token));
-      localStorage.setItem("expiry_time", expiryTime);
     } catch (error) {
       history.push("/");
     }
@@ -96,12 +102,14 @@ const Home = (props) => {
       ] = `Bearer ${auth_data.access_token}`;
     }*/
 
-    //set_authentication(localStorage, axios) //sets authentication in axios
+    set_authentication(localStorage, axios) //sets authentication in axios
 
     // const authToken =
     //   ; //localStorage.getItem("AuthToken");
 
-    /* Test function to see if axios authentication is correctly set
+    //Test function to see if axios authentication is correctly set
+    //This test function shouldn't be necessary, but for some reason without it
+    //The home page hangs on loading screen indefinitely
     axios({
       method: "get",
       url: "https://api.spotify.com/v1/me/playlists",
@@ -113,7 +121,7 @@ const Home = (props) => {
       .catch((err) => {
         console.log(err);
       });
-    */ 
+    
   }, []);
 
   const handleJoin = () => {

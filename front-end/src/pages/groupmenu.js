@@ -72,7 +72,7 @@ const GroupMenu = (props) => {
     console.log(`Bearer = ${get_bearer(localStorage)}`)
 
     // Test method to show Bearer token is functional when retrieved from local storage.
-    axios({
+    /*axios({
       method: "get",
       url: "https://api.spotify.com/v1/me/playlists",
     })
@@ -82,7 +82,7 @@ const GroupMenu = (props) => {
       })
       .catch((err) => {
         console.log(err);
-      });
+      });*/
       
   }, []);
 
