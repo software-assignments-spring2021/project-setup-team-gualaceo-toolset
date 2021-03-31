@@ -22,6 +22,7 @@ import Logout from "../components/logout";
 import styles from "../styles/homeStyles";
 
 import axios from "axios";
+import set_authentication from "../components/authentication.js"
 
 const Home = (props) => {
   let history = useHistory();
@@ -82,22 +83,25 @@ const Home = (props) => {
       }
       const access_token = getParamValues(location.hash);
       const expiryTime = new Date().getTime() + access_token.expires_in * 1000;
-      localStorage.setItem("params", JSON.stringify(access_token));
+      localStorage.setItem("auth_data", JSON.stringify(access_token));
       localStorage.setItem("expiry_time", expiryTime);
     } catch (error) {
       history.push("/");
     }
 
-    const params = JSON.parse(localStorage.getItem("params"));
-    if (params.access_token) {
+    /*const auth_data = JSON.parse(localStorage.getItem("auth_data"));
+    if (auth_data && auth_data.access_token) {
       axios.defaults.headers.common[
         "Authorization"
-      ] = `Bearer ${params.access_token}`;
-    }
+      ] = `Bearer ${auth_data.access_token}`;
+    }*/
+
+    set_authentication(localStorage, axios) //sets authentication in axios
 
     // const authToken =
     //   ; //localStorage.getItem("AuthToken");
 
+    /* Test function to see if axios authentication is correctly set
     axios({
       method: "get",
       url: "https://api.spotify.com/v1/me/playlists",
@@ -109,6 +113,7 @@ const Home = (props) => {
       .catch((err) => {
         console.log(err);
       });
+    */ 
   }, []);
 
   const handleJoin = () => {

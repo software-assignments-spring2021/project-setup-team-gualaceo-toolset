@@ -7,6 +7,8 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
 import addNotification from "react-push-notification";
 import backgroundWhite from "../media/background_white.png";
+import axios from "axios";
+import set_authentication from "../components/authentication.js"
 
 import Logout from "../components/logout";
 import Loading from "../components/loading";
@@ -64,6 +66,23 @@ const GroupMenu = (props) => {
     if (params.playlistGenerated === "generated"){ //If the route '/groupMenuOwner/generated' is accessed
       setPlaylistGenerated(true)
     }
+
+    //set access token if available in local storage
+    set_authentication(localStorage, axios)
+
+    // Test method to show Bearer token is functional when retrieved from local storage.
+    /*axios({
+      method: "get",
+      url: "https://api.spotify.com/v1/me/playlists",
+    })
+      .then((res) => {
+        console.log(res);
+        setuiLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });*/
+      
   }, []);
 
   if(playlistGenerated) { // Determines whether to show the user "view generated playlist" or "generate playlist"
