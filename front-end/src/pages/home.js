@@ -22,7 +22,7 @@ import Logout from "../components/logout";
 import styles from "../styles/homeStyles";
 
 import axios from "axios";
-import {set_authentication, get_bearer} from "../components/authentication.js"
+import {set_authentication, get_bearer, is_expired} from "../components/authentication.js"
 
 const Home = (props) => {
   let history = useHistory();
@@ -79,9 +79,7 @@ const Home = (props) => {
     const { setExpiryTime, history, location } = props;
     try {
       if (_.isEmpty(location.hash)) { //If no new authorization data is provided from spotify, check if the old data is good
-        let expiry_time = localStorage.getItem('expiry_time')
-        let cur_time = new Date().getTime()
-        if (!expiry_time || cur_time >= expiry_time)
+        if (is_expired(localStorage))
         {
           return history.push("/"); //should this just be history.push("/")?
         }

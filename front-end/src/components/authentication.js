@@ -17,4 +17,15 @@ const get_bearer = (localStorage) => {
   return null;
 }
 
-export {set_authentication, get_bearer}
+const is_expired = (localStorage) => {
+  let expiry_time = localStorage.getItem('expiry_time')
+  let cur_time = new Date().getTime()
+  if (!expiry_time || cur_time >= expiry_time)
+  {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export {set_authentication, get_bearer, is_expired}

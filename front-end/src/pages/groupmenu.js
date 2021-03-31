@@ -8,7 +8,7 @@ import { Typography, Card, CardContent } from "@material-ui/core";
 import addNotification from "react-push-notification";
 import backgroundWhite from "../media/background_white.png";
 import axios from "axios";
-import {set_authentication, get_bearer} from "../components/authentication.js"
+import {set_authentication, get_bearer, is_expired} from "../components/authentication.js"
 
 import Logout from "../components/logout";
 import Loading from "../components/loading";
@@ -65,6 +65,11 @@ const GroupMenu = (props) => {
     setuiLoading(false);
     if (params.playlistGenerated === "generated"){ //If the route '/groupMenuOwner/generated' is accessed
       setPlaylistGenerated(true)
+    }
+
+    if (is_expired(localStorage))
+    {
+      return history.push("/"); 
     }
 
     //set access token if available in local storage
