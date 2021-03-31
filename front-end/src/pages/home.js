@@ -108,17 +108,7 @@ const Home = (props) => {
     //Test function to see if axios authentication is correctly set
     //This test function shouldn't be necessary, but for some reason without it
     //The home page hangs on loading screen indefinitely
-    axios({
-      method: "get",
-      url: "https://api.spotify.com/v1/me/playlists",
-    })
-      .then((res) => {
-        console.log(res);
-        setuiLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setuiLoading(false);
     
   }, []);
 
