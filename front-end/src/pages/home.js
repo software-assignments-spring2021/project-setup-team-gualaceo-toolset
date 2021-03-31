@@ -246,7 +246,7 @@ const Group = (props) => {
   let group = props.group
   let classes = props.classes
   let handleVisit = props.handleVisit
-  console.log(group)
+  //console.log(group)
   let pageLink = "/groupmenu"
   if (group.owner){
     pageLink = "/groupMenuOwner"

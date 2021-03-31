@@ -74,7 +74,7 @@ const GroupMenu = (props) => {
 
     //set access token if available in local storage
     set_authentication(localStorage, axios)
-    console.log(`Bearer = ${get_bearer(localStorage)}`)
+    //console.log(`Bearer = ${get_bearer(localStorage)}`)
 
     // Test method to show Bearer token is functional when retrieved from local storage.
     /*axios({
