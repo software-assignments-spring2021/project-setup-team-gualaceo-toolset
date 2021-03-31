@@ -89,7 +89,7 @@ const Home = (props) => {
     }
 
     const params = JSON.parse(localStorage.getItem("params"));
-    if (params) {
+    if (params.access_token) {
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${params.access_token}`;
