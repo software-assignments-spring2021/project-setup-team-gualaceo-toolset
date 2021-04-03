@@ -21,6 +21,8 @@ import Loading from "../components/loading";
 
 import styles from "../styles/landingStyles";
 
+import SpotifyWebApi from "spotify-web-api-js";
+
 // This is the event handler for Spotify login.
 // This will be implemented when we integrate the Spotify API
 
@@ -31,21 +33,51 @@ const Landing = (props) => {
   const [spotifyRedirect, setSpotifyRedirect] = useState(false);
   const [guestRedirect, setGuestRedirect] = useState(false);
 
+  const {
+    REACT_APP_CLIENT_ID,
+    REACT_APP_AUTHORIZE_URL,
+    REACT_APP_REDIRECT_URL,
+  } = process.env;
+
+  const spotifyApi = new SpotifyWebApi();
   // This is the componentDidMount method.
   /**
    * Because the componentDidMount method sets parameters of the page state after certain things load (like an API call).
    * Because there are no async functions in the initial landing page, this will automatically be triggered.*/
+  const getHashParams = () => {
+    var hashParams = {};
+    var e,
+      r = /([^&;=]+)=?([^&;]*)/g,
+      q = window.location.hash.substring(1);
+    e = r.exec(q);
+    while (e) {
+      hashParams[e[1]] = decodeURIComponent(e[2]);
+      e = r.exec(q);
+    }
+    return hashParams;
+  };
+
   useEffect(() => {
     setuiLoading(false);
   }, []);
 
   const handleSpotifyRedirect = () => {
-    setSpotifyRedirect(true);
+    window.location = `${REACT_APP_AUTHORIZE_URL}?client_id=${REACT_APP_CLIENT_ID}&redirect_uri=${REACT_APP_REDIRECT_URL}&response_type=token&show_dialog=true`;
+    // setSpotifyRedirect(true);
   };
 
   const handleGuestRedirect = () => {
     setGuestRedirect(true);
   };
+
+  const params = getHashParams();
+  const token = params.access_token;
+  if (token) {
+    spotifyApi.setAccessToken(token);
+  }
+
+  // loggedIn = token ? true : false;
+  // nowPlaying = { name: "Not Checked", albumArt: "" };
 
   // Like said above, the UI will automatically load, so on render, uiLoading will automatically be set to false
   if (uiLoading === true) {

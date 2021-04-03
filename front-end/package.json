@@ -9,6 +9,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.1",
     "axios": "^0.21.1",
+    "dotenv": "^8.2.0",
     "material-ui-search-bar": "^1.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -20,6 +21,7 @@
     "react-scripts": "4.0.3",
     "react-scroll": "^1.8.2",
     "react-visibility-sensor": "^5.1.1",
+    "spotify-web-api-js": "^1.5.1",
     "web-vitals": "^1.1.0"
   },
   "scripts": {

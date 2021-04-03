@@ -12,6 +12,7 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
+import _ from "lodash";
 
 import backgroundWhite from "../media/background_white.png";
 
@@ -19,6 +20,9 @@ import Loading from "../components/loading";
 import Logout from "../components/logout";
 
 import styles from "../styles/homeStyles";
+
+import axios from "axios";
+import {set_authentication, get_bearer, is_expired} from "../components/authentication.js"
 
 const Home = (props) => {
   let history = useHistory();
@@ -60,10 +64,52 @@ const Home = (props) => {
     },
   ];
 
-  
+  const getParamValues = (url) => {
+    return url
+      .slice(1)
+      .split("&")
+      .reduce((prev, curr) => {
+        const [title, value] = curr.split("=");
+        prev[title] = value;
+        return prev;
+      }, {});
+  };
 
   useEffect(() => {
+    const { setExpiryTime, history, location } = props;
+    try {
+      if (_.isEmpty(location.hash)) { //If no new authorization data is provided from spotify, check if the old data is good
+        if (is_expired(localStorage))
+        {
+          return history.push("/"); //should this just be history.push("/")?
+        }
+      } else {
+        const access_token = getParamValues(location.hash);
+        const expiryTime = new Date().getTime() + access_token.expires_in * 1000;
+        localStorage.setItem("auth_data", JSON.stringify(access_token));
+        localStorage.setItem("expiry_time", expiryTime);
+      }
+    } catch (error) {
+      history.push("/");
+    }
+
+    /*const auth_data = JSON.parse(localStorage.getItem("auth_data"));
+    if (auth_data && auth_data.access_token) {
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${auth_data.access_token}`;
+    }*/
+
+    set_authentication(localStorage, axios) //sets authentication in axios
+
+    // const authToken =
+    //   ; //localStorage.getItem("AuthToken");
+
+    //Test function to see if axios authentication is correctly set
+    //This test function shouldn't be necessary, but for some reason without it
+    //The home page hangs on loading screen indefinitely
     setuiLoading(false);
+    
   }, []);
 
   const handleJoin = () => {
@@ -74,8 +120,8 @@ const Home = (props) => {
   };
 
   const handleCreate = () => {
-    history.push("/groupMenuOwner")
-  }
+    history.push("/groupMenuOwner");
+  };
 
   const handleVisit = (pageLink) => {
     history.push(pageLink)
@@ -177,38 +223,30 @@ const Home = (props) => {
 };
 
 const IsOwner = (props) => {
-  if (props.group.owner === true){
-    return (
-      <div className={props.classes.owner}>
-        Owner
-      </div>
-    );
+  if (props.group.owner === true) {
+    return <div className={props.classes.owner}>Owner</div>;
   } else {
-    return (
-      <div className={props.classes.owner}></div>
-    );
+    return <div className={props.classes.owner}></div>;
   }
-}
+};
 
 const RegenerateRequested = (props) => {
-  if (props.group.generationRequested === true){
+  if (props.group.generationRequested === true) {
     return (
       <div className={props.classes.generateRequested}>
         Playlist generation requested
       </div>
     );
   } else {
-    return (
-      <div className={props.classes.generateRequested}></div>
-    );
+    return <div className={props.classes.generateRequested}></div>;
   }
-}
+};
 
 const Group = (props) => {
   let group = props.group
   let classes = props.classes
   let handleVisit = props.handleVisit
-  console.log(group)
+  //console.log(group)
   let pageLink = "/groupmenu"
   if (group.owner){
     pageLink = "/groupMenuOwner"
