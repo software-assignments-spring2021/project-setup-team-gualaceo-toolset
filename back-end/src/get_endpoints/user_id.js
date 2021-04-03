@@ -18,13 +18,13 @@ const get_user_id = (req, res, next) => {
             data = response.data
             req.user_id = data.id
             console.log("Successfully pulled User ID from Spotify API")
-            next()
+            return next()
         })
         .catch((err) => {
             console.log("Something went wrong in the get_user_id endpoint when calling the Spotify API")
             console.error(err)
-            //res.send('error') //Not sure about this error handling
-            return;
+            return next(new Error("Could not pull user ID from Spotify API"))
+
         })
 }
 

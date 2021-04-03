@@ -10,6 +10,10 @@ app.use("/static", express.static("public"))
 
 app.use("/user_playlists/:bearer", user_id.get_user_id) // sets res.user_id to the user_id (if the bearer token is valid)
 app.get("/user_playlists/:bearer", user_playlists.get_playlists)
+app.use((error, req, res, next) => {
+    res.status(error.staus || 500)
+    return res.send(error.message)
+})
 
 //export the express app to make it available to other modules
 module.exports = app
