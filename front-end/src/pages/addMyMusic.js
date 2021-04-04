@@ -15,49 +15,89 @@ import Playlist from "../components/playlistComponent.js";
 
 import styles from "../styles/addMyMusicStyles.js";
 
+const backupPlaylists = [
+    {
+        name: "My Playlist",
+        images: [{
+        url:
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi1.wp.com%2Fwww.gardeningknowhow.com%2Fwp-content%2Fuploads%2F2017%2F01%2Fprune-mock-orange.jpg%3Ffit%3D1254%252C836%26ssl%3D1&f=1&nofb=1",
+        }],
+        tracks: {
+        items: [
+            {
+                track: { artists: [{ name: "Jack" }], name: "Good Song" },
+            },
+            { 
+                track: {artists: [{ name: "Jill" }], name: "The Hill" },
+            }
+        ],
+        },
+    },
+];
+
 const AddMyMusic = (props) => {
-    const [playlists, setPlaylists] = useState([]);
+    const [playlists, setPlaylists] = useState("unset");
     let history = useHistory();
     const { classes } = props;
     const [uiLoading, setuiLoading] = useState(true);
+    const [haveTracks, setHaveTracks] = useState(false);
 
     useEffect(() => {
         console.log("fetching playlists");
         axios({
             method: "get",
-            url: `http://localhost:5000/user_playlists_with_songs/${get_bearer(localStorage)}`
+            url: `http://localhost:5000/user_playlists/${get_bearer(localStorage)}/false` //true indicates we want playlists attached
         }) //makes a call to the back-end
             .then((response) => {  
                 console.log(response.data)
                 console.log(playlists);
-                setPlaylists(response.data); //stores the result from the api call in playlists
-                setuiLoading(false);
+            
+                if (playlists === "unset")
+                {
+                    setPlaylists(response.data); //stores the result from the api call in playlists
+                    setuiLoading(false);
+                }
             })
             .catch((err) => {
                 console.log("error encountered making request to user_playlists endpoint")
                 console.error(err);
                 console.log(err)
 
-                const backupPlaylists = [
+                if (playlists === "unset")
                 {
-                    name: "My Playlist",
-                    images: {
-                    url:
-                        "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi1.wp.com%2Fwww.gardeningknowhow.com%2Fwp-content%2Fuploads%2F2017%2F01%2Fprune-mock-orange.jpg%3Ffit%3D1254%252C836%26ssl%3D1&f=1&nofb=1",
-                    },
-                    tracks: {
-                    items: [
-                        { artists: [{ name: "Jack" }], name: "Good Song" },
-                        { artists: [{ name: "Jill" }], name: "The Hill" },
-                    ],
-                    },
-                },
-                ];
-
-                setPlaylists(backupPlaylists);
-                setuiLoading(false)
+                    setPlaylists(backupPlaylists);
+                    setuiLoading(false)
+                }
             });
-    }, []); //only run once
+
+        //make call asking for playlist contents
+        axios({
+            method: "get",
+            url: `http://localhost:5000/user_playlists/${get_bearer(localStorage)}/true` //true indicates we want playlists attached
+        }) //makes a call to the back-end
+            .then((response) => {  
+                console.log(response.data)
+                console.log(playlists);
+                if (!haveTracks)
+                {   
+                    setHaveTracks(true)
+                    setPlaylists(response.data); //stores the result from the api call in playlists
+                    setuiLoading(false);
+                }
+            })
+            .catch((err) => {
+                console.log("error encountered making request to user_playlists endpoint")
+                console.error(err);
+                console.log(err)
+
+                
+
+                if (playlists === "unset") 
+                {   setPlaylists(backupPlaylists);
+                    setuiLoading(false)
+                }
+            });    
+    }, [playlists, haveTracks]); // run whenever playlists is updated
 
   if (uiLoading === true) {
     return <Loading />; //If still waiting for an api request to return, will show the loading screen instead
@@ -79,7 +119,7 @@ const AddMyMusic = (props) => {
           </AppBar>
           <div className={classes.playlistContainer}>
             {playlists.map((item) => (
-              <Playlist playlist={item}></Playlist>
+              <Playlist playlist={item} has_tracks={haveTracks}></Playlist>
             ))}
           </div>
         </Container>
