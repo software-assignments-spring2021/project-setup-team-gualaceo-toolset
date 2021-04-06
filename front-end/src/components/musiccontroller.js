@@ -67,7 +67,21 @@ const MusicController = (props) => {
   const { classes } = props;
 
   const handleSliderChange = (event, newValue) => {
-    setCurrentTime(newValue);
+    if (is_expired(localStorage)) {
+      return history.push("/"); //should this just be history.push("/")?
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "get",
+      url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
+    })
+      .then((res) => {
+        console.log(res);
+        setCurrentTime(newValue);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const formatTime = (secs) => {
@@ -95,10 +109,16 @@ const MusicController = (props) => {
         console.log((deviceid = res.data.device.id));
         axios({
           method: "put",
-          url: `https://api.spotify.com/v1/me/player/play?context_uri=spotify:album:5ht7ItJgpBH7W6vJ5BqpPr`,
+          url: `https://api.spotify.com/v1/me/player/${
+            !isPlaying ? "play" : "pause"
+          }?device_id=${deviceid}`,
+          data: {
+            uris: [`spotify:track:${currentSong.id}`],
+          },
         })
           .then((res) => {
             console.log(res);
+            console.log(currentSong.id);
             setIsPlaying(!isPlaying);
           })
           .catch((err) => {
@@ -108,14 +128,27 @@ const MusicController = (props) => {
       .catch((err) => {
         console.log(err);
       });
-    //Some api call
-    // .then
   };
 
   const handleNext = () => {};
 
   useEffect(() => {
-    setDuration("280");
+    if (is_expired(localStorage)) {
+      return history.push("/"); //should this just be history.push("/")?
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "get",
+      url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
+    })
+      .then((res) => {
+        console.log(res.data.item.duration_ms);
+        setDuration(res.data.item.duration_ms / 1000);
+        setCurrentTime(res.data.item.progress_ms / 1000);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   if (expanded === false) {
