@@ -13,6 +13,7 @@ import { useHistory } from "react-router-dom";
 const styles = (theme) => ({});
 
 const handleLogout = (history) => {
+  //clear any Spotify session data
   localStorage.removeItem('auth_data')
   localStorage.removeItem('expiry_time')
   history.push("/")
