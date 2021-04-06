@@ -17,10 +17,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
 import backgroundWhite from "../media/background_white.png";
-
 import Loading from "../components/loading";
+import {is_expired} from "../components/authentication.js"
+
 // import Logout from "../components/logout";
 
 const styles = (theme) => ({
@@ -101,6 +101,10 @@ const Home = (props) => {
   ];
 
   useEffect(() => {
+    if (is_expired(localStorage))
+    {
+      return history.push("/"); 
+    }
     setuiLoading(false);
   }, []);
 

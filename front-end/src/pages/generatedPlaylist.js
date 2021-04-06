@@ -159,15 +159,17 @@ const Playlist = (props) => {
               <Typography variant="h5" className={classes.heading}>
                 Playlist
               </Typography>
-              <Button
+              { !isGuest &&
+                <Button
                 color="inherit"
                 onClick={() => {
                   setOpenConfirmLogout(!openConfirmLogout);
                 }}
                 className={classes.logout}
-              >
-                Logout
-              </Button>
+                >
+                  Logout
+                </Button>
+              }
               <div style={{ position: "absolute" }}>
                 <Logout
                   open={openConfirmLogout}

@@ -10,7 +10,7 @@ import Box from "@material-ui/core/Box";
 import Loading from "../components/loading";
 import styles from "../styles/membersStyles";
 import members from "./members";
-
+import {is_expired} from "../components/authentication.js"
 const MembersOwner = (props) => {
   let history = useHistory();
   const { classes } = props;
@@ -37,6 +37,10 @@ const MembersOwner = (props) => {
   }
 
   useEffect(() => {
+    if (is_expired(localStorage))
+    {
+      return history.push("/"); 
+    }
     setuiLoading(false);
   }, []);
 
