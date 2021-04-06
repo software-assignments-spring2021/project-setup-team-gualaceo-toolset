@@ -10,15 +10,21 @@ const create_playlist = async (req, res) => {
     }*/
 
     //put spotify user id here
-    let user_id='USER ID HERE';
+    let user_id=req.params.user_id;
     //put bearer token here
-    let token='Bearer '+ 'OAUTH TOKEN HERE';
-    let JSON_repsonse={};
+    let bearer= req.params.bearer;
+    let token='Bearer '+ bearer;
+
+    let name=req.body.name;
+    let description=req.body.description;
+    let privacy=req.body.public
     //specify header used
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': token
     }
+    let JSON_repsonse={};
+
 
     let URL = `https://api.spotify.com/v1/users/${user_id}/playlists`;
 
@@ -26,9 +32,9 @@ const create_playlist = async (req, res) => {
         method: "post",
         url: URL,
         data: {
-            "name": "test playlist 1",
-            "description": "Create a new playlist in user's spotify account",
-            "public": false
+            "name": name,
+            "description": description,
+            "public": privacy
           },
         headers: headers,
       })

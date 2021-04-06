@@ -9,12 +9,11 @@ const add_tracks = async (req, res) => {
         return;
     }*/
 
-    //put spotify user id here
-    let user_id='chriszheng2012';
     //put bearer token here
-    let token='Bearer '+ 'BQA2EF7tocOHLdk8k6sIlW9_ziYmcD3hz2_6rf4YVP529B3sc3IXLPu8K4xI9rVJg8dwnRBtqgLDMxlADlGtpshXpfvB1JFE_ahp4PoIj9Np4bmqpTP2OMSTkU9A6qzwL8Vl2IkvkaMXHYyRBzW5A9D399sAxZAizJrmmaLXQrPXyHhVrzIrzG5_5x5kcdtv3kLg0jPEwhm6JC5Rg801jO3nJEsu';
+    let bearer=req.params.bearer;
+    let token='Bearer '+ bearer;
     //put playlist id here
-    let playlist_id='0jG91Dtcef7dP37aoMMguZ';
+    let playlist_id=req.params.playlist_id;
 
     //specify header used
     const headers = {
@@ -23,11 +22,12 @@ const add_tracks = async (req, res) => {
     }
 
 
+    let tracks=req.body.uris;
     //list of spotify id to be added to the target playlist, as JSON object
-    const tracks= {"uris": ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh",
+    /*const tracks= {"uris": ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh",
     "spotify:track:1301WleyT98MSxVHPZCA6M", 
     "spotify:episode:512ojhOuo1ktJprKbVcKyQ"]}
-
+    */
 
     let URL = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks`;
     let JSON_response={};
@@ -40,8 +40,6 @@ const add_tracks = async (req, res) => {
       })
         .then((response) => {
             console.log("Successfully added tracks to target playlist")
-            //console.log(response)
-            //log the id of the playlist created
             console.log(response.data)
             JSON_response=response.data
         })
