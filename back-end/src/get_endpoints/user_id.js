@@ -17,7 +17,7 @@ const get_user_id = (req, res, next) => {
         .then((response) => {
             data = response.data
             req.user_id = data.id
-            console.log("Successfully pulled User ID from Spotify API")
+            //console.log("Successfully pulled User ID from Spotify API")
             return next()
         })
         .catch((err) => {

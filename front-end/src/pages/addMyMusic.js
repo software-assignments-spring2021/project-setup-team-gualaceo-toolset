@@ -44,6 +44,8 @@ const AddMyMusic = (props) => {
 
     useEffect(() => {
         console.log("fetching playlists");
+
+        //make call for playlists without track contents
         axios({
             method: "get",
             url: `http://localhost:5000/user_playlists/${get_bearer(localStorage)}/false` //true indicates we want playlists attached
@@ -89,8 +91,6 @@ const AddMyMusic = (props) => {
                 console.log("error encountered making request to user_playlists endpoint")
                 console.error(err);
                 console.log(err)
-
-                
 
                 if (playlists === "unset") 
                 {   setPlaylists(backupPlaylists);

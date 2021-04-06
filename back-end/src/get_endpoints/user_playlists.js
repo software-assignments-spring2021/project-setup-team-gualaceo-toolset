@@ -44,9 +44,7 @@ const get_playlists = async (req, res, next) => { //this function ends up being 
                             let msg = "Error: could not run get_tracks_items"
                             error = new Error(msg)
                             return //this should just escape the await request
-                        } else {
-                            console.log("tracks_items pulled successfully: i = ", index)
-                        }
+                        } 
                         item.tracks.items = tracks_items
                     }
                     user_playlists.push(item)
@@ -69,7 +67,7 @@ const get_playlists = async (req, res, next) => { //this function ends up being 
         return next(error)
     }
 
-    console.log("Successfully pulled user playlists from Spotify API")
+    //console.log("Successfully pulled user playlists from Spotify API")
     return res.send(user_playlists)
 }
 
