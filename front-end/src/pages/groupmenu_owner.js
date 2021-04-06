@@ -15,6 +15,8 @@ import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
 import styles from "../styles/groupmenuStyles.js"
 import EdiText from 'react-editext'
+import {is_expired} from "../components/authentication.js"
+
 
 const GroupMenuOwner = (props) => {
   let history = useHistory();
@@ -55,6 +57,10 @@ const GroupMenuOwner = (props) => {
   };
 
   useEffect(() => {
+    if (is_expired(localStorage))
+    {
+        return history.push("/"); 
+    }
     // get group id
     setGroupID("#8941-1125");
     setGroupName("Gaming Friends");

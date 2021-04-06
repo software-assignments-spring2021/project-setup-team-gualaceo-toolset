@@ -9,10 +9,8 @@ import addNotification from "react-push-notification";
 import backgroundWhite from "../media/background_white.png";
 import axios from "axios";
 import {set_authentication, get_bearer, is_expired} from "../components/authentication.js"
-
 import Logout from "../components/logout";
 import Loading from "../components/loading";
-
 import styles from "../styles/groupmenuStyles.js";
 
 const GroupMenu = (props) => {
@@ -59,6 +57,10 @@ const GroupMenu = (props) => {
   };
 
   useEffect(() => {
+    if (is_expired(localStorage))
+        {
+            return history.push("/"); 
+        }
     // get group id
     setGroupID("#4529-9915");
     setGroupName("Alexa's Party");

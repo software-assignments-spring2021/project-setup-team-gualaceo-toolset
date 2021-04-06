@@ -81,7 +81,7 @@ const Home = (props) => {
       if (_.isEmpty(location.hash)) { //If no new authorization data is provided from spotify, check if the old data is good
         if (is_expired(localStorage))
         {
-          return history.push("/"); //should this just be history.push("/")?
+          return history.push("/"); 
         }
       } else {
         const access_token = getParamValues(location.hash);
@@ -89,7 +89,9 @@ const Home = (props) => {
         localStorage.setItem("auth_data", JSON.stringify(access_token));
         localStorage.setItem("expiry_time", expiryTime);
       }
-    } catch (error) {
+    } catch (err) {
+      console.log("Error: something when wrong in setting up the home page")
+      console.error(err)
       history.push("/");
     }
 
