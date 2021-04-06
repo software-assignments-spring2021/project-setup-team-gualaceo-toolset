@@ -11,6 +11,7 @@ import {is_expired} from "../components/authentication.js"
 // import backgroundWhite from "../media/background_white.png";
 
 import Loading from "../components/loading";
+import Logout from "../components/logout";
 import Playlist from "../components/playlistComponent.js";
 
 import styles from "../styles/addMyMusicStyles.js";
@@ -20,6 +21,8 @@ const AddMyMusic = (props) => {
   let history = useHistory();
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
+  const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
+
 
   useEffect(() => {
 
@@ -77,7 +80,21 @@ const AddMyMusic = (props) => {
               <Typography variant="h5" className={classes.heading}>
                 Add My Music
               </Typography>
-              <Button className={classes.logout}>Logout</Button>
+              <Button
+                color="inherit"
+                onClick={() => {
+                  setOpenConfirmLogout(!openConfirmLogout);
+                }}
+                className={classes.logout}
+              >
+                Logout
+              </Button>
+              <div style={{ position: "absolute" }}>
+                <Logout
+                  open={openConfirmLogout}
+                  setOpen={setOpenConfirmLogout}
+                />
+              </div>
             </Toolbar>
           </AppBar>
           <div className={classes.playlistContainer}>
