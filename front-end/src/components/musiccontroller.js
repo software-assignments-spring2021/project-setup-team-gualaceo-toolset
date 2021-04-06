@@ -14,6 +14,12 @@ import PauseIcon from "@material-ui/icons/Pause";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
+import { useHistory } from "react-router-dom";
+
+import axios from "axios";
+import { set_authentication, get_bearer, is_expired } from "./authentication";
+
+import _ from "lodash";
 
 import styles from "../styles/musicControllerStyles.js";
 
@@ -48,6 +54,7 @@ const CollapsedSlider = withStyles({
 })(Slider);
 
 const MusicController = (props) => {
+  let history = useHistory();
   const [expanded, setExpanded] = [props.expanded, props.setExpanded];
   const [currentSong, setCurrentSong] = [
     props.currentSong,
@@ -75,9 +82,34 @@ const MusicController = (props) => {
   const handlePrevious = () => {};
 
   const handlePlay = () => {
+    if (is_expired(localStorage)) {
+      return history.push("/"); //should this just be history.push("/")?
+    }
+    set_authentication(localStorage, axios);
+    let deviceid;
+    axios({
+      method: "get",
+      url: `https://api.spotify.com/v1/me/player`,
+    })
+      .then((res) => {
+        console.log((deviceid = res.data.device.id));
+        axios({
+          method: "put",
+          url: `https://api.spotify.com/v1/me/player/play?context_uri=spotify:album:5ht7ItJgpBH7W6vJ5BqpPr`,
+        })
+          .then((res) => {
+            console.log(res);
+            setIsPlaying(!isPlaying);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     //Some api call
     // .then
-    setIsPlaying(!isPlaying);
   };
 
   const handleNext = () => {};
