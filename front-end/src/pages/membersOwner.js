@@ -11,10 +11,13 @@ import Loading from "../components/loading";
 import styles from "../styles/membersStyles";
 import members from "./members";
 import {is_expired} from "../components/authentication.js"
+import Logout from "../components/logout";
+
 const MembersOwner = (props) => {
   let history = useHistory();
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
+  const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const memberlist = [
     { name: "Ryan B", owner: false, self: false },
     { name: "Alexa H", owner: true, self: true },
@@ -62,11 +65,28 @@ const MembersOwner = (props) => {
                 <Typography variant="h5" className={classes.heading}>
                   Member List
                 </Typography>
-                <Button className={classes.banButton} onClick={goToBanList}>
-                  View Ban List
+                <Button
+                  color="inherit"
+                  onClick={() => {
+                    setOpenConfirmLogout(!openConfirmLogout);
+                  }}
+                  className={classes.logout}
+                >
+                  Logout
                 </Button>
+                <div style={{ position: "absolute" }}>
+                  <Logout
+                    open={openConfirmLogout}
+                    setOpen={setOpenConfirmLogout}
+                  />
+                </div>
               </Toolbar>
             </AppBar>
+            <div className={classes.banListButtonContainer}>
+              <Button color="secondary" variant="contained" onClick={goToBanList}>
+                View Ban List
+              </Button>
+            </div>
             {memberlist.map((member) => (
               <Card
                 fullWidth

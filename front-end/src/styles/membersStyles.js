@@ -83,8 +83,10 @@ const styles = (theme) => ({
     ownerIndicator: {
       alignSelf: "flex-start",
     },
-    banButton: {
-      color: theme.palette.secondary.contrastText
+    banListButtonContainer: {
+      display: "flex",
+      justifyContent: "center",
+      paddingBottom: "10px",
     }
   });
 

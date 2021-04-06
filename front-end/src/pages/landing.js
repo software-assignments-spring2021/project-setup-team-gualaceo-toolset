@@ -56,7 +56,6 @@ const Landing = (props) => {
 
   useEffect(() => {
     const { setExpiryTime, history, location } = props;
-    
     //if the current Spotify session in local storage is not yet expired, use it
     if (!is_expired(localStorage))
     {

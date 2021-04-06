@@ -20,6 +20,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
 import {is_expired} from "../components/authentication.js"
+import Logout from "../components/logout";
 
 // import Logout from "../components/logout";
 
@@ -151,35 +152,10 @@ const Home = (props) => {
                 Logout
               </Button>
               <div style={{ position: "absolute" }}>
-                <Dialog
+                <Logout
                   open={openConfirmLogout}
-                  onClose={() => {
-                    setOpenConfirmLogout(false);
-                  }}
-                  disableBackdropClick={false}
-                >
-                  <DialogTitle id="alert-dialog-title">{"Logout?"}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Are you sure you want to logout?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      onClick={() => setOpenConfirmLogout(false)}
-                      color="primary"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={() => history.push("/")}
-                      color="primary"
-                      autoFocus
-                    >
-                      Logout
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+                  setOpen={setOpenConfirmLogout}
+                />
               </div>
             </Toolbar>
           </AppBar>

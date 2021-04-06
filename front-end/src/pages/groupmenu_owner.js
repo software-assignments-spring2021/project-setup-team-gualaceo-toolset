@@ -16,7 +16,7 @@ import Loading from "../components/loading";
 import styles from "../styles/groupmenuStyles.js"
 import EdiText from 'react-editext'
 import {is_expired} from "../components/authentication.js"
-
+import Logout from "../components/logout";
 
 const GroupMenuOwner = (props) => {
   let history = useHistory();
@@ -28,6 +28,7 @@ const GroupMenuOwner = (props) => {
   const [groupName, setGroupName] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [playlistGenerated, setPlaylistGenerated] = useState(false);
+  
   const handleViewAllMusic = () => {
     //console.log("You've clicked on view all music");
     history.push("/viewMusicOwner")
@@ -117,7 +118,7 @@ const GroupMenuOwner = (props) => {
               ></Button>
               <Typography className={classes.heading}>
                 Group ID: {groupID}
-              </Typography>
+              </Typography>      
               <Button
                 color="inherit"
                 onClick={() => {
@@ -128,36 +129,10 @@ const GroupMenuOwner = (props) => {
                 Logout
               </Button>
               <div style={{ position: "absolute" }}>
-                <Dialog
+                <Logout
                   open={openConfirmLogout}
-                  onClose={() => {
-                    setOpenConfirmLogout(false);
-                  }}
-                  disableBackdropClick={false}
-                >
-                  <DialogTitle id="alert-dialog-title">{"Logout?"}</DialogTitle>
-
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Are you sure you want to logout?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      onClick={() => setOpenConfirmLogout(false)}
-                      color="primary"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={() => history.push("/")}
-                      color="primary"
-                      autoFocus
-                    >
-                      Logout
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+                  setOpen={setOpenConfirmLogout}
+                />
               </div>
             </Toolbar>
           </AppBar>

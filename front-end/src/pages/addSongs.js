@@ -15,6 +15,7 @@ import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
 
 import styles from "../styles/addSongsStyles";
+import Logout from "../components/logout";
 
 const AddSongs = (props) => {
   let history = useHistory();
@@ -22,6 +23,7 @@ const AddSongs = (props) => {
   const [uiLoading, setuiLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
 
   const handleSearchTermChange = (term) => {
     setSearchTerm(term);
@@ -111,7 +113,21 @@ const AddSongs = (props) => {
             <Typography variant="h5" className={classes.heading}>
               Add Songs
             </Typography>
-            <Button className={classes.logout}>Logout</Button>
+            <Button
+              color="inherit"
+              onClick={() => {
+                setOpenConfirmLogout(!openConfirmLogout);
+              }}
+              className={classes.logout}
+            >
+              Logout
+            </Button>
+            <div style={{ position: "absolute" }}>
+              <Logout
+                open={openConfirmLogout}
+                setOpen={setOpenConfirmLogout}
+              />
+            </div>
           </Toolbar>
         </AppBar>
         <div className={classes.searchBarContainer}>
