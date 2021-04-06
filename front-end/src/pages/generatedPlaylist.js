@@ -113,7 +113,7 @@ const Playlist = (props) => {
 
 
   useEffect(() => {
-    if (is_expired(localStorage))
+    if (!isGuest && is_expired(localStorage)) //only non-guests should be booted to the landing page
     {
         return history.push("/"); 
     }
