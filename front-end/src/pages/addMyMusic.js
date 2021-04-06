@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography } from "@material-ui/core";
 import axios from "axios";
+import {is_expired} from "../components/authentication.js"
 
 // import backgroundWhite from "../media/background_white.png";
 
@@ -21,6 +22,12 @@ const AddMyMusic = (props) => {
   const [uiLoading, setuiLoading] = useState(true);
 
   useEffect(() => {
+
+    if (is_expired(localStorage))
+    {
+        return history.push("/"); 
+    }
+
     setuiLoading(false);
     console.log("fetching 10 playlists");
 

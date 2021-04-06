@@ -16,6 +16,7 @@ import MusicController from "../components/musiccontroller";
 import IconButton from '@material-ui/core/IconButton';
 import RemoveIcon from '@material-ui/icons/Remove';
 import styles from "../styles/generatedPlaylistStyles";
+import {is_expired} from "../components/authentication.js"
 
 
 const Playlist = (props) => {
@@ -112,6 +113,10 @@ const Playlist = (props) => {
 
 
   useEffect(() => {
+    if (is_expired(localStorage))
+    {
+        return history.push("/"); 
+    }
     setuiLoading(false);
   }, []);
 
