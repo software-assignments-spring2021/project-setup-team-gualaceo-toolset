@@ -72,6 +72,11 @@ const styles = (theme) => ({
     display: "flex",
     justifyContent: "space-between",
   },
+  addMyMusicButtonContainer: {
+    display: "flex",
+    justifyContent: "center",
+    paddingBottom: "10px",
+  },
 });
 
 const Home = (props) => {
@@ -118,6 +123,10 @@ const Home = (props) => {
     // }
   };
 
+  const goToAddMyMusic = () => {
+    history.push("/addMyMusic/owner")
+  }
+
   if (uiLoading === true) {
     return <Loading />;
   } else {
@@ -125,7 +134,7 @@ const Home = (props) => {
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.root}>
-          <div style={{ width: "200px", height: "100px" }}>
+          <div style={{ width: "200px", height: "70px" }}>
             {/* Background */}
             <img
               alt="complex"
@@ -159,7 +168,12 @@ const Home = (props) => {
               </div>
             </Toolbar>
           </AppBar>
-          <div style={{ marginTop: "-30px" }}>
+          <div className={classes.addMyMusicButtonContainer}>
+            <Button color="primary" variant="contained" onClick={goToAddMyMusic}>
+              Add My Music
+            </Button>
+          </div>
+          <div>
             <Card fullWidth className={classes.cards}>
                 <TextField
                   style={{ width: "120%" }}

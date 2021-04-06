@@ -22,7 +22,16 @@ const AddMyMusic = (props) => {
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
+  const { match: { params } } = props;
 
+  const goLastPage = () => {
+    if (params.userStatus === "owner")
+    {
+      return history.push("/viewMusicOwner")
+    } else {
+      return history.push("/viewMusic")
+    }
+  }
 
   useEffect(() => {
 
@@ -74,7 +83,7 @@ const AddMyMusic = (props) => {
           <AppBar className={classes.appBar}>
             <Toolbar className={classes.toolbar}>
               <Button
-                onClick={() => history.push("/placeholder")}
+                onClick={goLastPage}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
               <Typography variant="h5" className={classes.heading}>
