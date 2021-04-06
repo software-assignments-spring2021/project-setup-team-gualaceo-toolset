@@ -14,14 +14,11 @@ import { AppBar, Toolbar } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import backgroundLight from "../media/background_light.png";
-
 import { Redirect } from "react-router-dom";
-
 import Loading from "../components/loading";
-
 import styles from "../styles/landingStyles";
-
 import SpotifyWebApi from "spotify-web-api-js";
+import {is_expired} from "../components/authentication.js";
 
 // This is the event handler for Spotify login.
 // This will be implemented when we integrate the Spotify API
@@ -58,6 +55,14 @@ const Landing = (props) => {
   };
 
   useEffect(() => {
+    const { setExpiryTime, history, location } = props;
+    
+    //if the current Spotify session in local storage is not yet expired, use it
+    if (!is_expired(localStorage))
+    {
+      return history.push("/home")
+    }
+
     setuiLoading(false);
   }, []);
 
