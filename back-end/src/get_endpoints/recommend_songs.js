@@ -1,7 +1,7 @@
 const axios = require("axios")
 //const set_authentication = require("../other/authentication.js").set_authentication
 
-const recommend_songs = async (req, res) => {   
+const recommend_songs = async (req, res, next) => {   
 
     /*if (!set_authentication(bearer, axios))
     {
@@ -9,6 +9,7 @@ const recommend_songs = async (req, res) => {
         return;
     }*/
 
+    let error = null //null indicates no error has been encounterd
     let bearer=req.params.bearer
     let token='Bearer '+ bearer;
     let tracks=[]
@@ -24,14 +25,21 @@ const recommend_songs = async (req, res) => {
             //recommended tracks, as an array of JSON objects
             tracks=response.data.tracks
             console.log("Logging recommendation")
-            console.log(tracks)
+            //console.log(tracks)
+            return
         })
         .catch((err) => {
-            console.log("Something went wrong")
+            let msg = "Error: Something went wrong in the recommend_songs method. This may be due to bad authorization or seed tracks."
+            console.log(msg)
             console.error(err)
-            return;
+            error = err
+            return
         })
 
+    if (error)
+    {
+      return next(error)
+    }
     console.log("Return recommended songs as a list of JSON objects")
     return res.send(tracks)
 

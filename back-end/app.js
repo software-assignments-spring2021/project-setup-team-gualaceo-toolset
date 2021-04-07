@@ -6,5 +6,11 @@ const app = express()
 
 app.get("/recommend_songs/:bearer/limit/:limit/seed_tracks/:seed_tracks", recommend_songs.recommend_songs)
 
+//Handle any errors
+app.use((error, req, res, next) => { 
+    res.status(error.staus || 500)
+    return res.send(error.message)
+})
+
 //export the express app to make it available to other modules
 module.exports = app
