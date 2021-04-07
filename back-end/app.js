@@ -1,10 +1,16 @@
 //import and instantiate express
+//import get_playlists from "./src/get_endpoints/user_playlists"
+const recommend_songs = require("./src/get_endpoints/recommend_songs")
 const express = require("express")
 const app = express()
 
-app.use("/static", express.static("public"))
+app.get("/recommend_songs/:bearer/limit/:limit/seed_tracks/:seed_tracks", recommend_songs.recommend_songs)
 
-//Server logic will go here
+//Handle any errors
+app.use((error, req, res, next) => { 
+    res.status(error.staus || 500)
+    return res.send(error.message)
+})
 
-//export the epxress app to make it available to other modules
+//export the express app to make it available to other modules
 module.exports = app
