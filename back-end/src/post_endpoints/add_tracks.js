@@ -24,7 +24,7 @@ const add_tracks = async (req, res) => {
 
     let tracks=req.body.uris;
     //list of spotify id to be added to the target playlist, as JSON object
-    /*const tracks= {"uris": ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh",
+    /*Sample body: {"uris": ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh",
     "spotify:track:1301WleyT98MSxVHPZCA6M", 
     "spotify:episode:512ojhOuo1ktJprKbVcKyQ"]}
     */

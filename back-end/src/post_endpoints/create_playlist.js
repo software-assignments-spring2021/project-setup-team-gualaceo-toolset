@@ -15,9 +15,6 @@ const create_playlist = async (req, res) => {
     let bearer= req.params.bearer;
     let token='Bearer '+ bearer;
 
-    let name=req.body.name;
-    let description=req.body.description;
-    let privacy=req.body.public
     //specify header used
     const headers = {
         'Content-Type': 'application/json',
@@ -32,9 +29,9 @@ const create_playlist = async (req, res) => {
         method: "post",
         url: URL,
         data: {
-            "name": name,
-            "description": description,
-            "public": privacy
+            "name": req.body.name,
+            "description": req.body.description,
+            "public": req.body.public
           },
         headers: headers,
       })
