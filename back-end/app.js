@@ -1,8 +1,6 @@
 //import and instantiate express
 //import get_playlists from "./src/get_endpoints/user_playlists"
-const user_playlists = require("./src/get_endpoints/user_playlists")
-const user_id = require("./src/get_endpoints/user_id")
-
+const recommend_songs = require("./src/get_endpoints/recommend_songs")
 const express = require("express")
 const app = express()
 
@@ -17,6 +15,7 @@ app.use("/static", express.static("public")) //Anything within the /public direc
 
 app.use("/user_playlists/:bearer/:include_tracks", user_id.get_user_id) // sets res.user_id to the user_id (if the bearer token is valid)
 app.get("/user_playlists/:bearer/:include_tracks", user_playlists.get_playlists)
+app.get("/recommend_songs/:bearer/limit/:limit/seed_tracks/:seed_tracks", recommend_songs.recommend_songs)
 
 //Handle any errors
 app.use((error, req, res, next) => { 
