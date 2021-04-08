@@ -1,170 +1,65 @@
-// /**
-//  * This is an example of a basic node.js script that performs
-//  * the Authorization Code oAuth2 flow to authenticate against
-//  * the Spotify Accounts.
-//  *
-//  * For more information, read
-//  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
-//  */
-
-// var express = require("express"); // Express web server framework
-// var request = require("request"); // "Request" library
-// var cors = require("cors");
-// var querystring = require("querystring");
-// var cookieParser = require("cookie-parser");
-
-// var client_id = "95d62e39e2a948b99b2b378d11a6e8c0"; // Your client id
-// var client_secret = "834736a8b62a45ad864f7b85d608dc3b"; // Your secret
-// var redirect_uri = "http://localhost:3000/home"; // Your redirect uri
-
-// /**
-//  * Generates a random string containing numbers and letters
-//  * @param  {number} length The length of the string
-//  * @return {string} The generated string
-//  */
-// var generateRandomString = function (length) {
-//   var text = "";
-//   var possible =
-//     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-//   for (var i = 0; i < length; i++) {
-//     text += possible.charAt(Math.floor(Math.random() * possible.length));
-//   }
-//   return text;
-// };
-
-// var stateKey = "spotify_auth_state";
-
-// var app = express();
-
-// app
-//   .use(express.static(__dirname + "/public"))
-//   .use(cors())
-//   .use(cookieParser());
-
-// app.get("/login", function (req, res) {
-//   var state = generateRandomString(16);
-//   res.cookie(stateKey, state);
-
-//   // your application requests authorization
-//   var scope = "user-read-private user-read-email user-read-playback-state";
-//   res.redirect(
-//     "https://accounts.spotify.com/authorize?" +
-//       querystring.stringify({
-//         response_type: "code",
-//         client_id: client_id,
-//         scope: scope,
-//         redirect_uri: redirect_uri,
-//         state: state,
-//       })
-//   );
-// });
-
-// app.get("/callback", function (req, res) {
-//   // your application requests refresh and access tokens
-//   // after checking the state parameter
-
-//   var code = req.query.code || null;
-//   var state = req.query.state || null;
-//   var storedState = req.cookies ? req.cookies[stateKey] : null;
-
-//   if (state === null || state !== storedState) {
-//     res.redirect(
-//       "/#" +
-//         querystring.stringify({
-//           error: "state_mismatch",
-//         })
-//     );
-//   } else {
-//     res.clearCookie(stateKey);
-//     var authOptions = {
-//       url: "https://accounts.spotify.com/api/token",
-//       form: {
-//         code: code,
-//         redirect_uri: redirect_uri,
-//         grant_type: "authorization_code",
-//       },
-//       headers: {
-//         Authorization:
-//           "Basic " +
-//           new Buffer(client_id + ":" + client_secret).toString("base64"),
-//       },
-//       json: true,
-//     };
-
-//     request.post(authOptions, function (error, response, body) {
-//       if (!error && response.statusCode === 200) {
-//         var access_token = body.access_token,
-//           refresh_token = body.refresh_token;
-
-//         var options = {
-//           url: "https://api.spotify.com/v1/me",
-//           headers: { Authorization: "Bearer " + access_token },
-//           json: true,
-//         };
-
-//         // use the access token to access the Spotify Web API
-//         request.get(options, function (error, response, body) {
-//           console.log(body);
-//         });
-
-//         // we can also pass the token to the browser to make requests from there
-//         res.redirect(
-//           "http://localhost:3000/home/#" +
-//             querystring.stringify({
-//               access_token: access_token,
-//               refresh_token: refresh_token,
-//             })
-//         );
-//       } else {
-//         res.redirect(
-//           "/#" +
-//             querystring.stringify({
-//               error: "invalid_token",
-//             })
-//         );
-//       }
-//     });
-//   }
-// });
-
-// app.get("/refresh_token", function (req, res) {
-//   // requesting access token from refresh token
-//   var refresh_token = req.query.refresh_token;
-//   var authOptions = {
-//     url: "https://accounts.spotify.com/api/token",
-//     headers: {
-//       Authorization:
-//         "Basic " +
-//         new Buffer(client_id + ":" + client_secret).toString("base64"),
-//     },
-//     form: {
-//       grant_type: "refresh_token",
-//       refresh_token: refresh_token,
-//     },
-//     json: true,
-//   };
-
-//   request.post(authOptions, function (error, response, body) {
-//     if (!error && response.statusCode === 200) {
-//       var access_token = body.access_token;
-//       res.send({
-//         access_token: access_token,
-//       });
-//     }
-//   });
-// });
-
-// console.log("Listening on 8888");
-// app.listen(8888);
-
 //import and instantiate express
+//import get_playlists from "./src/get_endpoints/user_playlists"
+const recommend_songs = require("./requests/get/recommend_songs");
+const user_id = require("./requests/get/user_id");
+const user_playlists = require("./requests/get/user_playlists");
 const express = require("express");
 const app = express();
+const cors = require("cors");
+const mongoose = require("mongoose");
 
-app.use("/static", express.static("public"));
+require("dotenv").config();
 
-//Server logic will go here
+app.use(cors());
+app.use(express.json());
 
-//export the epxress app to make it available to other modules
+const uri = process.env.ATLAS_URI;
+mongoose.connect(uri, {
+  keepAlive: true,
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+});
+
+const connection = mongoose.connection;
+connection.once("open", () => {
+  console.log("MongoDB connection established");
+});
+
+const playlistsRouter = require("./routes/playlists");
+const usersRouter = require("./routes/users");
+
+app.use("/playlists", playlistsRouter);
+app.use("/users", usersRouter);
+
+// This code disables CORS, it may be necessary for debugging.
+//***We should remove this in the final version***
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "YOUR-DOMAIN.TLD"); // update to match the domain you will make the request from
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
+// app.use("/static", express.static("public")); //Anything within the /public directory is delivered statically by accessing /static/filename in your browser
+
+app.use("/user_playlists/:bearer/:include_tracks", user_id.get_user_id); // sets res.user_id to the user_id (if the bearer token is valid)
+app.get(
+  "/user_playlists/:bearer/:include_tracks",
+  user_playlists.get_playlists
+);
+app.get(
+  "/recommend_songs/:bearer/limit/:limit/seed_tracks/:seed_tracks",
+  recommend_songs.recommend_songs
+);
+
+//Handle any errors
+app.use((error, req, res, next) => {
+  res.status(error.staus || 500);
+  return res.send(error.message);
+});
+
+//export the express app to make it available to other modules
 module.exports = app;

@@ -63,13 +63,11 @@ const Landing = (props) => {
 
   const handleSpotifyRedirect = () => {
     let scopes =
-      "user-read-private user-read-email user-read-playback-state user-read-private user-modify-playback-state user-read-currently-playing playlist-modify-private";
+      "user-read-private user-read-email user-read-playback-state playlist-read-collaborative playlist-read-private user-modify-playback-state user-read-currently-playing playlist-modify-private";
     window.location = `${REACT_APP_AUTHORIZE_URL}?client_id=${REACT_APP_CLIENT_ID}${
       scopes ? "&scope=" + encodeURIComponent(scopes) : ""
-    }&redirect_uri=${REACT_APP_REDIRECT_URL}&response_type=token&show_dialog=true`;
-    // setSpotifyRedirect(true);
+    }&redirect_uri=${REACT_APP_REDIRECT_URL}&response_type=token&show_dialog=true`; // setSpotifyRedirect(true);
   };
-
   const handleGuestRedirect = () => {
     setGuestRedirect(true);
   };

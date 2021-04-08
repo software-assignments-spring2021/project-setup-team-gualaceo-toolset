@@ -10,6 +10,8 @@ import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 
 import styles from "../styles/playlistComponentStyles.js";
+import {get_bearer, set_authentication} from "../components/authentication"
+import axios from "axios"
 
 const pressButton = (event, added, setAdded) => {
   event.stopPropagation(); //Prevents dropdown from opening when button is pressed
@@ -29,8 +31,30 @@ const Playlist = (props) => {
   } else {
     buttonIcon = <RemoveIcon color="secondary" />;
   }
+    set_authentication(localStorage, axios)
+    let tracks = playlist.tracks
 
-  console.log("playlist name: ", playlist.name);
+    /*
+    console.log("href = " , playlist.tracks)
+    axios(playlist.tracks.href)
+        .then((response) => {
+            tracks = response.data
+        })
+        .catch((err) => {
+            console.log("Error retrieving playlist tracks")
+            console.error(err)
+            return
+        })
+    */
+  console.log("playlist: ", playlist);
+  console.log("tracks: ", tracks)
+  console.log("tracks.items:" )
+  if (tracks.items)
+  {
+    tracks.items.forEach((item) => {
+        console.log(item)
+    })
+  }
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -57,19 +81,21 @@ const Playlist = (props) => {
         </div>
       </AccordionSummary>
       <Divider />
-      <AccordionDetails className={classes.accordionDetails}>
-        <div className={classes.tracklistContainer}>
-          {playlist.tracks.items.map((curSong) => (
-            <Song classes={classes} song={curSong} /> //Creates a song card for each song in the playlist
-          ))}
-        </div>
-      </AccordionDetails>
+      {tracks.items &&
+        <AccordionDetails className={classes.accordionDetails}>
+          <div className={classes.tracklistContainer}>
+            {tracks.items.map((curSong) => (
+              <Song classes={classes} song={curSong} /> //Creates a song card for each song in the playlist
+            ))}
+          </div>
+        </AccordionDetails>
+      }
     </Accordion>
   );
 };
 
 const Song = (props) => {
-  const song = props.song;
+  const song = props.song.track;
   const classes = props.classes;
   return (
     <Card className={classes.songCard} variant="square">
