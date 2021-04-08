@@ -31,6 +31,8 @@ const AddSongs = (props) => {
   const [uiLoading, setuiLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [addedSong, setAddedSong] = useState({});
+  const [uneditedSearchResults, setUneditedSearchResults] = useState([]);
 
   const getParamValues = (url) => {
     return url
@@ -67,9 +69,10 @@ const AddSongs = (props) => {
               ? (artists = track.artists[i].name)
               : (artists = artists + ", " + track.artists[i].name);
           }
-          editedRes.push({ artist: artists, title: track.name });
+          editedRes.push({ artist: artists, title: track.name, id: track.id });
         });
         setSearchResults(editedRes);
+        setUneditedSearchResults(res.data.tracks.items);
         setuiLoading(false);
       })
       .catch((err) => {
@@ -77,10 +80,43 @@ const AddSongs = (props) => {
       });
   };
 
+  // let numruns = 0;
   const handleAdd = (searchResult) => {
-    console.log(
-      `You clicked on ${searchResult.artist} - ${searchResult.title}`
-    );
+    console.log(searchResult);
+    // console.log(uneditedSearchResults);
+    // console.log(uneditedSearchResults[0].id);
+    // console.log(searchResult.id);
+    // for (let i = 0; i < uneditedSearchResults.length; i++) {
+    //   if (uneditedSearchResults[i].id === searchResult.id) {
+    //     let song = uneditedSearchResults[i];
+    //     // console.log(song);
+    //     // await setAddedSong((prevState) => ({
+    //     //   ...prevState,
+    //     //   addedSong: song,
+    //     // }));
+    //     setAddedSong(song);
+    //     break;
+    //   }
+    // }
+    // axios({
+    //   method: "get",
+    //   url: `http://localhost:5000/playlists/`,
+    // })
+    //   .then((res) => {
+    //     setSongs(res.data[0].songs);
+    //     setuiLoading(false);
+    //   })
+    //   .catch((err) => console.log(err));
+    // console.log(
+    //   `You clicked on ${searchResult.artist} - ${searchResult.title}`
+    // );
+    // console.log(addedSong);
+    // numruns++;
+    // if (numruns !== 3) {
+    //   setTimeout(() => {
+    //     handleAdd(searchResult);
+    //   }, 3000);
+    // }
   };
 
   useEffect(() => {

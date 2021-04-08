@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
 import Avatar from "@material-ui/core/avatar";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -36,6 +36,58 @@ const Playlist = (props) => {
   const [currentSong, setCurrentSong] = useState("");
   let [isOwner, setIsOwner] = useState(params.userStatus === "owner"); //params.userStatus is whatever comes after /generatedPlaylist/ in the url
   let [isGuest, setIsGuest] = useState(params.userStatus === "guest");
+  const [songs, setSongs] = useState([]);
+  const previousSongsRef = useRef(songs);
+
+  // let startSongs = [
+  // {
+  //   artist: "Aphex Twin",
+  //   title: "Xtal",
+  //   id: "7o2AeQZzfCERsRmOM86EcB",
+  // },
+  // {
+  //   artist: "Tyler, The Creator",
+  //   title: "Yonkers",
+  //   id: "1nwkSqzTyXBk6XF796EOav",
+  // },
+  // {
+  //   artist: "Billie Eilish",
+  //   title: "Bad Guy",
+  // },
+  // {
+  //   artist: "The Beetles",
+  //   title: "Here Comes the Sun",
+  // },
+  // {
+  //   artist: "Daft Punk",
+  //   title: "Emotion",
+  // },
+  // {
+  //   artist: "Aphex Twin",
+  //   title: "Avril 14th",
+  // },
+  // {
+  //   artist: "The Doors",
+  //   title: "Riders on the Storm",
+  // },
+  // {
+  //   artist: "Daft Punk",
+  //   title: "Too Long",
+  // },
+  // {
+  //   artist: "100 Gecs",
+  //   title: "Money Machine",
+  // },
+  // {
+  //   artist: "Rebecca Black",
+  //   title: "Friday",
+  // },
+  // {
+  //   artist: "Death Grips",
+  //   title: "Guillotine",
+  // },
+  // ];
+
   const handleAddMusic = () => {
     console.log("add songs");
     history.push("/addSongs");
@@ -50,57 +102,6 @@ const Playlist = (props) => {
       history.push("groupMenu/generated");
     }
   };
-
-  const startSongs = [
-    {
-      artist: "Aphex Twin",
-      title: "Xtal",
-      id: "7o2AeQZzfCERsRmOM86EcB",
-    },
-    {
-      artist: "Tyler, The Creator",
-      title: "Yonkers",
-      id: "1nwkSqzTyXBk6XF796EOav",
-    },
-    {
-      artist: "Billie Eilish",
-      title: "Bad Guy",
-    },
-    {
-      artist: "The Beetles",
-      title: "Here Comes the Sun",
-    },
-    {
-      artist: "Daft Punk",
-      title: "Emotion",
-    },
-    {
-      artist: "Aphex Twin",
-      title: "Avril 14th",
-    },
-    {
-      artist: "The Doors",
-      title: "Riders on the Storm",
-    },
-    {
-      artist: "Daft Punk",
-      title: "Too Long",
-    },
-    {
-      artist: "100 Gecs",
-      title: "Money Machine",
-    },
-    {
-      artist: "Rebecca Black",
-      title: "Friday",
-    },
-    {
-      artist: "Death Grips",
-      title: "Guillotine",
-    },
-  ];
-
-  const [songs, setSongs] = useState(startSongs);
 
   const handleRemoveSong = (delIndex, event) => {
     event.stopPropagation(); //Prevents song from opening when remove button is pressed
@@ -121,7 +122,17 @@ const Playlist = (props) => {
   };
 
   useEffect(() => {
-    setuiLoading(false);
+    if (previousSongsRef.current === songs) {
+      axios({
+        method: "get",
+        url: `http://localhost:5000/playlists/`,
+      })
+        .then((res) => {
+          setSongs(res.data[0].songs);
+          setuiLoading(false);
+        })
+        .catch((err) => console.log(err));
+    }
   }, []);
 
   const handleLogout = () => {
