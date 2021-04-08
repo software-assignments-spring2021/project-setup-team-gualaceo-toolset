@@ -99,7 +99,7 @@ const Playlist = (props) => {
     } else if (isGuest) {
       history.push("/groupMenuGuest/generated");
     } else {
-      history.push("groupMenu/generated");
+      history.push("/groupMenu/generated");
     }
   };
 
