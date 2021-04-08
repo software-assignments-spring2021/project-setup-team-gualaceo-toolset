@@ -14,6 +14,12 @@ import PauseIcon from "@material-ui/icons/Pause";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
+import { useHistory } from "react-router-dom";
+
+import axios from "axios";
+import { set_authentication, get_bearer, is_expired } from "./authentication";
+
+import _ from "lodash";
 
 import styles from "../styles/musicControllerStyles.js";
 
@@ -48,6 +54,7 @@ const CollapsedSlider = withStyles({
 })(Slider);
 
 const MusicController = (props) => {
+  let history = useHistory();
   const [expanded, setExpanded] = [props.expanded, props.setExpanded];
   const [currentSong, setCurrentSong] = [
     props.currentSong,
@@ -60,7 +67,21 @@ const MusicController = (props) => {
   const { classes } = props;
 
   const handleSliderChange = (event, newValue) => {
-    setCurrentTime(newValue);
+    if (is_expired(localStorage)) {
+      return history.push("/"); //should this just be history.push("/")?
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "get",
+      url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
+    })
+      .then((res) => {
+        console.log(res);
+        setCurrentTime(newValue);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const formatTime = (secs) => {
@@ -75,15 +96,59 @@ const MusicController = (props) => {
   const handlePrevious = () => {};
 
   const handlePlay = () => {
-    //Some api call
-    // .then
-    setIsPlaying(!isPlaying);
+    if (is_expired(localStorage)) {
+      return history.push("/"); //should this just be history.push("/")?
+    }
+    set_authentication(localStorage, axios);
+    let deviceid;
+    axios({
+      method: "get",
+      url: `https://api.spotify.com/v1/me/player`,
+    })
+      .then((res) => {
+        console.log((deviceid = res.data.device.id));
+        axios({
+          method: "put",
+          url: `https://api.spotify.com/v1/me/player/${
+            !isPlaying ? "play" : "pause"
+          }?device_id=${deviceid}`,
+          data: {
+            uris: [`spotify:track:${currentSong.id}`],
+          },
+        })
+          .then((res) => {
+            console.log(res);
+            console.log(currentSong.id);
+            setIsPlaying(!isPlaying);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleNext = () => {};
 
   useEffect(() => {
-    setDuration("280");
+    if (is_expired(localStorage)) {
+      return history.push("/"); //should this just be history.push("/")?
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "get",
+      url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
+    })
+      .then((res) => {
+        console.log(res.data.item.duration_ms);
+        setDuration(res.data.item.duration_ms / 1000);
+        setCurrentTime(res.data.item.progress_ms / 1000);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   if (expanded === false) {
