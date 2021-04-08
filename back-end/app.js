@@ -1,10 +1,13 @@
 //import and instantiate express
 //import get_playlists from "./src/get_endpoints/user_playlists"
 const recommend_songs = require("./src/get_endpoints/recommend_songs")
+const user_id = require("./src/get_endpoints/user_id")
+const user_playlists = require("./src/get_endpoints/user_playlists")
 const express = require("express")
 const app = express()
 
-// This code disables CORS, it may be necessary for debugging
+// This code disables CORS, it may be necessary for debugging.
+//***We should remove this in the final version***
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "YOUR-DOMAIN.TLD"); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
