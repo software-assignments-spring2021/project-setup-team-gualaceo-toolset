@@ -124,18 +124,21 @@ const styles = (theme) => ({
   },
   spotifyLogo: {
     width: "17%",
-    left: "0%",
-    marginTop: "3%",
+    float: "left",
+    // left: "0%",
+    marginTop: "2%",
     opacity: "70%",
     zIndex: "100",
-    marginRight: "-14px",
+    // padding: "6px",
+    marginLeft: "-5px",
+    // marginRight: "-14px",
   },
   spotifyButtonText: {
     float: "right",
-    marginRight: "15px",
-    padding: "6px",
-    textAlign: "center",
-    opacity: "100%",
+    // marginRight: "-px",
+    // padding: "6px",
+    // textAlign: "center",
+    // opacity: "100%",
   },
 });
 
