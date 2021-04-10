@@ -47,25 +47,16 @@ app.use((req, res, next) => {
 
 // app.use("/static", express.static("public")); //Anything within the /public directory is delivered statically by accessing /static/filename in your browser
 
-<<<<<<< HEAD
+//Get and set user_id if required (middleware)
 app.use("/user_playlists/:bearer/:include_tracks", user_id.get_user_id) // sets res.user_id to the user_id (if the bearer token is valid)
+app.use("/follow_playlist/:bearer/:playlist_id", user_id.get_user_id)
+app.use("/remove_tracks/:bearer/:playlist_id/:track_id", user_id.get_user_id)
+
+//endpoints to be used
 app.get("/user_playlists/:bearer/:include_tracks", user_playlists.get_playlists)
 app.get("/recommend_songs/:bearer/limit/:limit/seed_tracks/:seed_tracks", recommend_songs.recommend_songs)
-app.use("/remove_tracks/:bearer/:playlist_id/:track_id", user_id.get_user_id)
-app.use("/follow_playlist/:bearer/:playlist_id", user_id.get_user_id)
 app.delete("/remove_tracks/:bearer/:playlist_id/:track_id", remove_tracks.remove_tracks)
 app.put("/follow_playlist/:bearer/:playlist_id", follow_playlist.follow_playlist)
-=======
-app.use("/user_playlists/:bearer/:include_tracks", user_id.get_user_id); // sets res.user_id to the user_id (if the bearer token is valid)
-app.get(
-  "/user_playlists/:bearer/:include_tracks",
-  user_playlists.get_playlists
-);
-app.get(
-  "/recommend_songs/:bearer/limit/:limit/seed_tracks/:seed_tracks",
-  recommend_songs.recommend_songs
-);
->>>>>>> master
 
 //Handle any errors
 app.use((error, req, res, next) => {

@@ -1,17 +1,16 @@
 const axios = require("axios")
 const set_authentication = require("../other/authentication.js").set_authentication
 
-const follow_playlist = async (req, res, next) => 
+const remove_tracks = async (req, res, next) => 
 {
 
     const bearer = req.params.bearer
     const user_id = req.user_id //this is set by previous middleware in routing
     const playlist_id = req.params.playlist_id
-    console.log(playlist_id)
+    const track_id = req.params.track_id
+    let tracks = {"tracks": [{"uri":`spotify:track:${track_id}`}]} //req.body.uris
+    let URL = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks`
     let error = null
-    
-
-    let URL = `	https://api.spotify.com/v1/playlists/${playlist_id}/followers`
 
     if (!user_id) //check for user_id, which should have been acquired from middleware
     {
@@ -27,22 +26,24 @@ const follow_playlist = async (req, res, next) =>
     }
 
     await axios(({
-        method: "put",
+        method: "delete",
         url: URL,
+        data: tracks,
       }))
         .then((response) => 
         {
-            console.log("Successfully followed the playlist")
-            JSON_response = {"successful": true}
+            console.log("Successfully removed tracks from target playlist")
+            console.log(response.data)
+            JSON_response = response.data
         })
         .catch(async (err) => 
         {
-            let msg = "Something went wrong in the follow_playlist method"
+            let msg = "Something went wrong in the remove_tracks method"
             console.log(msg)
             console.error(err)
             error = new Error(msg)
         })
-    
+
     if (error)
     {
       return next(error)
@@ -51,5 +52,5 @@ const follow_playlist = async (req, res, next) =>
 }
 
 module.exports = {
-    follow_playlist: follow_playlist
+    remove_tracks: remove_tracks
 }
