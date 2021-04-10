@@ -28,6 +28,8 @@
 
 - When writing code, developers should leave clear comments about what their code is doing.
 
+- Use 2 space size indents/tabs
+
 ### Conflict Resolution
 
 - Please communicate any conflicts with the Scrum Master, Product Owner, or the team as a whole.

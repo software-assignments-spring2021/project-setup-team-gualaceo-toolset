@@ -19,146 +19,9 @@ import { Redirect } from "react-router-dom";
 
 import Loading from "../components/loading";
 
-//  This is the styles for material ui elements
-const styles = (theme) => ({
-  // backgroundColor: theme.palette.background.paper,
-  root: {
-    padding: theme.spacing(4),
-    borderRadius: "8px",
-    backgroundSize: "contain",
-  },
-  aboutLinkContainer: {
-    marginTop: "-20px",
-    flexGrow: 0.25,
-  },
-  backgroundImg: {
-    position: "absolute",
-    width: "100%",
-    left: "0%",
-    top: "0%",
-    // height: "100%",
-    // opacity: "50%",
-    objectFit: "cover",
-    // transform: "rotateX(180deg)",
-    zIndex: "-1",
-    boxShadow: "0 16px 40px -12px rgba(0,0,0,0.3)",
-  },
-  buttonContainer: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    flexGrow: 1,
-    marginTop: "-300px",
-  },
-  cards: {
-    width: "106%",
-    marginLeft: "-9px",
-    transition: "0.3s",
-    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
-    "&:hover": {
-      boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
-    },
-  },
-  cardHeading: {
-    fontWeight: "bolder",
-  },
-  downArrow: {
-    width: "20%",
-  },
-  downText: { color: theme.palette.secondary.contrastText, opacity: "90%" },
-  footer: {
-    top: "20px",
-  },
-  footerContainer: {
-    margin: "0 -5%",
-    display: "flex",
-  },
-  footerLinkContainer: {
-    color: "#fff",
-    display: "flex",
-    marginLeft: "4%",
-    marginTop: "4%",
-  },
-  footerLinks: {
-    color: "#fff",
-    textDecoration: "underline",
-    fontSize: "15px",
-  },
-  heading: {
-    color: theme.palette.secondary.dark,
-    textAlign: "center",
-    fontWeight: 900,
-  },
-  img: {
-    marginLeft: "-7px",
-    width: "200%",
-  },
-  landingContainer: {
-    height: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  logoBottom: {
-    width: "40px",
-    marginRight: "-4px",
-    marginTop: "-1.5px",
-    transform: "rotate(15deg)",
-  },
-  logoBox: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  logoContainer: {
-    display: "flex",
-    justifyContent: "center",
-    flexGrow: 1.5,
-    padding: "10px",
-    marginTop: "-90px",
-  },
-  logoImage: {
-    height: "80px",
-    marginBottom: "5px",
-    display: "flex",
-    marginRight: "-10px",
-    transform: "rotate(15deg)",
-  },
-  logoTextBox: {
-    height: "70px",
-  },
-  logoHeading: {
-    color: theme.palette.secondary.dark,
-    textAlign: "center",
-    fontWeight: 900,
-    fontSize: "50px",
-  },
-  login: {
-    display: "block",
-    marginLeft: "auto",
-    marginRight: "auto",
-    width: "80%",
-    fontSize: "15px",
-    fontWeight: 1000,
-    maxWidth: "100%",
-    opacity: "80%",
-  },
-  spotifyLogo: {
-    width: "17%",
-    left: "0%",
-    marginTop: "3%",
-    opacity: "70%",
-    zIndex: "100",
-    marginRight: "-14px",
-  },
-  spotifyButtonText: {
-    float: "right",
-    marginRight: "15px",
-    padding: "6px",
-    textAlign: "center",
-    opacity: "100%",
-  },
-});
+import styles from "../styles/landingStyles";
+
+import SpotifyWebApi from "spotify-web-api-js";
 
 // This is the event handler for Spotify login.
 // This will be implemented when we integrate the Spotify API
@@ -170,21 +33,53 @@ const Landing = (props) => {
   const [spotifyRedirect, setSpotifyRedirect] = useState(false);
   const [guestRedirect, setGuestRedirect] = useState(false);
 
+  const {
+    REACT_APP_CLIENT_ID,
+    REACT_APP_AUTHORIZE_URL,
+    REACT_APP_REDIRECT_URL,
+  } = process.env;
+
+  const spotifyApi = new SpotifyWebApi();
   // This is the componentDidMount method.
   /**
    * Because the componentDidMount method sets parameters of the page state after certain things load (like an API call).
    * Because there are no async functions in the initial landing page, this will automatically be triggered.*/
+  const getHashParams = () => {
+    var hashParams = {};
+    var e,
+      r = /([^&;=]+)=?([^&;]*)/g,
+      q = window.location.hash.substring(1);
+    e = r.exec(q);
+    while (e) {
+      hashParams[e[1]] = decodeURIComponent(e[2]);
+      e = r.exec(q);
+    }
+    return hashParams;
+  };
+
   useEffect(() => {
     setuiLoading(false);
   }, []);
 
   const handleSpotifyRedirect = () => {
-    setSpotifyRedirect(true);
+    let scopes =
+      "user-read-private user-read-email user-read-playback-state playlist-read-collaborative playlist-read-private user-modify-playback-state user-read-currently-playing playlist-modify-private";
+    window.location = `${REACT_APP_AUTHORIZE_URL}?client_id=${REACT_APP_CLIENT_ID}${
+      scopes ? "&scope=" + encodeURIComponent(scopes) : ""
+    }&redirect_uri=${REACT_APP_REDIRECT_URL}&response_type=token&show_dialog=true`; // setSpotifyRedirect(true);
   };
-
   const handleGuestRedirect = () => {
     setGuestRedirect(true);
   };
+
+  const params = getHashParams();
+  const token = params.access_token;
+  if (token) {
+    spotifyApi.setAccessToken(token);
+  }
+
+  // loggedIn = token ? true : false;
+  // nowPlaying = { name: "Not Checked", albumArt: "" };
 
   // Like said above, the UI will automatically load, so on render, uiLoading will automatically be set to false
   if (uiLoading === true) {
@@ -242,7 +137,7 @@ const Landing = (props) => {
                   />
                   <div className={classes.spotifyButtonText}>
                     {spotifyRedirect ? (
-                      <Redirect to="/placeholder" />
+                      <Redirect to="/home" />
                     ) : (
                       "Login with Spotify"
                     )}
