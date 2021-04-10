@@ -7,7 +7,6 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
-import {is_expired} from "../components/authentication.js"
 import SearchBar from "material-ui-search-bar";
 
 import backgroundWhite from "../media/background_white.png";
@@ -17,6 +16,14 @@ import Loading from "../components/loading";
 import styles from "../styles/addSongsStyles";
 import Logout from "../components/logout";
 
+import axios from "axios";
+import {
+  set_authentication,
+  is_expired,
+} from "../components/authentication.js";
+
+import _ from "lodash";
+
 const AddSongs = (props) => {
   let history = useHistory();
   const { classes } = props;
@@ -24,61 +31,92 @@ const AddSongs = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
+  const [addedSong, setAddedSong] = useState({});
+  const [uneditedSearchResults, setUneditedSearchResults] = useState([]);
 
-  const handleSearchTermChange = (term) => {
-    setSearchTerm(term);
-    setSearchResults([
-      {
-        artist: "Aphex Twin",
-        title: "Xtal",
-      },
-      {
-        artist: "Tyler, The Creator",
-        title: "Yonkers",
-      },
-      {
-        artist: "Billie Eilish",
-        title: "Bad Guy",
-      },
-      {
-        artist: "The Beetles",
-        title: "Here Comes the Sun",
-      },
-      {
-        artist: "Daft Punk",
-        title: "Emotion",
-      },
-      {
-        artist: "Aphex Twin",
-        title: "Avril 14th",
-      },
-      {
-        artist: "The Doors",
-        title: "Riders on the Storm",
-      },
-      {
-        artist: "Daft Punk",
-        title: "Too Long",
-      },
-      {
-        artist: "100 Gecs",
-        title: "Money Machine",
-      },
-      {
-        artist: "Rebecca Black",
-        title: "Friday",
-      },
-      {
-        artist: "Death Grips",
-        title: "Guillotine",
-      },
-    ]);
+  const getParamValues = (url) => {
+    return url
+      .slice(1)
+      .split("&")
+      .reduce((prev, curr) => {
+        const [title, value] = curr.split("=");
+        prev[title] = value;
+        return prev;
+      }, {});
   };
 
+  const handleSearchTermChange = (term) => {
+    let editedRes = [];
+    if (is_expired(localStorage)) {
+      return history.push("/"); //should this just be history.push("/")?
+    }
+    set_authentication(localStorage, axios);
+    setSearchTerm(term);
+    axios({
+      method: "get",
+      url: `https://api.spotify.com/v1/search?q=${
+        term ? term.replace(" ", "%20") : term
+      }&type=track%2Cartist&limit=50`,
+    })
+      .then((res) => {
+        console.log(res.data.tracks.items);
+        let artists = "";
+        res.data.tracks.items.map((track) => {
+          artists = "";
+          for (let i = 0; i < track.artists.length; i++) {
+            // track.artists.indexOf(artist) == 0
+            i === 0
+              ? (artists = track.artists[i].name)
+              : (artists = artists + ", " + track.artists[i].name);
+          }
+          editedRes.push({ artist: artists, title: track.name, id: track.id });
+        });
+        setSearchResults(editedRes);
+        setUneditedSearchResults(res.data.tracks.items);
+        setuiLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // let numruns = 0;
   const handleAdd = (searchResult) => {
-    console.log(
-      `You clicked on ${searchResult.artist} - ${searchResult.title}`
-    );
+    console.log(searchResult);
+    // console.log(uneditedSearchResults);
+    // console.log(uneditedSearchResults[0].id);
+    // console.log(searchResult.id);
+    // for (let i = 0; i < uneditedSearchResults.length; i++) {
+    //   if (uneditedSearchResults[i].id === searchResult.id) {
+    //     let song = uneditedSearchResults[i];
+    //     // console.log(song);
+    //     // await setAddedSong((prevState) => ({
+    //     //   ...prevState,
+    //     //   addedSong: song,
+    //     // }));
+    //     setAddedSong(song);
+    //     break;
+    //   }
+    // }
+    // axios({
+    //   method: "get",
+    //   url: `http://localhost:5000/playlists/`,
+    // })
+    //   .then((res) => {
+    //     setSongs(res.data[0].songs);
+    //     setuiLoading(false);
+    //   })
+    //   .catch((err) => console.log(err));
+    // console.log(
+    //   `You clicked on ${searchResult.artist} - ${searchResult.title}`
+    // );
+    // console.log(addedSong);
+    // numruns++;
+    // if (numruns !== 3) {
+    //   setTimeout(() => {
+    //     handleAdd(searchResult);
+    //   }, 3000);
+    // }
   };
 
   useEffect(() => {

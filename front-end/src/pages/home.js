@@ -146,10 +146,7 @@ const Home = (props) => {
           </div>
           <AppBar>
             <Toolbar className={classes.toolbar}>
-              <Button
-                onClick={() => history.push("/")}
-                startIcon={<ArrowBackIosIcon className={classes.back} />}
-              ></Button>
+              <div className={classes.spacer}></div>
               <Typography variant="h5" className={classes.heading}>
                 Your Groups
               </Typography>

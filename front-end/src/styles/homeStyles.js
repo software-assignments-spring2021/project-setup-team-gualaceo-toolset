@@ -63,6 +63,9 @@ const styles = (theme) => ({
   generateRequested:{
     fontSize: "10px",
     color: theme.palette.primary.main,
+  },
+  spacer: {
+    width: "60px"
   }
 });
 

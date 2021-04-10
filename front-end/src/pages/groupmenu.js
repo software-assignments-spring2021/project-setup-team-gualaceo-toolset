@@ -58,20 +58,15 @@ const GroupMenu = (props) => {
 
   useEffect(() => {
     if (is_expired(localStorage))
-        {
-            return history.push("/"); 
-        }
+    {
+      return history.push("/"); 
+    }
     // get group id
     setGroupID("#4529-9915");
     setGroupName("Alexa's Party");
     setuiLoading(false);
     if (params.playlistGenerated === "generated"){ //If the route '/groupMenuOwner/generated' is accessed
       setPlaylistGenerated(true)
-    }
-
-    if (is_expired(localStorage))
-    {
-      return history.push("/"); 
     }
 
     //set access token if available in local storage
