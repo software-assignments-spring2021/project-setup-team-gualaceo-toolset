@@ -37,7 +37,7 @@ const backupPlaylists = [
 ];
 
 const AddMyMusic = (props) => {
-  const [playlists, setPlaylists] = useState([]);
+  const [playlists, setPlaylists] = useState("unset");
   let history = useHistory();
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
