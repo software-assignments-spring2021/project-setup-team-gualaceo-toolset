@@ -100,6 +100,10 @@ const get_tracks_items = async (bearer, url) => {
         
     } while (offset < total && !error)
     //console.log("result = ", result)
+    if (error)
+    {
+        console.log("Error encountered in get_tracks_items function")
+    }
     return result
 }
 

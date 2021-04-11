@@ -9,6 +9,7 @@ const remove_tracks = require("./requests/post/remove_tracks")
 const create_playlist = require("./requests/post/create_playlist")
 const add_tracks = require("./requests/post/add_tracks")
 const follow_playlist = require("./requests/put/follow_playlist")
+const generate_playlist = require("./requests/post/generate_playlist")
 const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
@@ -55,6 +56,7 @@ app.use("/user_playlists/:bearer/:include_tracks", user_id.get_user_id) // sets 
 app.use("/follow_playlist/:bearer/:playlist_id", user_id.get_user_id)
 app.use("/remove_tracks/:bearer/:playlist_id/:track_id", user_id.get_user_id)
 app.use("/create_playlist/:bearer/", user_id.get_user_id)
+app.use("/generate_playlist/:bearer", user_id.get_user_id)
 
 //endpoints to be used
 app.use(express.urlencoded({extended: true}));
@@ -64,6 +66,8 @@ app.get("/user_playlists/:bearer/:include_tracks", user_playlists.get_playlists)
 app.get("/recommend_songs/:bearer/limit/:limit/seed_tracks/:seed_tracks", recommend_songs.recommend_songs)
 app.delete("/remove_tracks/:bearer/:playlist_id/:track_id", remove_tracks.remove_tracks)
 app.put("/follow_playlist/:bearer/:playlist_id", follow_playlist.follow_playlist)
+
+app.get("/generate_playlist/:bearer", generate_playlist.generate_playlist)
 
 //Handle any errors
 app.use((error, req, res, next) => {
