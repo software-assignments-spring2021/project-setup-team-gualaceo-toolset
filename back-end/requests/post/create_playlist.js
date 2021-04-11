@@ -10,7 +10,7 @@ const create_playlist = async (req, res) => {
     }*/
 
     //put spotify user id here
-    let user_id=req.params.user_id;
+    const user_id = req.user_id //this is set by previous middleware in routing
     //put bearer token here
     let bearer= req.params.bearer;
     let token='Bearer '+ bearer;

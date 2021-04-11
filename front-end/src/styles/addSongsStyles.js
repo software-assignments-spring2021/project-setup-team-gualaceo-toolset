@@ -31,8 +31,9 @@ const styles = (theme) => ({
     display: "flex",
     justifyContent: "space-between",
   },
+  logout: { color: "#fff" },
   searchBarContainer: {
-    // marginTop: "100px",
+    marginTop: "-10px",
   },
 });
 

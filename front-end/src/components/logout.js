@@ -19,7 +19,7 @@ const Logout = (props) => {
   return (
     <Container>
       <CssBaseline />
-      <Dialog open={open} disableBackdropClick={false}>
+      <Dialog open={open} disableBgitackdropClick={false}>
         <DialogTitle id="alert-dialog-title">{"Logout?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
