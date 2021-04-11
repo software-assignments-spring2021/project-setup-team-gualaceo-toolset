@@ -1,7 +1,7 @@
 const axios = require("axios")
 //const set_authentication = require("../other/authentication.js").set_authentication
 
-const create_playlist = async (req, res) => {   
+const create_playlist = async (req, res, next) => {   
 
     /*if (!set_authentication(bearer, axios))
     {
@@ -14,6 +14,7 @@ const create_playlist = async (req, res) => {
     //put bearer token here
     let bearer= req.params.bearer;
     let token='Bearer '+ bearer;
+    let error = null
 
     //specify header used
     const headers = {
@@ -42,11 +43,16 @@ const create_playlist = async (req, res) => {
             JSON_repsonse=response.data
         })
         .catch((err) => {
-            console.log("Something went wrong")
+            const msg = "Soemthing went wrong in the create_playlist endpoint"
+            console.log(msg)
             console.error(err)
-            return;
+            error = new Error(msg)
     })
 
+    if (error)
+    {
+        return next(error)
+    }
     return res.send(JSON_repsonse)
 
 }

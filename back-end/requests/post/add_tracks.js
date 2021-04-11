@@ -1,7 +1,7 @@
 const axios = require("axios")
 //const set_authentication = require("../other/authentication.js").set_authentication
 
-const add_tracks = async (req, res) => {   
+const add_tracks = async (req, res, next) => {   
 
     /*if (!set_authentication(bearer, axios))
     {
@@ -14,6 +14,7 @@ const add_tracks = async (req, res) => {
     let token='Bearer '+ bearer;
     //put playlist id here
     let playlist_id=req.params.playlist_id;
+    let error = null
 
     //specify header used
     const headers = {
@@ -44,11 +45,16 @@ const add_tracks = async (req, res) => {
             JSON_response=response.data
         })
         .catch((err) => {
-            console.log("Something went wrong")
+            const msg = "Something went wrong in the add_tracks endpoint"
+            console.log(msg)
             console.error(err)
-            return;
+            error = new Error(msg)
     })
 
+    if (error)
+    {
+        return next(error)
+    }
     return res.send(JSON_response)
 
 }
