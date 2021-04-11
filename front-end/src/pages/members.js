@@ -7,15 +7,16 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
-
 import Loading from "../components/loading";
-
+import Logout from "../components/logout";
 import styles from "../styles/membersStyles.js";
+import {is_expired} from "../components/authentication.js"
 
 const Members = (props) => {
   let history = useHistory();
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
+  const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const memberlist = [
     { name: "Ryan B", owner: false, self: false },
     { name: "Alexa H", owner: true, self: false },
@@ -26,6 +27,10 @@ const Members = (props) => {
   ];
 
   useEffect(() => {
+    if (is_expired(localStorage))
+    {
+      return history.push("/"); 
+    }
     setuiLoading(false);
   }, []);
 
@@ -47,6 +52,21 @@ const Members = (props) => {
                 <Typography variant="h5" className={classes.heading}>
                   Member List
                 </Typography>
+                <Button
+                  color="inherit"
+                  onClick={() => {
+                    setOpenConfirmLogout(!openConfirmLogout);
+                  }}
+                  className={classes.logout}
+                >
+                  Logout
+                </Button>
+                <div style={{ position: "absolute" }}>
+                  <Logout
+                    open={openConfirmLogout}
+                    setOpen={setOpenConfirmLogout}
+                  />
+                </div>
               </Toolbar>
             </AppBar>
             {memberlist.map((member) => (

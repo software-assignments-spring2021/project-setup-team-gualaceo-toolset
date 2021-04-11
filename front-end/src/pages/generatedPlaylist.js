@@ -16,11 +16,9 @@ import MusicController from "../components/musiccontroller";
 import IconButton from "@material-ui/core/IconButton";
 import RemoveIcon from "@material-ui/icons/Remove";
 import styles from "../styles/generatedPlaylistStyles";
-
 import axios from "axios";
 import {
   set_authentication,
-  get_bearer,
   is_expired,
 } from "../components/authentication";
 
@@ -38,55 +36,6 @@ const Playlist = (props) => {
   let [isGuest, setIsGuest] = useState(params.userStatus === "guest");
   const [songs, setSongs] = useState([]);
   const previousSongsRef = useRef(songs);
-
-  // let startSongs = [
-  // {
-  //   artist: "Aphex Twin",
-  //   title: "Xtal",
-  //   id: "7o2AeQZzfCERsRmOM86EcB",
-  // },
-  // {
-  //   artist: "Tyler, The Creator",
-  //   title: "Yonkers",
-  //   id: "1nwkSqzTyXBk6XF796EOav",
-  // },
-  // {
-  //   artist: "Billie Eilish",
-  //   title: "Bad Guy",
-  // },
-  // {
-  //   artist: "The Beetles",
-  //   title: "Here Comes the Sun",
-  // },
-  // {
-  //   artist: "Daft Punk",
-  //   title: "Emotion",
-  // },
-  // {
-  //   artist: "Aphex Twin",
-  //   title: "Avril 14th",
-  // },
-  // {
-  //   artist: "The Doors",
-  //   title: "Riders on the Storm",
-  // },
-  // {
-  //   artist: "Daft Punk",
-  //   title: "Too Long",
-  // },
-  // {
-  //   artist: "100 Gecs",
-  //   title: "Money Machine",
-  // },
-  // {
-  //   artist: "Rebecca Black",
-  //   title: "Friday",
-  // },
-  // {
-  //   artist: "Death Grips",
-  //   title: "Guillotine",
-  // },
-  // ];
 
   const handleAddMusic = () => {
     console.log("add songs");
@@ -122,7 +71,12 @@ const Playlist = (props) => {
   };
 
   useEffect(() => {
-    if (previousSongsRef.current === songs) {
+    if (!isGuest && is_expired(localStorage)) //only non-guests should be booted to the landing page
+    {
+      return history.push("/"); 
+    }
+
+    if (!isGuest && previousSongsRef.current === songs) {
       axios({
         method: "get",
         url: `http://localhost:5000/playlists/`,
@@ -132,6 +86,8 @@ const Playlist = (props) => {
           setuiLoading(false);
         })
         .catch((err) => console.log(err));
+    } else if (isGuest){
+      setuiLoading(false);
     }
   }, []);
 
@@ -148,7 +104,7 @@ const Playlist = (props) => {
 
   const handleSongChange = (song) => {
     if (is_expired(localStorage)) {
-      return history.push("/"); //should this just be history.push("/")?
+      return history.push("/"); 
     }
     set_authentication(localStorage, axios);
     let deviceid;
@@ -206,15 +162,17 @@ const Playlist = (props) => {
               <Typography variant="h5" className={classes.heading}>
                 Playlist
               </Typography>
-              <Button
+              { !isGuest &&
+                <Button
                 color="inherit"
                 onClick={() => {
                   setOpenConfirmLogout(!openConfirmLogout);
                 }}
                 className={classes.logout}
-              >
-                Logout
-              </Button>
+                >
+                  Logout
+                </Button>
+              }
               <div style={{ position: "absolute" }}>
                 <Logout
                   open={openConfirmLogout}

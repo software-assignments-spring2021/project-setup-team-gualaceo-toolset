@@ -6,11 +6,12 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography } from "@material-ui/core";
 import axios from "axios";
-import {get_bearer, set_authentication} from "../components/authentication"
+import {get_bearer, is_expired} from "../components/authentication.js"
 
 // import backgroundWhite from "../media/background_white.png";
 
 import Loading from "../components/loading";
+import Logout from "../components/logout";
 import Playlist from "../components/playlistComponent.js";
 
 import styles from "../styles/addMyMusicStyles.js";
@@ -36,14 +37,32 @@ const backupPlaylists = [
 ];
 
 const AddMyMusic = (props) => {
-    const [playlists, setPlaylists] = useState("unset");
-    let history = useHistory();
-    const { classes } = props;
-    const [uiLoading, setuiLoading] = useState(true);
-    const [haveTracks, setHaveTracks] = useState(false);
+  const [playlists, setPlaylists] = useState("unset");
+  let history = useHistory();
+  const { classes } = props;
+  const [uiLoading, setuiLoading] = useState(true);
+  const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
+  const [haveTracks, setHaveTracks] = useState(false);
+  const { match: { params } } = props;
 
-    useEffect(() => {
-        console.log("fetching playlists");
+  const goLastPage = () => {
+    if (params.userStatus === "owner")
+    {
+      return history.push("/viewMusicOwner")
+    } else {
+      return history.push("/viewMusic")
+    }
+  }
+
+  useEffect(() => {
+
+    if (is_expired(localStorage))
+    {
+      return history.push("/"); 
+    }
+    //setuiLoading(false);
+    
+    console.log("fetching playlists");
 
         //make call for playlists without track contents
         axios({
@@ -56,8 +75,8 @@ const AddMyMusic = (props) => {
             
                 if (playlists === "unset")
                 {
-                    setPlaylists(response.data); //stores the result from the api call in playlists
-                    setuiLoading(false);
+                  setPlaylists(response.data); //stores the result from the api call in playlists
+                  setuiLoading(false);
                 }
             })
             .catch((err) => {
@@ -97,7 +116,7 @@ const AddMyMusic = (props) => {
                     setuiLoading(false)
                 }
             });    
-    }, [playlists, haveTracks]); // run whenever playlists is updated
+    }, [playlists, haveTracks, history]); // run whenever playlists, haveTracks or history is updated
 
   if (uiLoading === true) {
     return <Loading />; //If still waiting for an api request to return, will show the loading screen instead
@@ -108,13 +127,27 @@ const AddMyMusic = (props) => {
           <AppBar className={classes.appBar}>
             <Toolbar className={classes.toolbar}>
               <Button
-                onClick={() => history.push("/placeholder")}
+                onClick={goLastPage}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
               <Typography variant="h5" className={classes.heading}>
                 Add My Music
               </Typography>
-              <Button className={classes.logout}>Logout</Button>
+              <Button
+                color="inherit"
+                onClick={() => {
+                  setOpenConfirmLogout(!openConfirmLogout);
+                }}
+                className={classes.logout}
+              >
+                Logout
+              </Button>
+              <div style={{ position: "absolute" }}>
+                <Logout
+                  open={openConfirmLogout}
+                  setOpen={setOpenConfirmLogout}
+                />
+              </div>
             </Toolbar>
           </AppBar>
           <div className={classes.playlistContainer}>
