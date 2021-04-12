@@ -35,7 +35,11 @@ const generate_playlist = async (req, res, next) => {
     }
 
     console.log("result acquired!")
-    return res.send(result)
+    let user_arrays = get_user_arrays(playlists)
+
+    let occurrences = get_occurrences(user_arrays)
+
+    return res.send(occurrences)
 }
 
 const get_playlists = async (playlist_ids) => { //returns an array of playlists and their tracks from an input of the playlist_ids
@@ -91,9 +95,102 @@ const get_playlists = async (playlist_ids) => { //returns an array of playlists 
 }
 
 const get_user_arrays = (playlists) => { //gets an object of user arrays, each containing the tracks from the corresponding user
+    let user_songs = {} //object with user ids as keys and their songs in an array as value
+    
+    playlists.forEach((playlist) => {
+        if (!user_songs[playlist.owner.id]) //user is yet to be accounted for
+        {
+            user_songs[playlist.owner.id] = []
+        }
+        
+        playlist.tracks.items.forEach(item => {
+            user_songs[playlist.owner.id].push(item)
+        })
 
+        //console.log(user_songs)
+    })
+
+    return user_songs
 }
 
+const get_occurrences = (user_arrays) => { //gets an object of the format {song_occurrences: [], artist_occurrences: []}
+    
+    
+    song_occurrences = {}
+    artist_occurrences = {}
+    
+
+    Object.keys(user_arrays).forEach(user_id => {
+        //create objects indicating occurences within the current user array
+        let cur_song_occ = {} 
+        let cur_artist_occ = {}
+
+        user_arrays[user_id].forEach(item => {
+            let cur_id = item.track.id
+            let cur_artists = item.track.artists
+            //update song occurrences
+            if (!cur_song_occ[cur_id]) //this song is yet to show up for the current user
+            {
+                cur_song_occ[cur_id] = true
+                if (!song_occurrences[cur_id])
+                {
+                    song_occurrences[cur_id] = 1
+                } else {
+                    song_occurrences[cur_id] += 1
+                }
+            }
+
+            //update cur_artist occurrences 
+            cur_artists.forEach(artist => {
+                if (!cur_artist_occ[artist.id]) //this artist is yet to show up for the current user
+                {   
+                    cur_artist_occ[artist.id] = true
+                    if (!artist_occurrences[artist.id])
+                    {
+                        artist_occurrences[artist.id] = 1
+                    } else {
+                        artist_occurrences[artist.id] += 1
+                    }
+                }
+            })
+        })
+
+    })
+
+    //put the occurrences into arrays
+    let song_occ_array = []
+    let artist_occ_array = []
+
+    for (let song in song_occurrences)
+    {
+        song_occ_array.push([song, song_occurrences[song]])
+    }
+
+    for (let artist in artist_occurrences)
+    {
+        artist_occ_array.push([artist, artist_occurrences[artist]])
+    }
+
+    //sort them greatest to least
+    song_occ_array.sort((a, b) => {
+        return b[1] - a[1] 
+    })
+
+    artist_occ_array.sort((a, b) => {
+        return b[1] - a[1]
+    })
+
+    //filter out songs and artists that only show up once
+    song_occ_array = song_occ_array.filter(song => song[1] > 1)
+    artist_occ_array = artist_occ_array.filter(artist => artist[1] > 1)
+
+    let occurrences = {
+        song_occurrences: song_occ_array,
+        artist_occurrences: artist_occ_array
+    }
+
+    return occurrences
+}
 const async_for_each = async (array, callback) => { // forEach loop in sequential order
     for (let index = 0; index < array.length; index++) {
         await callback(array[index], index, array);
