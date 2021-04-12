@@ -13,6 +13,10 @@ const generate_playlist = async (req, res, next) => {
 
     const bearer = req.params.bearer
     const user_id = req.user_id //this is set by previous middleware in routing
+    const common_songs_ratio = 0.2 //max ratio of common songs to total songs
+    const common_artists_ratio = 0.2 //max ratio of songs from common artists
+    const common_recs = 0.3 //ratio of recommendations obtained using the common songs and artists
+    const total_songs = 50
 
     if (!user_id) //check for user_id, which should have been acquired from middleware 
     {   
@@ -39,6 +43,12 @@ const generate_playlist = async (req, res, next) => {
 
     let occurrences = get_occurrences(user_arrays)
 
+    let uris = [] //should be an array of track uri's (spotify:track:${track_id})
+    let inserted_songs = {} //object to keep track of what ids have been added already
+
+    add_common_songs(uris, occurrences, common_songs_ratio, total_songs, inserted_songs)
+    
+    console.log("in main, uris = ", uris)
     return res.send(occurrences)
 }
 
@@ -191,6 +201,33 @@ const get_occurrences = (user_arrays) => { //gets an object of the format {song_
 
     return occurrences
 }
+
+//Add any songs that are common between different users' playlists
+const add_common_songs = (uris, occurrences, common_songs_ratio, max_songs, inserted_songs) => {
+    let song_occurrences = occurrences.song_occurrences
+    let common_songs_count = Math.floor(common_songs_ratio * max_songs) //limit of how many songs should be added in this category
+
+    let i = 0
+    while(i < song_occurrences.length && i < common_songs_count) //limit the songs added
+    {   
+        let track_id = song_occurrences[i][0] //the first index will be the ID
+        uris.push(`spotify:track:${track_id}`) 
+        inserted_songs[track_id] = true
+        i += 1
+    }
+
+    //console.log(uris)
+}
+
+//Add songs that come from any common artists
+const add_from_common_artists = async (uris, occurrences, common_artists_ratio, max_songs) => {
+    let song_occurrences = occurrences.song_occurrences
+    let common_songs_count = Math.floor(common_songs_ratio * max_songs) //limit of how many songs should be added in this category
+
+    
+    //Make sure to check if a song is already inserted before adding (won't this make it O(n^2)?)
+}
+
 const async_for_each = async (array, callback) => { // forEach loop in sequential order
     for (let index = 0; index < array.length; index++) {
         await callback(array[index], index, array);
