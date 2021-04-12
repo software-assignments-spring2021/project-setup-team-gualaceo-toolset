@@ -27,7 +27,13 @@ const generate_playlist = async (req, res, next) => {
         return next(new Error(msg))
     }
 
-    let result = await get_playlists(dummyPlaylists)
+    let playlists = await get_playlists(dummyPlaylists) //get an array of playlists
+
+    if (playlists instanceof Error) //check if an error was thrown by get_playlists
+    {
+        return next(playlists)
+    }
+
     console.log("result acquired!")
     return res.send(result)
 }
@@ -54,21 +60,24 @@ const get_playlists = async (playlist_ids) => { //returns an array of playlists 
 
         //append the tracks to the playlist object
 
-        await axios(`${cur_playlist.tracks.href}`)  //do not try this if the playlist is private
-            .then(async res => {
-                cur_playlist.tracks.items = res.data.items
-            })
-            .catch(err => {
-                console.log("Error encountered in retrieving playlist track items in get_playlists method")
-                error = new Error(err)
-            })
-
-        if (error) //check for errors
+        if (cur_playlist.public) //Only include this playlist in the result if it is public, we can't retrieve tracks for private playlists
         {
-            return //not sure if this will actually work
-        }
+            await axios(`${cur_playlist.tracks.href}`)  //do not try this if the playlist is private
+                .then(async res => {
+                    cur_playlist.tracks.items = res.data.items
+                })
+                .catch(err => {
+                    console.log("Error encountered in retrieving playlist track items in get_playlists method")
+                    error = new Error(err)
+                })
 
-        result.push(cur_playlist)
+            if (error) //check for errors
+            {
+                return //not sure if this will actually work
+            }
+
+            result.push(cur_playlist)
+        }
         
     })
 
@@ -76,9 +85,13 @@ const get_playlists = async (playlist_ids) => { //returns an array of playlists 
     {
         console.log("Error encountered in get_playlists method in generate_playlist.js")
         console.error(error)
-        return error //eh?
+        return error 
     }
     return result
+}
+
+const get_user_arrays = (playlists) => { //gets an object of user arrays, each containing the tracks from the corresponding user
+
 }
 
 const async_for_each = async (array, callback) => { // forEach loop in sequential order
