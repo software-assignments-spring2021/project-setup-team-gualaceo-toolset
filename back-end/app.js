@@ -1,7 +1,7 @@
 //import and instantiate express
 //import get_playlists from "./src/get_endpoints/user_playlists"
 const recommend_songs = require("./requests/get/recommend_songs");
-const user_id = require("./requests/get/user_id");
+const user_info = require("./requests/get/user_info");
 const user_playlists = require("./requests/get/user_playlists");
 const express = require("express");
 const app = express();
@@ -51,12 +51,12 @@ app.use((req, res, next) => {
 
 // app.use("/static", express.static("public")); //Anything within the /public directory is delivered statically by accessing /static/filename in your browser
 
-//Get and set user_id if required (middleware)
-app.use("/user_playlists/:bearer/:include_tracks", user_id.get_user_id) // sets res.user_id to the user_id (if the bearer token is valid)
-app.use("/follow_playlist/:bearer/:playlist_id", user_id.get_user_id)
-app.use("/remove_tracks/:bearer/:playlist_id/:track_id", user_id.get_user_id)
-app.use("/create_playlist/:bearer/", user_id.get_user_id)
-app.use("/generate_playlist/:bearer", user_id.get_user_id)
+//Get and set user info if required (middleware)
+app.use("/user_playlists/:bearer/:include_tracks", user_info.get_user_info) // sets res.user_id to the user_id (if the bearer token is valid)
+app.use("/follow_playlist/:bearer/:playlist_id", user_info.get_user_info)
+app.use("/remove_tracks/:bearer/:playlist_id/:track_id", user_info.get_user_info)
+app.use("/create_playlist/:bearer/", user_info.get_user_info)
+app.use("/generate_playlist/:bearer", user_info.get_user_info)
 
 //endpoints to be used
 app.use(express.urlencoded({extended: true}));

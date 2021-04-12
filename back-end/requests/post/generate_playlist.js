@@ -13,10 +13,11 @@ const generate_playlist = async (req, res, next) => {
 
     const bearer = req.params.bearer
     const user_id = req.user_id //this is set by previous middleware in routing
+    const country = req.country //set by previous middleware
     const common_songs_ratio = 0.2 //max ratio of common songs to total songs
-    const common_artists_ratio = 0.2 //max ratio of songs from common artists
-    const common_recs = 0.3 //ratio of recommendations obtained using the common songs and artists
-    const total_songs = 50
+    const common_artists_ratio = 0.5 //max ratio of songs from common artists
+    const common_recs_ratio = 0.3 //ratio of recommendations obtained using the common songs and artists
+    const total_songs = 50 //songs that will be added to the playlist, should not exceed 100
 
     if (!user_id) //check for user_id, which should have been acquired from middleware 
     {   
@@ -47,8 +48,10 @@ const generate_playlist = async (req, res, next) => {
     let inserted_songs = {} //object to keep track of what ids have been added already
 
     add_common_songs(uris, occurrences, common_songs_ratio, total_songs, inserted_songs)
+    await add_from_common_artists(uris, occurrences, common_artists_ratio, total_songs, inserted_songs, country)
     
     console.log("in main, uris = ", uris)
+    console.log("total tracks = ", uris.length)
     return res.send(occurrences)
 }
 
@@ -220,11 +223,54 @@ const add_common_songs = (uris, occurrences, common_songs_ratio, max_songs, inse
 }
 
 //Add songs that come from any common artists
-const add_from_common_artists = async (uris, occurrences, common_artists_ratio, max_songs) => {
-    let song_occurrences = occurrences.song_occurrences
-    let common_songs_count = Math.floor(common_songs_ratio * max_songs) //limit of how many songs should be added in this category
-
+const add_from_common_artists = async (uris, occurrences, common_artists_ratio, max_songs, inserted_songs, country) => {
+    let artist_occurrences = occurrences.artist_occurrences
+    let common_artist_songs_count = Math.floor(common_artists_ratio * max_songs) //limit of how many songs should be added in this category
+    let songs_per_artist = Math.floor(common_artist_songs_count / artist_occurrences.length) //determine number of songs to get from each artist
     
+    if (songs_per_artist < 1)
+    {
+        songs_per_artist = 1
+    }
+
+    console.log("adding", songs_per_artist, "songs per artist")
+
+    let artist_index = 0
+    while (artist_index < artist_occurrences.length && common_artist_songs_count > 0)
+    {
+        let artist_id = artist_occurrences[artist_index][0]
+        let artist_tracks
+        let cur_artist_count = songs_per_artist
+
+        let passed = await axios(`https://api.spotify.com/v1/artists/${artist_id}/top-tracks?market=${country}`) //pull the artist's top 10 tracks
+            .then(res => {
+                artist_tracks = res.data.tracks
+                return true
+            })
+            .catch(err => {
+                console.log("error obtaining top tracks for artist with id ", artist_id)
+                return false
+            })
+        
+        if (passed) //add acquired data
+        {
+            let j = 0
+            while (j < artist_tracks.length && cur_artist_count > 0 && common_artist_songs_count > 0) //insert all top tracks from artist
+            {
+                let track_id = artist_tracks[j].id
+                if (!inserted_songs[track_id]) //do not insert if this song has already been inserted
+                {
+                    inserted_songs[track_id] = true
+                    uris.push(`spotify:track:${track_id}`) 
+                    cur_artist_count -= 1
+                    common_artist_songs_count -= 1
+                }
+
+                j += 1
+            }
+        }
+        artist_index += 1
+    }
     //Make sure to check if a song is already inserted before adding (won't this make it O(n^2)?)
 }
 
