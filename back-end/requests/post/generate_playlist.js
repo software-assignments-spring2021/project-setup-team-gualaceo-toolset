@@ -29,8 +29,8 @@ const generate_playlist = async (req, res, next) => {
 
     //these ratios should not total to any number > 1.0
     const common_songs_ratio = 0.2 //max ratio of common songs to total songs
-    const common_artists_ratio = 0.4 //max ratio of songs from common artists
-    const common_recs_ratio = 0.3 //ratio of recommendations obtained using the common songs and artists
+    const common_artists_ratio = 0.2 //max ratio of songs from common artists
+    const common_recs_ratio = 0.4 //ratio of recommendations obtained using the common songs and artists
 
     //for sake of the demo, retrieve specified dummy data
     let dummy_playlists
@@ -79,6 +79,7 @@ const generate_playlist = async (req, res, next) => {
 
     let remaining_tracks = total_songs - uris.length
     await add_remaining_recs(uris, user_arrays, remaining_tracks, inserted_songs, country)
+    shuffleArray(uris)
     let created = await create_playlist(uris, user_id, playlist_name, bearer)
     if (created instanceof Error)
     {
@@ -540,6 +541,21 @@ const async_for_each = async (array, callback) => { // forEach loop in sequentia
         await callback(array[index], index, array);
     }
 }
+
+const shuffleArray = (array) => {
+    let curId = array.length;
+    // There remain elements to shuffle
+    while (0 !== curId) {
+      // Pick a remaining element
+      let randId = Math.floor(Math.random() * curId);
+      curId -= 1;
+      // Swap it with the current element.
+      let tmp = array[curId];
+      array[curId] = array[randId];
+      array[randId] = tmp;
+    }
+    return array;
+  }
 
 module.exports = {
     generate_playlist: generate_playlist
