@@ -9,8 +9,8 @@ const playlistsSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
-  songs: {
-    type: Array,
+  href: {
+    type: String,
     default: [],
   },
 });

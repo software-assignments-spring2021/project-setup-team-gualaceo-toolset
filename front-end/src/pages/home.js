@@ -22,13 +22,17 @@ import Logout from "../components/logout";
 import styles from "../styles/homeStyles";
 
 import axios from "axios";
-import {set_authentication, get_bearer, is_expired} from "../components/authentication.js"
+import {
+  set_authentication,
+  get_bearer,
+  is_expired,
+} from "../components/authentication.js";
 
 const Home = (props) => {
   let history = useHistory();
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
-
+  const [groupName, setGroupName] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
 
   const groups = [
@@ -78,20 +82,21 @@ const Home = (props) => {
   useEffect(() => {
     const { setExpiryTime, history, location } = props;
     try {
-      if (_.isEmpty(location.hash)) { //If no new authorization data is provided from spotify, check if the old data is good
-        if (is_expired(localStorage))
-        {
-          return history.push("/"); 
+      if (_.isEmpty(location.hash)) {
+        //If no new authorization data is provided from spotify, check if the old data is good
+        if (is_expired(localStorage)) {
+          return history.push("/");
         }
       } else {
         const access_token = getParamValues(location.hash);
-        const expiryTime = new Date().getTime() + access_token.expires_in * 1000;
+        const expiryTime =
+          new Date().getTime() + access_token.expires_in * 1000;
         localStorage.setItem("auth_data", JSON.stringify(access_token));
         localStorage.setItem("expiry_time", expiryTime);
       }
     } catch (err) {
-      console.log("Error: something when wrong in setting up the home page")
-      console.error(err)
+      console.log("Error: something when wrong in setting up the home page");
+      console.error(err);
       history.push("/");
     }
 
@@ -102,7 +107,7 @@ const Home = (props) => {
       ] = `Bearer ${auth_data.access_token}`;
     }*/
 
-    set_authentication(localStorage, axios) //sets authentication in axios
+    set_authentication(localStorage, axios); //sets authentication in axios
 
     // const authToken =
     //   ; //localStorage.getItem("AuthToken");
@@ -110,8 +115,26 @@ const Home = (props) => {
     //Test function to see if axios authentication is correctly set
     //This test function shouldn't be necessary, but for some reason without it
     //The home page hangs on loading screen indefinitely
+
+    axios({
+      method: "get",
+      url: `https://api.spotify.com/v1/me`,
+    })
+      .then((res) => {
+        let userid = res.data.id;
+        console.log(userid);
+        axios({
+          method: "get",
+          url: `http://localhost:5000/playlists/me`,
+          data: { user: `${userid}` },
+        })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
     setuiLoading(false);
-    
   }, []);
 
   const handleJoin = () => {
@@ -121,13 +144,68 @@ const Home = (props) => {
     // }
   };
 
-  const handleCreate = () => {
-    history.push("/groupMenuOwner");
+  const handleCreate = (event) => {
+    event.preventDefault();
+    console.log(groupName);
+    // return history.push("/groupMenuOwner");
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    // get user id
+    axios({
+      method: "get",
+      url: `https://api.spotify.com/v1/me`,
+    })
+      .then((res) => {
+        let userid = res.data.id;
+        // Create the playlist
+        axios({
+          method: "post",
+          url: `https://api.spotify.com/v1/users/${userid}/playlists`,
+          data: {
+            name: groupName,
+            description: "This playlist was generated using Synthesize.",
+            public: true,
+          },
+        })
+          .then((res) => {
+            console.log(res);
+            // Add the playlist to the DB
+            axios({
+              method: "post",
+              url: `http://localhost:5000/playlists/add`,
+              data: { owners: userid, members: userid, href: res.data.href },
+            })
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((err) => console.log(err));
+            //Follow the playlist
+            axios({
+              method: "put",
+              url: `https://api.spotify.com/v1/playlists/${res.data.id}/followers`,
+              data: {
+                public: true,
+              },
+            })
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((err) => console.log(err));
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // history.push("/groupMenuOwner");
   };
 
   const handleVisit = (pageLink) => {
-    history.push(pageLink)
-  }
+    history.push(pageLink);
+  };
 
   if (uiLoading === true) {
     return <Loading />;
@@ -175,19 +253,23 @@ const Home = (props) => {
                 </Typography>
               </AccordionSummary>
               <Divider></Divider>
-              <AccordionDetails style={{ marginTop: "10px" }}>
-                <Typography>Enter Group Name:</Typography>
-                <TextField
-                  style={{ width: "90%" }}
-                  label="Group Name"
-                  variant="outlined"
-                />
-              </AccordionDetails>
-              <AccordionDetails style={{ marginTop: "-10px" }}>
-                <Button variant="outlined" fullWidth onClick={handleCreate}>
-                  Create
-                </Button>
-              </AccordionDetails>
+              <form onSubmit={handleCreate}>
+                <AccordionDetails style={{ marginTop: "10px" }}>
+                  <Typography>Enter Group Name:</Typography>
+                  <TextField
+                    style={{ width: "90%" }}
+                    label="Group Name"
+                    variant="outlined"
+                    onChange={(e) => setGroupName(e.target.value)}
+                    value={groupName}
+                  />
+                </AccordionDetails>
+                <AccordionDetails style={{ marginTop: "-10px" }}>
+                  <Button variant="outlined" fullWidth type="submit">
+                    Create
+                  </Button>
+                </AccordionDetails>
+              </form>
             </Accordion>
             <Accordion square={true} className={classes.accordion}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -242,37 +324,38 @@ const RegenerateRequested = (props) => {
 };
 
 const Group = (props) => {
-  let group = props.group
-  let classes = props.classes
-  let handleVisit = props.handleVisit
+  let group = props.group;
+  let classes = props.classes;
+  let handleVisit = props.handleVisit;
   //console.log(group)
-  let pageLink = "/groupmenu"
-  if (group.owner){
-    pageLink = "/groupMenuOwner"
+  let pageLink = "/groupmenu";
+  if (group.owner) {
+    pageLink = "/groupMenuOwner";
   }
-  
+
   return (
-  <Card fullWidth className={classes.cards}>
-    <CardContent style={{ marginBottom: "-10px" }} onClick={() => handleVisit(pageLink)}>
-      <Box className={classes.groupBox}>
-        <Box>
-          <Avatar className={classes.avatar} variant="rounded" />
+    <Card fullWidth className={classes.cards}>
+      <CardContent
+        style={{ marginBottom: "-10px" }}
+        onClick={() => handleVisit(pageLink)}
+      >
+        <Box className={classes.groupBox}>
+          <Box>
+            <Avatar className={classes.avatar} variant="rounded" />
+          </Box>
+          <Box>
+            <Typography style={{ marginLeft: "15px", marginTop: "10px" }}>
+              {group.name}
+            </Typography>
+          </Box>
+          <Box className={classes.playlistInfo}>
+            <IsOwner group={group} classes={classes} />
+            <RegenerateRequested group={group} classes={classes} />
+          </Box>
         </Box>
-        <Box>
-          <Typography
-            style={{ marginLeft: "15px", marginTop: "10px" }}
-          >
-            {group.name}
-          </Typography>
-        </Box>
-        <Box className={classes.playlistInfo}>
-          <IsOwner group={group} classes={classes}/>
-          <RegenerateRequested group={group} classes={classes}/>
-        </Box>
-      </Box>
-    </CardContent>
-  </Card>
-  )
-}
+      </CardContent>
+    </Card>
+  );
+};
 
 export default withStyles(styles)(Home);

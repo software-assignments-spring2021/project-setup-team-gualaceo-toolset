@@ -18,7 +18,7 @@ import { Redirect } from "react-router-dom";
 import Loading from "../components/loading";
 import styles from "../styles/landingStyles";
 import SpotifyWebApi from "spotify-web-api-js";
-import {is_expired} from "../components/authentication.js";
+import { is_expired } from "../components/authentication.js";
 
 // This is the event handler for Spotify login.
 // This will be implemented when we integrate the Spotify API
@@ -57,17 +57,16 @@ const Landing = (props) => {
   useEffect(() => {
     const { setExpiryTime, history, location } = props;
     //if the current Spotify session in local storage is not yet expired, use it
-    if (!is_expired(localStorage))
-    {
-      return history.push("/home")
+    if (!is_expired(localStorage)) {
+      return history.push("/home");
     }
 
     setuiLoading(false);
-  }, []);
+  }, [props]);
 
   const handleSpotifyRedirect = () => {
     let scopes =
-      "user-read-private user-read-email user-read-playback-state playlist-read-collaborative playlist-read-private user-modify-playback-state user-read-currently-playing playlist-modify-private";
+      "user-read-private user-read-email user-read-playback-state playlist-read-collaborative playlist-modify-public playlist-read-private user-modify-playback-state user-read-currently-playing playlist-modify-private";
     window.location = `${REACT_APP_AUTHORIZE_URL}?client_id=${REACT_APP_CLIENT_ID}${
       scopes ? "&scope=" + encodeURIComponent(scopes) : ""
     }&redirect_uri=${REACT_APP_REDIRECT_URL}&response_type=token&show_dialog=true`; // setSpotifyRedirect(true);

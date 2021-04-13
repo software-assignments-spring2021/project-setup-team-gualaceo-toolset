@@ -62,26 +62,26 @@ const MusicController = (props) => {
   ];
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = [props.isPlaying, props.setIsPlaying];
 
   const { classes } = props;
 
   const handleSliderChange = (event, newValue) => {
-    if (is_expired(localStorage)) {
-      return history.push("/"); //should this just be history.push("/")?
-    }
-    set_authentication(localStorage, axios);
-    axios({
-      method: "get",
-      url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
-    })
-      .then((res) => {
-        console.log(res);
-        setCurrentTime(newValue);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // if (is_expired(localStorage)) {
+    //   return history.push("/"); //should this just be history.push("/")?
+    // }
+    // set_authentication(localStorage, axios);
+    // axios({
+    //   method: "get",
+    //   url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
+    // })
+    //   .then((res) => {
+    //     console.log(res);
+    //     setCurrentTime(newValue);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
 
   const formatTime = (secs) => {
@@ -106,19 +106,22 @@ const MusicController = (props) => {
       url: `https://api.spotify.com/v1/me/player`,
     })
       .then((res) => {
-        console.log((deviceid = res.data.device.id));
+        deviceid = res.data.device.id;
         axios({
           method: "put",
           url: `https://api.spotify.com/v1/me/player/${
             !isPlaying ? "play" : "pause"
           }?device_id=${deviceid}`,
           data: {
-            uris: [`spotify:track:${currentSong.id}`],
+            uris:
+              props.currentSong == currentSong
+                ? null
+                : [`spotify:track:${currentSong.id}`],
           },
         })
           .then((res) => {
-            console.log(res);
-            console.log(currentSong.id);
+            // console.log(res);
+            // console.log(currentSong.id);
             setIsPlaying(!isPlaying);
           })
           .catch((err) => {
@@ -130,26 +133,40 @@ const MusicController = (props) => {
       });
   };
 
+  // useEffect(() => {
+  //   console.log("song updated");
+  // }, [props.currentSong]);
+
   const handleNext = () => {};
 
   useEffect(() => {
-    if (is_expired(localStorage)) {
-      return history.push("/"); //should this just be history.push("/")?
-    }
-    set_authentication(localStorage, axios);
-    axios({
-      method: "get",
-      url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
-    })
-      .then((res) => {
-        console.log(res.data.item.duration_ms);
-        setDuration(res.data.item.duration_ms / 1000);
-        setCurrentTime(res.data.item.progress_ms / 1000);
+    if (isPlaying) {
+      // setInterval(() => {
+      console.log("hi");
+      if (is_expired(localStorage)) {
+        return history.push("/"); //should this just be history.push("/")?
+      }
+      set_authentication(localStorage, axios);
+      axios({
+        method: "get",
+        url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
       })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+        .then((res) => {
+          console.log(res);
+          if (res.data.item.duration_ms !== 0) {
+            console.log(res.data.item.duration_ms);
+            setDuration(res.data.item.duration_ms / 1000);
+            setCurrentTime(res.data.progress_ms / 1000);
+            console.log(duration);
+            console.log(currentTime);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      // }, 1000);
+    }
+  }, [props.currentSong]);
 
   if (expanded === false) {
     if (currentSong) {

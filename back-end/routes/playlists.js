@@ -7,11 +7,17 @@ router.route("/").get((req, res) => {
     .catch((err) => res.status(400).json("Error:" + err));
 });
 
+router.route("/me").get((req, res) => {
+  Playlist.find({ members: req.body.user })
+    .then((playlists) => res.json(playlists))
+    .catch((err) => res.status(400).json("Error:" + err));
+});
+
 router.route("/add").post((req, res) => {
   const members = req.body.members;
   const owners = req.body.owners;
-  const songs = req.body.songs;
-  const newPlaylist = new Playlist({ members, owners, songs });
+  const href = req.body.href;
+  const newPlaylist = new Playlist({ members, owners, href });
   newPlaylist
     .save()
     .then(() => res.json("Playlist Added!"))
