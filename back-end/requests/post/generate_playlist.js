@@ -9,9 +9,11 @@ const dummyPlaylists = ["2vCtLzopIe4ENfaTP31l3p",
     "7m6CZ8gq94Kee4ZLkph5ZL"]
 
 //Generate playlist from a pool of playlists
+//Requires permission to create a playlist on the user's account
 const generate_playlist = async (req, res, next) => { 
 
     const bearer = req.params.bearer
+    const playlist_name = req.params.playlist_name
     const user_id = req.user_id //this is set by previous middleware in routing
     const country = req.country //set by previous middleware
 
@@ -20,8 +22,11 @@ const generate_playlist = async (req, res, next) => {
     const common_artists_ratio = 0.4 //max ratio of songs from common artists
     const common_recs_ratio = 0.3 //ratio of recommendations obtained using the common songs and artists
 
-    const total_songs = 50 //songs that will be added to the playlist, should not exceed 100
-
+    let total_songs = 125 //songs that will be added to the playlist, should not exceed 100
+    if (total_songs > 100)
+    {
+        total_songs = 100
+    }
     if (!user_id) //check for user_id, which should have been acquired from middleware 
     {   
         let msg = "Error: No user_id provided"
@@ -42,7 +47,6 @@ const generate_playlist = async (req, res, next) => {
         return next(playlists)
     }
 
-    console.log("result acquired!")
     let user_arrays = get_user_arrays(playlists)
 
     let occurrences = get_occurrences(user_arrays)
@@ -55,9 +59,17 @@ const generate_playlist = async (req, res, next) => {
     await add_common_recs(uris, occurrences, common_recs_ratio, total_songs, inserted_songs, country)
 
     let remaining_tracks = total_songs - uris.length
-    console.log("in main, uris = ", uris)
+    console.log("remaining_tracks: ", remaining_tracks)
+    await add_remaining_recs(uris, user_arrays, remaining_tracks, inserted_songs, country)
+    let created = await create_playlist(uris, user_id, playlist_name)
+    if (created instanceof Error)
+    {
+        return next(created)
+    }
+    //console.log("in main, uris = ", uris)
     console.log("total tracks = ", uris.length)
-    return res.send(occurrences)
+    console.log("result acquired!")
+    return res.send(uris)
 }
 
 const get_playlists = async (playlist_ids) => { //returns an array of playlists and their tracks from an input of the playlist_ids
@@ -238,7 +250,7 @@ const add_from_common_artists = async (uris, occurrences, common_artists_ratio, 
         songs_per_artist = 1
     }
 
-    console.log("adding", songs_per_artist, "songs per artist")
+    //console.log("adding", songs_per_artist, "songs per artist")
 
     let artist_index = 0
     while (artist_index < artist_occurrences.length && common_artist_songs_count > 0)
@@ -284,7 +296,7 @@ const add_common_recs = async (uris, occurrences, common_recs_ratio, max_songs, 
     let common_recs_count = Math.floor(common_recs_ratio * max_songs) //keeps track of how many songs can be inserted still within this section
     let max_iterations = 20 //Used to prevent an infinite loop
     let cur_iteration = 0
-    let recs_per_iteration = 10 //maximum tracks to add for each iteration
+    let recs_per_iteration = 5 //maximum tracks to add for each iteration
     let track_index = 0
     let artist_index = 0
     let song_occurrences = occurrences.song_occurrences
@@ -331,11 +343,10 @@ const add_common_recs = async (uris, occurrences, common_recs_ratio, max_songs, 
                     artist_index = 0
                 }
             } while (artist_index !== start_artist_index && artist_count < 3)
-            cur_iteration += 1
         }
 
-        console.log("seed_tracks =", seed_tracks)
-        console.log("seed_artists =", seed_artists)
+        //console.log("seed_tracks =", seed_tracks)
+        //console.log("seed_artists =", seed_artists)
 
         //Get recommendations based on these seeds
         let rec_tracks
@@ -368,8 +379,86 @@ const add_common_recs = async (uris, occurrences, common_recs_ratio, max_songs, 
                 rec_index += 1
             }
         }
+        cur_iteration += 1
     }
+}
 
+const add_remaining_recs = async (uris, user_arrays, remaining_count, inserted_songs, country) => {
+    console.log("adding_remaining recs")
+    console.log("user_arrays.length = ", user_arrays.length)
+    let recs_per_iteration = 5 //max tracks to add for each Spotify api request
+    let max_iterations = 20
+    let cur_iteration = 0
+    let user_index = 0
+    let user_arrays_keys = Object.keys(user_arrays)
+    console.log("user_arrays_keys = ", user_arrays_keys)
+    if (user_arrays_keys.length > 0)
+    {
+        while (cur_iteration < max_iterations && remaining_count > 0)
+        {
+            //get seed for 
+            let seed_tracks = ""
+            let seeds_left = 5
+            let start_user_index = user_index
+            do
+            {   
+                console.log("user_index = ", user_index)
+                let key = user_arrays_keys[user_index]
+                let user_track_keys = Object.keys(user_arrays[key])
+                console.log("user_track_keys length is", user_track_keys.length)
+                //console.log("user_arrays[key] = ", user_arrays[key])
+                let track_index = Math.floor(Math.random() * user_track_keys.length)
+                console.log("track_index selected: ", track_index)
+                let track_key = user_track_keys[track_index]
+                let track_id = user_arrays[key][track_key].track.id //set track id
+                seed_tracks += `${track_id},` //append track_id to seed_tracks
+
+                user_index += 1
+                if (user_index >= user_arrays_keys.length)
+                {
+                    user_index = 0
+                }
+                seeds_left -= 1
+            } while (user_index !== start_user_index && seeds_left > 0)
+
+            console.log("seed_tracks = ", seed_tracks)
+            
+            //acquire recomendations from spotify using seed
+            let rec_tracks
+            let passed = await axios(`https://api.spotify.com/v1/recommendations?seed_tracks=${seed_tracks}&market=${country}`)
+                .then(res => {
+                    rec_tracks = res.data.tracks
+                    return true
+                })
+                .catch(err => {
+                    console.log("error encountered retrieving recommendations for remaining_recs")
+                    console.error(err)
+                    return false
+                })
+
+            if (passed) //then add in the new recommendations
+            {
+                let rec_index = 0
+                let cur_recs_count = recs_per_iteration
+                while(rec_index < rec_tracks.length && remaining_count > 0)
+                {
+                    let track_id = rec_tracks[rec_index].id
+
+                    if (!inserted_songs[track_id])
+                    {
+                        uris.push(`spotify:track:${track_id}`)
+                        inserted_songs[track_id] = true
+                        cur_recs_count -= 1
+                        remaining_count -= 1
+                    }
+
+                    rec_index += 1
+                }
+            }
+            cur_iteration += 1
+        }
+    }
+    //console.log("user_arrays = ", user_arrays)
 }
 
 const async_for_each = async (array, callback) => { // forEach loop in sequential order

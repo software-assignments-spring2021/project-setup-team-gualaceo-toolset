@@ -56,7 +56,7 @@ app.use("/user_playlists/:bearer/:include_tracks", user_info.get_user_info) // s
 app.use("/follow_playlist/:bearer/:playlist_id", user_info.get_user_info)
 app.use("/remove_tracks/:bearer/:playlist_id/:track_id", user_info.get_user_info)
 app.use("/create_playlist/:bearer/", user_info.get_user_info)
-app.use("/generate_playlist/:bearer", user_info.get_user_info)
+app.use("/generate_playlist/:playlist_name/:bearer", user_info.get_user_info)
 
 //endpoints to be used
 app.use(express.urlencoded({extended: true}));
@@ -67,7 +67,7 @@ app.get("/recommend_songs/:bearer/limit/:limit/seed_tracks/:seed_tracks", recomm
 app.delete("/remove_tracks/:bearer/:playlist_id/:track_id", remove_tracks.remove_tracks)
 app.put("/follow_playlist/:bearer/:playlist_id", follow_playlist.follow_playlist)
 
-app.get("/generate_playlist/:bearer", generate_playlist.generate_playlist)
+app.get("/generate_playlist/:playlist_name/:bearer", generate_playlist.generate_playlist)
 
 //Handle any errors
 app.use((error, req, res, next) => {
