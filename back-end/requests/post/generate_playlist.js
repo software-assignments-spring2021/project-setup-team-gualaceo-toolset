@@ -14,9 +14,12 @@ const generate_playlist = async (req, res, next) => {
     const bearer = req.params.bearer
     const user_id = req.user_id //this is set by previous middleware in routing
     const country = req.country //set by previous middleware
+
+    //these ratios should not total to any number > 1.0
     const common_songs_ratio = 0.2 //max ratio of common songs to total songs
-    const common_artists_ratio = 0.5 //max ratio of songs from common artists
+    const common_artists_ratio = 0.4 //max ratio of songs from common artists
     const common_recs_ratio = 0.3 //ratio of recommendations obtained using the common songs and artists
+
     const total_songs = 50 //songs that will be added to the playlist, should not exceed 100
 
     if (!user_id) //check for user_id, which should have been acquired from middleware 
@@ -49,7 +52,9 @@ const generate_playlist = async (req, res, next) => {
 
     add_common_songs(uris, occurrences, common_songs_ratio, total_songs, inserted_songs)
     await add_from_common_artists(uris, occurrences, common_artists_ratio, total_songs, inserted_songs, country)
-    
+    await add_common_recs(uris, occurrences, common_recs_ratio, total_songs, inserted_songs, country)
+
+    let remaining_tracks = total_songs - uris.length
     console.log("in main, uris = ", uris)
     console.log("total tracks = ", uris.length)
     return res.send(occurrences)
@@ -272,6 +277,99 @@ const add_from_common_artists = async (uris, occurrences, common_artists_ratio, 
         artist_index += 1
     }
     //Make sure to check if a song is already inserted before adding (won't this make it O(n^2)?)
+}
+
+//Add recomendations based on common songs/artists
+const add_common_recs = async (uris, occurrences, common_recs_ratio, max_songs, inserted_songs, country) => {
+    let common_recs_count = Math.floor(common_recs_ratio * max_songs) //keeps track of how many songs can be inserted still within this section
+    let max_iterations = 20 //Used to prevent an infinite loop
+    let cur_iteration = 0
+    let recs_per_iteration = 10 //maximum tracks to add for each iteration
+    let track_index = 0
+    let artist_index = 0
+    let song_occurrences = occurrences.song_occurrences
+    let artist_occurrences = occurrences.artist_occurrences
+
+    if (song_occurrences.length === 0 && artist_occurrences.length === 0)
+    {
+        return
+    }
+    while (common_recs_count > 0 && cur_iteration < max_iterations)
+    {   
+        // create strings to use as seeds for the tracks and artists
+        let seed_tracks = ""
+        let seed_artists = ""
+        
+        if (song_occurrences.length > 0) //only do this if some commmon songs exist
+        {
+            let start_track_index = track_index //the initial index before iterating below
+            let track_count = 0
+            do 
+            {
+                seed_tracks += `${song_occurrences[track_index][0]},` //append this tracks id to the seed_tracks string
+                track_index += 1
+                track_count += 1
+                if (track_index >= song_occurrences.length)
+                {
+                    track_index = 0
+                }
+            } while (track_index !== start_track_index && track_count < 2)
+        }
+
+        if (artist_occurrences.length > 0)
+        {
+            let start_artist_index = artist_index
+            let artist_count = 0
+
+            do
+            {
+                seed_artists += `${artist_occurrences[artist_index][0]},` //append this artists id to the seed_artists string
+                artist_index += 1
+                artist_count += 1
+                if (artist_index >= artist_occurrences.length)
+                {
+                    artist_index = 0
+                }
+            } while (artist_index !== start_artist_index && artist_count < 3)
+            cur_iteration += 1
+        }
+
+        console.log("seed_tracks =", seed_tracks)
+        console.log("seed_artists =", seed_artists)
+
+        //Get recommendations based on these seeds
+        let rec_tracks
+        let passed = await axios(`https://api.spotify.com/v1/recommendations?seed_tracks=${seed_tracks}&seed_artists=${seed_artists}&market=${country}`)
+            .then(res => {
+                rec_tracks = res.data.tracks
+                return true
+            })
+            .catch(err => {
+                console.log("error encountered in retrieving recomendations for generate_playlist endpoint")
+                console.error(err)
+                return false
+            })
+
+        if (passed)
+        {
+            let rec_index = 0
+            let cur_recs_count = recs_per_iteration //limit how many are added from this iteration of reccomendations
+            while (rec_index < rec_tracks.length && common_recs_count > 0 && cur_recs_count > 0)
+            {    let track_id = rec_tracks[rec_index].id
+
+                if(!inserted_songs[track_id]) //song is yet to be inserted
+                {
+                    uris.push(`spotify:track:${track_id}`)
+                    inserted_songs[track_id] = true
+                    common_recs_count -= 1
+                    cur_recs_count -= 1
+                }
+
+                rec_index += 1
+            }
+        }
+    }
+
 }
 
 const async_for_each = async (array, callback) => { // forEach loop in sequential order
