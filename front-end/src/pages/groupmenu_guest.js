@@ -106,7 +106,7 @@ const GroupMenuGuest = (props) => {
               </Typography>
             </CardContent>
           </Card>
-          {playlistCard}
+          {/* playlistCard */}
         </div>
       </Container>
     );

@@ -7,15 +7,17 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
-
 import Loading from "../components/loading";
-
 import styles from "../styles/bannedMembersStyles";
+import {is_expired} from "../components/authentication.js"
+import Logout from "../components/logout";
 
 const BannedMembers = (props) => {
   let history = useHistory();
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
+  const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
+
 
   const BannedMembers = [
     {
@@ -37,6 +39,11 @@ const BannedMembers = (props) => {
   ];
 
   useEffect(() => {
+    if (is_expired(localStorage))
+    {
+        return history.push("/"); 
+    }
+
     setuiLoading(false);
   }, []);
 
@@ -62,6 +69,21 @@ const BannedMembers = (props) => {
                 <Typography variant="h5" className={classes.heading}>
                   Banned Members
                 </Typography>
+                <Button
+                  color="inherit"
+                  onClick={() => {
+                    setOpenConfirmLogout(!openConfirmLogout);
+                  }}
+                  className={classes.logout}
+                >
+                  Logout
+                </Button>
+                <div style={{ position: "absolute" }}>
+                  <Logout
+                    open={openConfirmLogout}
+                    setOpen={setOpenConfirmLogout}
+                  />
+                </div>
               </Toolbar>
             </AppBar>
             {BannedMembers.map((member) => (

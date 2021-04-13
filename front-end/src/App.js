@@ -26,6 +26,7 @@ const App = () => {
         <Switch>
           <Route exact path="/" component={landing} />
           <Route exact path="/addSongs" component={addSongs}/>
+          <Route exact path="/addMyMusic/:userStatus" component={addMyMusic}/>
           <Route exact path="/placeholder" component={placeholder} />
           <Route exact path="/home" component={home} />
           <Route exact path="/guest" component={guest} />
@@ -45,7 +46,7 @@ const App = () => {
             path="/generatedPlaylist/:userStatus"
             component={generatedPlaylist}
           />
-          <Route exact path="/addMyMusic" component={addMyMusic} />
+          <Route exact path="/addMyMusic/:userStatus" component={addMyMusic} />
           <Route exact path="/bannedMembers" component={bannedMembers} />
           <Route exact path="/members" component={members} />
           <Route exact path="/membersGuest" component={membersGuest} />

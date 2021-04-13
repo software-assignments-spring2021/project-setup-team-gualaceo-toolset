@@ -12,6 +12,13 @@ import { useHistory } from "react-router-dom";
 
 const styles = (theme) => ({});
 
+const handleLogout = (history) => {
+  //clear any Spotify session data
+  localStorage.removeItem('auth_data')
+  localStorage.removeItem('expiry_time')
+  history.push("/")
+}
+
 const Logout = (props) => {
   const [open, setOpen] = [props.open, props.setOpen];
   let history = useHistory();
@@ -30,7 +37,7 @@ const Logout = (props) => {
           <Button onClick={() => setOpen(false)} color="primary">
             Cancel
           </Button>
-          <Button onClick={() => history.push("/")} color="primary" autoFocus>
+          <Button onClick={() => handleLogout(history)} color="primary" autoFocus>
             Logout
           </Button>
         </DialogActions>

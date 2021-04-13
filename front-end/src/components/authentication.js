@@ -17,7 +17,7 @@ const get_bearer = (localStorage) => {
   return null;
 }
 
-const is_expired = (localStorage) => {
+const is_expired = (localStorage) => { //returns true if the current Spotify API session is expired
   let expiry_time = localStorage.getItem('expiry_time')
   let cur_time = new Date().getTime()
   if (!expiry_time || cur_time >= expiry_time)

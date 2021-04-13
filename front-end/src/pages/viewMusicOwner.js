@@ -17,10 +17,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
 import backgroundWhite from "../media/background_white.png";
-
 import Loading from "../components/loading";
+import {is_expired} from "../components/authentication.js"
+import Logout from "../components/logout";
+
 // import Logout from "../components/logout";
 
 const styles = (theme) => ({
@@ -71,6 +72,11 @@ const styles = (theme) => ({
     display: "flex",
     justifyContent: "space-between",
   },
+  addMyMusicButtonContainer: {
+    display: "flex",
+    justifyContent: "center",
+    paddingBottom: "10px",
+  },
 });
 
 const Home = (props) => {
@@ -101,6 +107,12 @@ const Home = (props) => {
   ];
 
   useEffect(() => {
+    if (is_expired(localStorage))
+    {
+      return history.push("/"); 
+    }
+
+
     setuiLoading(false);
   }, []);
 
@@ -111,6 +123,10 @@ const Home = (props) => {
     // }
   };
 
+  const goToAddMyMusic = () => {
+    history.push("/addMyMusic/owner")
+  }
+
   if (uiLoading === true) {
     return <Loading />;
   } else {
@@ -118,7 +134,7 @@ const Home = (props) => {
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.root}>
-          <div style={{ width: "200px", height: "100px" }}>
+          <div style={{ width: "200px", height: "70px" }}>
             {/* Background */}
             <img
               alt="complex"
@@ -145,39 +161,19 @@ const Home = (props) => {
                 Logout
               </Button>
               <div style={{ position: "absolute" }}>
-                <Dialog
+                <Logout
                   open={openConfirmLogout}
-                  onClose={() => {
-                    setOpenConfirmLogout(false);
-                  }}
-                  disableBackdropClick={false}
-                >
-                  <DialogTitle id="alert-dialog-title">{"Logout?"}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Are you sure you want to logout?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      onClick={() => setOpenConfirmLogout(false)}
-                      color="primary"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={() => history.push("/")}
-                      color="primary"
-                      autoFocus
-                    >
-                      Logout
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+                  setOpen={setOpenConfirmLogout}
+                />
               </div>
             </Toolbar>
           </AppBar>
-          <div style={{ marginTop: "-30px" }}>
+          <div className={classes.addMyMusicButtonContainer}>
+            <Button color="primary" variant="contained" onClick={goToAddMyMusic}>
+              Add My Music
+            </Button>
+          </div>
+          <div>
             <Card fullWidth className={classes.cards}>
                 <TextField
                   style={{ width: "120%" }}
