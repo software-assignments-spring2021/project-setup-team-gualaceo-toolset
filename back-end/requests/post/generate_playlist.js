@@ -3,10 +3,19 @@ const user_playlists = require("../get/user_playlists")
 const set_authentication = require("../other/authentication.js").set_authentication
 const get_tracks_items = user_playlists.get_tracks_items
 
-const dummyPlaylists = ["2vCtLzopIe4ENfaTP31l3p",
+const dummy_playlists_1 = ["2vCtLzopIe4ENfaTP31l3p",
     "0y67ofGW3OL8Pu2wZHiVWq",
     "3FWMoF9oFOliCd2USOfMLv",
-    "7m6CZ8gq94Kee4ZLkph5ZL"]
+    "7m6CZ8gq94Kee4ZLkph5ZL"
+]
+
+const dummy_playlists_2 = ["1tnqexNp5xYsxj4JMiUnXK",
+	"1uW7OkSuL2qngPiiDvNY5E",
+	"2vCtLzopIe4ENfaTP31l3p",
+	"5n07yWC7B3URSNk78zdFsg",
+	"0mHy3nmHppsVXDDw8bNVPB",
+	"4bZJLok2TNq0bnUHNqMdVB"
+]
 
 //Generate playlist from a pool of playlists
 //Requires permission to create a playlist on the user's account
@@ -14,6 +23,7 @@ const generate_playlist = async (req, res, next) => {
 
     const bearer = req.params.bearer
     const playlist_name = req.params.playlist_name
+    const demo_index = parseInt(req.params.demo_index)
     const user_id = req.user_id //this is set by previous middleware in routing
     const country = req.country //set by previous middleware
 
@@ -22,7 +32,16 @@ const generate_playlist = async (req, res, next) => {
     const common_artists_ratio = 0.4 //max ratio of songs from common artists
     const common_recs_ratio = 0.3 //ratio of recommendations obtained using the common songs and artists
 
-    let total_songs = 125 //songs that will be added to the playlist, should not exceed 100
+    //for sake of the demo, retrieve specified dummy data
+    let dummy_playlists
+    if (demo_index === 1)
+    {
+        dummy_playlists = dummy_playlists_1
+    } else {
+        dummy_playlists = dummy_playlists_2
+    }
+
+    let total_songs = 50 //songs that will be added to the playlist, should not exceed 100
     if (total_songs > 100)
     {
         total_songs = 100
@@ -40,7 +59,7 @@ const generate_playlist = async (req, res, next) => {
         return next(new Error(msg))
     }
 
-    let playlists = await get_playlists(dummyPlaylists) //get an array of playlists
+    let playlists = await get_playlists(dummy_playlists) //get an array of playlists
 
     if (playlists instanceof Error) //check if an error was thrown by get_playlists
     {
@@ -59,17 +78,14 @@ const generate_playlist = async (req, res, next) => {
     await add_common_recs(uris, occurrences, common_recs_ratio, total_songs, inserted_songs, country)
 
     let remaining_tracks = total_songs - uris.length
-    console.log("remaining_tracks: ", remaining_tracks)
     await add_remaining_recs(uris, user_arrays, remaining_tracks, inserted_songs, country)
-    let created = await create_playlist(uris, user_id, playlist_name)
+    let created = await create_playlist(uris, user_id, playlist_name, bearer)
     if (created instanceof Error)
     {
         return next(created)
     }
-    //console.log("in main, uris = ", uris)
-    console.log("total tracks = ", uris.length)
-    console.log("result acquired!")
-    return res.send(uris)
+    
+    return res.send(created)
 }
 
 const get_playlists = async (playlist_ids) => { //returns an array of playlists and their tracks from an input of the playlist_ids
@@ -384,14 +400,11 @@ const add_common_recs = async (uris, occurrences, common_recs_ratio, max_songs, 
 }
 
 const add_remaining_recs = async (uris, user_arrays, remaining_count, inserted_songs, country) => {
-    console.log("adding_remaining recs")
-    console.log("user_arrays.length = ", user_arrays.length)
     let recs_per_iteration = 5 //max tracks to add for each Spotify api request
     let max_iterations = 20
     let cur_iteration = 0
     let user_index = 0
     let user_arrays_keys = Object.keys(user_arrays)
-    console.log("user_arrays_keys = ", user_arrays_keys)
     if (user_arrays_keys.length > 0)
     {
         while (cur_iteration < max_iterations && remaining_count > 0)
@@ -402,13 +415,10 @@ const add_remaining_recs = async (uris, user_arrays, remaining_count, inserted_s
             let start_user_index = user_index
             do
             {   
-                console.log("user_index = ", user_index)
                 let key = user_arrays_keys[user_index]
                 let user_track_keys = Object.keys(user_arrays[key])
-                console.log("user_track_keys length is", user_track_keys.length)
                 //console.log("user_arrays[key] = ", user_arrays[key])
                 let track_index = Math.floor(Math.random() * user_track_keys.length)
-                console.log("track_index selected: ", track_index)
                 let track_key = user_track_keys[track_index]
                 let track_id = user_arrays[key][track_key].track.id //set track id
                 seed_tracks += `${track_id},` //append track_id to seed_tracks
@@ -421,7 +431,6 @@ const add_remaining_recs = async (uris, user_arrays, remaining_count, inserted_s
                 seeds_left -= 1
             } while (user_index !== start_user_index && seeds_left > 0)
 
-            console.log("seed_tracks = ", seed_tracks)
             
             //acquire recomendations from spotify using seed
             let rec_tracks
@@ -459,6 +468,71 @@ const add_remaining_recs = async (uris, user_arrays, remaining_count, inserted_s
         }
     }
     //console.log("user_arrays = ", user_arrays)
+}
+
+const create_playlist = async (uris, user_id, playlist_name, bearer) => {
+    let playlist_id
+    let error
+     //specify header used
+     const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${bearer}`
+    }
+    let CREATE_URL = `https://api.spotify.com/v1/users/${user_id}/playlists`;
+    let desc = "Generated by Synthesize"
+    let created = await axios({
+        method: "post",
+        url: CREATE_URL,
+        data: {
+            "name": playlist_name,
+            "description": desc,
+            "public": true
+        },
+        headers: headers,
+    })
+        .then(res => {
+            playlist_id = res.data.id
+            console.log("playlist created successfully from generate_playlist")
+            return true
+        })
+        .catch(err => {
+            console.log("error creating playlist in generate_playlist")
+            console.error(err)
+            error = err
+            return false
+        })
+    
+    if (error)
+    {
+        return error
+    }
+
+    //send request to add_tracks
+    let ADD_URL = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks`;
+    let JSON_RESPONSE
+    await axios({
+        method: "post",
+        url: ADD_URL,
+        data: uris,
+        headers: headers,
+      })
+        .then((response) => {
+            console.log("Successfully added tracks to target playlist")
+            JSON_RESPONSE=response.data
+        })
+        .catch((err) => {
+            const msg = "Something went wrong in the add_tracks endpoint"
+            console.log(msg)
+            console.error(err)
+            error = new Error(msg)
+    })
+
+    if (error)
+    {
+        return error
+    }
+
+    return JSON_RESPONSE
 }
 
 const async_for_each = async (array, callback) => { // forEach loop in sequential order
