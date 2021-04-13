@@ -21,3 +21,5 @@ const get_recommendation = (localStorage, axios) => {
 
     return data
   }
+
+export {get_recommendation}
