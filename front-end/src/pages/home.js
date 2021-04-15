@@ -18,6 +18,7 @@ import backgroundWhite from "../media/background_white.png";
 
 import Loading from "../components/loading";
 import Logout from "../components/logout";
+import Error from "../components/error";
 
 import styles from "../styles/homeStyles";
 
@@ -33,6 +34,8 @@ const Home = (props) => {
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [groupName, setGroupName] = useState("");
+  const [userid, setUserID] = useState("");
+  const [errors, setErrors] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
 
   const groups = [
@@ -122,6 +125,7 @@ const Home = (props) => {
     })
       .then((res) => {
         let userid = res.data.id;
+        setUserID(res.data.id);
         console.log(userid);
         axios({
           method: "get",
@@ -130,76 +134,171 @@ const Home = (props) => {
         })
           .then((res) => {
             console.log(res.data);
+            setuiLoading(false);
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err);
+          });
       })
-      .catch((err) => console.log(err));
-    setuiLoading(false);
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status === 401) {
+          localStorage.clear();
+          history.push("/");
+        }
+      });
   }, []);
 
-  const handleJoin = () => {
-    // if (isValidID) {
-    history.push("/groupMenu");
-
-    // }
-  };
-
-  const handleCreate = (event) => {
+  // Not finished... groupName is set to the id of the database record
+  // not the id of the spotify playlist
+  const handleJoin = async (event) => {
     event.preventDefault();
-    console.log(groupName);
-    // return history.push("/groupMenuOwner");
+    // 6075333ffd54816234d7fdc6
     if (is_expired(localStorage)) {
       return history.push("/");
     }
     set_authentication(localStorage, axios);
-    // get user id
-    axios({
-      method: "get",
-      url: `https://api.spotify.com/v1/me`,
-    })
-      .then((res) => {
-        let userid = res.data.id;
-        // Create the playlist
-        axios({
-          method: "post",
-          url: `https://api.spotify.com/v1/users/${userid}/playlists`,
-          data: {
-            name: groupName,
-            description: "This playlist was generated using Synthesize.",
-            public: true,
-          },
-        })
-          .then((res) => {
-            console.log(res);
-            // Add the playlist to the DB
-            axios({
-              method: "post",
-              url: `http://localhost:5000/playlists/add`,
-              data: { owners: userid, members: userid, href: res.data.href },
-            })
-              .then((res) => {
-                console.log(res);
-              })
-              .catch((err) => console.log(err));
-            //Follow the playlist
-            axios({
-              method: "put",
-              url: `https://api.spotify.com/v1/playlists/${res.data.id}/followers`,
-              data: {
-                public: true,
-              },
-            })
-              .then((res) => {
-                console.log(res);
-              })
-              .catch((err) => console.log(err));
-          })
-          .catch((err) => console.log(err));
+    if (groupName) {
+      console.log(groupName);
+      await axios({
+        method: "get",
+        url: `http://localhost:5000/playlists/id/${groupName}`,
       })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          setGroupName("");
+          console.log(err);
+        });
+    } else {
+      setErrors("You have not entered a valid Group ID.");
+    }
+    if (groupName) {
+      /*axios({
+        method: "put",
+        url: `http://localhost:5000/playlists/add`,
+        data: { members: userid },
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
+      //Follow the playlist
+      axios({
+        method: "put",
+        url: `https://api.spotify.com/v1/playlists/${group}/followers`,
+        data: {
+          public: true,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          history.push("/groupMenuOwner");
+        })
+        .catch((err) => console.log(err));*/
+    }
+    /* 
 
+    if (groupName) {
+      console.log(groupName);
+      // return history.push("/groupMenuOwner");
+      if (is_expired(localStorage)) {
+        return history.push("/");
+      }
+      set_authentication(localStorage, axios);
+      // Create the playlist
+      axios({
+        method: "post",
+        url: `https://api.spotify.com/v1/users/${userid}/playlists`,
+        data: {
+          name: groupName,
+          description: "This playlist was generated using Synthesize.",
+          public: true,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          // Add the playlist to the DB
+          axios({
+            method: "post",
+            url: `http://localhost:5000/playlists/add`,
+            data: { owners: userid, members: userid, href: res.data.href },
+          })
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => console.log(err));
+          //Follow the playlist
+          axios({
+            method: "put",
+            url: `https://api.spotify.com/v1/playlists/${res.data.id}/followers`,
+            data: {
+              public: true,
+            },
+          })
+            .then((res) => {
+              console.log(res);
+              history.push("/groupMenuOwner");
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    }
+    // if (isValidID) {
+    history.push("/groupMenu");
+
+    // }
+ */
+  };
+
+  const handleCreate = (event) => {
+    event.preventDefault();
+    if (groupName) {
+      console.log(groupName);
+      // return history.push("/groupMenuOwner");
+      if (is_expired(localStorage)) {
+        return history.push("/");
+      }
+      set_authentication(localStorage, axios);
+      // Create the playlist
+      axios({
+        method: "post",
+        url: `https://api.spotify.com/v1/users/${userid}/playlists`,
+        data: {
+          name: groupName,
+          description: "This playlist was generated using Synthesize.",
+          public: true,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          // Add the playlist to the DB
+          axios({
+            method: "post",
+            url: `http://localhost:5000/playlists/add`,
+            data: { owners: userid, members: userid, href: res.data.href },
+          })
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => console.log(err));
+          //Follow the playlist
+          axios({
+            method: "put",
+            url: `https://api.spotify.com/v1/playlists/${res.data.id}/followers`,
+            data: {
+              public: true,
+            },
+          })
+            .then((res) => {
+              console.log(res);
+              history.push("/groupMenuOwner");
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    }
     // history.push("/groupMenuOwner");
   };
 
@@ -245,6 +344,9 @@ const Home = (props) => {
               </div>
             </Toolbar>
           </AppBar>
+          {/* <div style={{ position: "absolute" }}> */}
+          <Error error={errors} setError={setErrors} />
+          {/* </div> */}
           <div style={{ marginTop: "-30px" }}>
             <Accordion square={true} className={classes.accordion}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -278,19 +380,23 @@ const Home = (props) => {
                 </Typography>
               </AccordionSummary>
               <Divider></Divider>
-              <AccordionDetails style={{ marginTop: "10px" }}>
-                <Typography>Enter Group ID:</Typography>
-                <TextField
-                  style={{ width: "90%" }}
-                  label="Group ID"
-                  variant="outlined"
-                />
-              </AccordionDetails>
-              <AccordionDetails style={{ marginTop: "-10px" }}>
-                <Button variant="outlined" fullWidth onClick={handleJoin}>
-                  Join
-                </Button>
-              </AccordionDetails>
+              <form onSubmit={handleJoin}>
+                <AccordionDetails style={{ marginTop: "10px" }}>
+                  <Typography>Enter Group ID:</Typography>
+                  <TextField
+                    style={{ width: "90%" }}
+                    label="Group ID"
+                    variant="outlined"
+                    onChange={(e) => setGroupName(e.target.value)}
+                    value={groupName}
+                  />
+                </AccordionDetails>
+                <AccordionDetails style={{ marginTop: "-10px" }}>
+                  <Button variant="outlined" fullWidth type="submit">
+                    Join
+                  </Button>
+                </AccordionDetails>
+              </form>
             </Accordion>
           </div>
           <br />

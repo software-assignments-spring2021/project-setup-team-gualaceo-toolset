@@ -15,6 +15,7 @@ const styles = (theme) => ({
     width: 40,
     flexShrink: 0,
     flexGrow: 0,
+    zIndex: 3,
     borderRadius: "8px",
   },
   back: { color: theme.palette.secondary.main },
@@ -60,13 +61,13 @@ const styles = (theme) => ({
   owner: {
     color: theme.palette.secondary.main,
   },
-  generateRequested:{
+  generateRequested: {
     fontSize: "10px",
     color: theme.palette.primary.main,
   },
   spacer: {
-    width: "60px"
-  }
+    width: "60px",
+  },
 });
 
 export default styles;

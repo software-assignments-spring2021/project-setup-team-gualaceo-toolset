@@ -3,13 +3,24 @@ let Playlist = require("../models/playlists.model");
 
 router.route("/").get((req, res) => {
   Playlist.find()
-    .then((playlists) => res.json(playlists))
+    .then((playlists) => {
+      res.json(playlists);
+      console.log(req.params);
+    })
     .catch((err) => res.status(400).json("Error:" + err));
 });
 
 router.route("/me").get((req, res) => {
   Playlist.find({ members: req.body.user })
     .then((playlists) => res.json(playlists))
+    .catch((err) => res.status(400).json("Error:" + err));
+});
+
+router.route("/id/:id").get((req, res) => {
+  Playlist.find({ _id: { $eq: req.params.id } })
+    .then((playlists) => {
+      res.json(playlists);
+    })
     .catch((err) => res.status(400).json("Error:" + err));
 });
 
