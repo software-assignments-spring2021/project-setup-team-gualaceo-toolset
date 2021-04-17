@@ -5,6 +5,10 @@ const playlistsSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  banned_members: {
+    type: Array,
+    default: [],
+  },
   owners: {
     type: Array,
     default: [],
