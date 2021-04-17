@@ -1,25 +1,25 @@
 const router = require("express").Router();
-let Playlist = require("../models/playlists.model");
+let Group = require("../models/groups.model");
 
 router.route("/").get((req, res) => {
-  Playlist.find()
-    .then((playlists) => {
-      res.json(playlists);
+  Group.find()
+    .then((groups) => {
+      res.json(groups);
       console.log(req.params);
     })
     .catch((err) => res.status(400).json("Error:" + err));
 });
 
 router.route("/me").get((req, res) => {
-  Playlist.find({ members: req.body.user })
-    .then((playlists) => res.json(playlists))
+  Group.find({ members: req.body.user })
+    .then((groups) => res.json(groups))
     .catch((err) => res.status(400).json("Error:" + err));
 });
 
 router.route("/id/:id").get((req, res) => {
-  Playlist.find({ _id: { $eq: req.params.id } })
-    .then((playlists) => {
-      res.json(playlists);
+  Group.find({ _id: { $eq: req.params.id } })
+    .then((groups) => {
+      res.json(groups);
     })
     .catch((err) => res.status(400).json("Error:" + err));
 });
@@ -28,10 +28,10 @@ router.route("/add").post((req, res) => {
   const members = req.body.members;
   const owners = req.body.owners;
   const href = req.body.href;
-  const newPlaylist = new Playlist({ members, owners, href });
-  newPlaylist
+  const newGroup = new Group({ members, owners, href });
+  newGroup
     .save()
-    .then(() => res.json("Playlist Added!"))
+    .then(() => res.json("Group Added!"))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 

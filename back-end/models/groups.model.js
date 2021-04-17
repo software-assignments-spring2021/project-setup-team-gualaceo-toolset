@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const playlistsSchema = new mongoose.Schema({
+const groupsSchema = new mongoose.Schema({
   members: {
     type: Array,
     default: [],
@@ -15,6 +15,6 @@ const playlistsSchema = new mongoose.Schema({
   },
 });
 
-const playlistsModel = mongoose.model("Playlists", playlistsSchema);
+const groupsModel = mongoose.model("Groups", groupsSchema);
 
-module.exports = playlistsModel;
+module.exports = groupsModel;
