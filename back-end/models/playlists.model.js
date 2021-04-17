@@ -13,6 +13,10 @@ const playlistsSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  pool: {
+      type: Array,
+      default: [],
+  },
 });
 
 const playlistsModel = mongoose.model("Playlists", playlistsSchema);

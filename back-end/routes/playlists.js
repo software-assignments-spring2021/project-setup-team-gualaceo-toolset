@@ -1,5 +1,7 @@
 const router = require("express").Router();
 let Playlist = require("../models/playlists.model");
+const add_to_pool = require("../requests/put/add_to_pool")
+const user_id = require("../requests/get/user_id")
 
 router.route("/").get((req, res) => {
   Playlist.find()
@@ -18,4 +20,6 @@ router.route("/add").post((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+router.use("/add_to_pool/:group_id/:playlist_href/:bearer", user_id.get_user_id)
+router.route("/add_to_pool/:group_id/:playlist_href/:bearer").put(add_to_pool.add_to_pool)
 module.exports = router;
