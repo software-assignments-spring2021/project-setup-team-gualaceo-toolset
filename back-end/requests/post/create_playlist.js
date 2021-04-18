@@ -1,4 +1,5 @@
-const axios = require("axios")
+const axios = require("axios");
+const post_playlist = require("./post_playlist");
 //const set_authentication = require("../other/authentication.js").set_authentication
 
 const create_playlist = async (req, res, next) => {   
@@ -43,7 +44,7 @@ const create_playlist = async (req, res, next) => {
             JSON_repsonse=response.data
         })
         .catch((err) => {
-            const msg = "Soemthing went wrong in the create_playlist endpoint"
+            const msg = "Something went wrong in the create_playlist endpoint"
             console.log(msg)
             console.error(err)
             error = new Error(msg)
@@ -53,8 +54,8 @@ const create_playlist = async (req, res, next) => {
     {
         return next(error)
     }
+    next(post_playlist,JSON_repsonse.body.id)
     return res.send(JSON_repsonse)
-
 }
 
 
