@@ -4,7 +4,7 @@
   "description": "Synthesize back-end",
   "main": "nodemon server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "devStart": "nodemon server.js"
   },
   "author": "",

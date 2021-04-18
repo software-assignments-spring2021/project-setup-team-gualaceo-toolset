@@ -11,7 +11,7 @@ const is_in_group = async (user_id, group_id) => { //checks if the user is a mem
     })
     .catch(err => {
       const msg = "Error: Could not find group with given group id" 
-      console.log(msg)
+      //console.log(msg)
       console.log(err)
       return new Error(msg)
     })
@@ -24,12 +24,12 @@ const is_in_group = async (user_id, group_id) => { //checks if the user is a mem
   if (!(members.includes(user_id))) //user is not in the members list
   {
     const msg = "Error: member not in member list"
-    console.log(msg)
+    //console.log(msg)
     return new Error(msg)
   } else if (banned_members.includes(user_id))
   {
     const msg = "Error: member is banned"
-    console.log(msg)
+    //console.log(msg)
     return new Error(msg)
   }
 
