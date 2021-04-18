@@ -2,10 +2,11 @@ const router = require("express").Router();
 let Playlist = require("../models/playlists.model");
 const add_to_pool = require("../requests/put/add_to_pool")
 const user_id = require("../requests/get/user_id")
+const create_group = require("../requests/put/create_group")
 
 router.route("/").get((req, res) => {
   Playlist.find()
-    .then((playlists) => res.json(playlists))
+   .then((playlists) => res.json(playlists))
     .catch((err) => res.status(400).json("Error:" + err));
 });
 
@@ -20,6 +21,18 @@ router.route("/add").post((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+/*
+router.route("/create_group").get((req, res) => {
+  const newPlaylist = new Playlist({ members: 'Chris zheng' });
+  newPlaylist
+    .save()
+    .then(() => res.json("Playlist Added!"))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+*/
+
+
 router.use("/add_to_pool/:group_id/:playlist_id/:bearer", user_id.get_user_id)
 router.put("/add_to_pool/:group_id/:playlist_id/:bearer", add_to_pool.add_to_pool)
+router.get("/create_group", create_group.create_group)
 module.exports = router;

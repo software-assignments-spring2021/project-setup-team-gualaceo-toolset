@@ -34,21 +34,23 @@ connection.once("open", () => {
 });
 */
 const url = 'mongodb://127.0.0.1:27017/local-test'
-mongoose.connect(url, { useNewUrlParser: true })
-const db = mongoose.connection
-db.once('open', _ => {
+mongoose.connect(url, { useNewUrlParser: true,useUnifiedTopology: true })
+const connection = mongoose.connection
+connection.once('open', _ => {
   console.log('Database connected:', url)
 })
 
-db.on('error', err => {
+connection.on('error', err => {
   console.error('connection error:', err)
 })
 
 const groupsRouter = require("./routes/groups");
 const usersRouter = require("./routes/users");
+const playlistsRouter = require("./routes/playlists");
 
 app.use("/groups", groupsRouter);
 app.use("/users", usersRouter);
+app.use("/playlists", playlistsRouter);
 
 // This code disables CORS, it may be necessary for debugging.
 //***We should remove this in the final version***
