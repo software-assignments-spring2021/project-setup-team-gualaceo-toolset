@@ -58,7 +58,7 @@ const add_to_pool = async (req, res, next) => {
   )
 
   console.log("Playlist successfully added to pool")
-  res.send("successfully added playlist to pool!")
+  res.send("successfully added playlist to pool!") //do not change this message, one of the chai tests depends on it
 }
 module.exports = {
   add_to_pool: add_to_pool

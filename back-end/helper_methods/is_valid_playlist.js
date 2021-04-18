@@ -11,12 +11,12 @@ const is_valid_playlist = async (bearer, playlist_id) => {
 
 let playlist_exists = await axios(`https://api.spotify.com/v1/playlists/${playlist_id}`) //make a request for the playlist
   .then(response => { //if there is a valid response, the playlist must exist
-    console.log("Playlist validated for add_to_pool method")
+    //console.log("Playlist validated for add_to_pool method")
     return true
   })
   .catch(err => { //if an error is returned, the playlist doesn't exist (or something else was wrong with request)
-    console.log("add_to_pool error: Not a valid playlist")
-    console.error(err)
+    //console.log("add_to_pool error: Not a valid playlist")
+    //console.error(err)
     return false
   })
 
