@@ -2,7 +2,6 @@ const router = require("express").Router();
 let Playlist = require("../models/playlists.model");
 const add_to_pool = require("../requests/put/add_to_pool")
 const user_id = require("../requests/get/user_id")
-const create_group = require("../requests/put/create_group");
 const add_members = require("../requests/put/add_members");
 
 router.route("/").get((req, res) => {
