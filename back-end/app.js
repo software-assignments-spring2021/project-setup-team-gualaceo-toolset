@@ -18,7 +18,7 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 
-/*
+
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, {
   keepAlive: true,
@@ -26,23 +26,25 @@ mongoose.connect(uri, {
   useCreateIndex: true,
   useUnifiedTopology: true,
 });
-*/
-/*
+
+
 const connection = mongoose.connection;
 connection.once("open", () => {
   console.log("MongoDB connection established");
 });
-*/
+
+
+/*     Testing with a localhost database
 const url = 'mongodb://127.0.0.1:27017/local-test'
 mongoose.connect(url, { useNewUrlParser: true,useUnifiedTopology: true })
 const connection = mongoose.connection
 connection.once('open', _ => {
   console.log('Database connected:', url)
 })
-
 connection.on('error', err => {
   console.error('connection error:', err)
 })
+*/
 
 const groupsRouter = require("./routes/groups");
 const usersRouter = require("./routes/users");

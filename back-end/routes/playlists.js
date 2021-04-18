@@ -2,7 +2,8 @@ const router = require("express").Router();
 let Playlist = require("../models/playlists.model");
 const add_to_pool = require("../requests/put/add_to_pool")
 const user_id = require("../requests/get/user_id")
-const create_group = require("../requests/put/create_group")
+const create_group = require("../requests/put/create_group");
+const add_members = require("../requests/put/add_members");
 
 router.route("/").get((req, res) => {
   Playlist.find()
@@ -35,4 +36,5 @@ router.route("/create_group").get((req, res) => {
 router.use("/add_to_pool/:group_id/:playlist_id/:bearer", user_id.get_user_id)
 router.put("/add_to_pool/:group_id/:playlist_id/:bearer", add_to_pool.add_to_pool)
 router.get("/create_group", create_group.create_group)
+router.get("/add_members/:group_id/:user_id", add_members.add_members)
 module.exports = router;

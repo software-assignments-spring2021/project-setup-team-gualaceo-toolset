@@ -1,22 +1,19 @@
-const axios = require("axios")
 let Playlist = require("../../models/playlists.model");
 
 const add_member = async (req, res) => {
   const group_id = req.params.group_id
-  const user_id = req.user_id
+  const user_id = req.params.user_id
 
   let members
   let banned_members
-  let passed = await Playlist.findOne({_id:group_id}) //retrieve the group information
+  await Playlist.findOne({_id:group_id}) //retrieve the group information
     .then(response => {
       members = response.members
       banned_members = response.banned_members
-      return true //no error encountered, so error will be set to null
     })
     .catch(err => {
-      const msg = "Error: Could not find group with given group id" 
+      const msg = "Cannot find the group" 
       console.log(msg)
-      console.log(err)
       return new Error(msg)
     })
   if (members.includes(user_id))  //check if in group already
@@ -39,7 +36,7 @@ const add_member = async (req, res) => {
   {safe: true, upsert: true}
   )
 
-  res.send("successfully added member")
+  res.send("Finished operation")
 }
 module.exports = {
   add_members: add_member
