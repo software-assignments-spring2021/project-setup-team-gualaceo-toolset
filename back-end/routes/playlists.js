@@ -1,8 +1,9 @@
 const router = require("express").Router();
 let Playlist = require("../models/playlists.model");
-const add_to_pool = require("../requests/put/add_to_pool")
 const user_id = require("../requests/get/user_id")
 const add_members = require("../requests/put/add_members");
+const add_to_ban = require("../requests/put/add_to_ban");
+const unban = require("../requests/put/unban");
 
 router.route("/").get((req, res) => {
   Playlist.find()
@@ -21,9 +22,16 @@ router.route("/add").post((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+router.route("/create").get((req, res) => {
+  const newPlaylist = new Playlist({ members:"Chris",banned_members:"Bob" });
+  newPlaylist
+    .save()
+    .then(() => res.json("Playlist Added!"))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
 
 
-router.use("/add_to_pool/:group_id/:playlist_id/:bearer", user_id.get_user_id)
-router.put("/add_to_pool/:group_id/:playlist_id/:bearer", add_to_pool.add_to_pool)
 router.get("/add_members/:group_id/:user_id", add_members.add_members)
+router.get("/add_to_ban/:group_id/:user_id", add_to_ban.add_to_ban)
+router.get("/unban/:group_id/:user_id", unban.unban)
 module.exports = router;
