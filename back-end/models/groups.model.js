@@ -13,6 +13,14 @@ const groupsSchema = new mongoose.Schema({
     type: String,
     default: [],
   },
+  banned_members: {
+    type: Array,
+    default: [],
+  },
+  pool: {
+    type: Array,
+    default: [],
+  },
 });
 
 const groupsModel = mongoose.model("Groups", groupsSchema);

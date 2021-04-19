@@ -1,5 +1,7 @@
 const router = require("express").Router();
 let Group = require("../models/groups.model");
+const add_to_pool = require("../requests/put/add_to_pool");
+const user_id = require("../requests/get/user_id");
 
 router.route("/").get((req, res) => {
   Group.find()
@@ -34,5 +36,11 @@ router.route("/add").post((req, res) => {
     .then(() => res.json("Group Added!"))
     .catch((err) => res.status(400).json("Error: " + err));
 });
+
+router.use("/add_to_pool/:group_id/:playlist_id/:bearer", user_id.get_user_id);
+router.put(
+  "/add_to_pool/:group_id/:playlist_id/:bearer",
+  add_to_pool.add_to_pool
+);
 
 module.exports = router;
