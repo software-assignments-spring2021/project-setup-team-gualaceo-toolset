@@ -271,8 +271,8 @@ const Home = (props) => {
           public: true,
         },
       })
-        .then((res) => {
-          console.log(res);
+        .then((response) => {
+          console.log(response);
           // Add the playlist to the DB
           axios({
             method: "post",
@@ -280,28 +280,32 @@ const Home = (props) => {
             data: {
               owners: userid,
               members: userid,
-              id: res.data.id,
+              id: response.data.id,
               banned_members: [],
               pool: [],
             },
           })
             .then((res) => {
               console.log(res);
+              axios({
+                method: "put",
+                url: `https://api.spotify.com/v1/playlists/${response.data.id}/followers`,
+                data: {
+                  public: true,
+                },
+              })
+                .then((res) => {
+                  console.log(res);
+                  history.push({
+                    pathname: "/groupMenuOwner",
+                    state: { name: groupName, id: response.data.id },
+                  });
+                  // history.push("/groupMenuOwner");
+                })
+                .catch((err) => console.log(err));
             })
             .catch((err) => console.log(err));
           //Follow the playlist
-          axios({
-            method: "put",
-            url: `https://api.spotify.com/v1/playlists/${res.data.id}/followers`,
-            data: {
-              public: true,
-            },
-          })
-            .then((res) => {
-              console.log(res);
-              history.push("/groupMenuOwner");
-            })
-            .catch((err) => console.log(err));
         })
         .catch((err) => console.log(err));
     }
