@@ -2,6 +2,7 @@ const router = require("express").Router();
 let Group = require("../models/groups.model");
 const add_to_pool = require("../requests/put/add_to_pool");
 const user_id = require("../requests/get/user_id");
+const add_members = require("../requests/put/add_members");
 
 router.route("/").get((req, res) => {
   Group.find()
@@ -44,5 +45,7 @@ router.put(
   "/add_to_pool/:group_id/:playlist_id/:bearer",
   add_to_pool.add_to_pool
 );
+
+router.put("/add_members/:group_id/:user_id", add_members.add_members)
 
 module.exports = router;
