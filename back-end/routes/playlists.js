@@ -19,7 +19,7 @@ router.route("/add").post((req, res) => {
   const newPlaylist = new Playlist({ members, owners, songs });
   newPlaylist
     .save()
-    .then(() => res.json("Playlist Added!"))
+    .then(() => res.json(newPlaylist))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
