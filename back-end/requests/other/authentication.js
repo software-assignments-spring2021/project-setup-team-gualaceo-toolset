@@ -1,5 +1,3 @@
-const { set } = require("../../app");
-
 const set_authentication = (bearer_token, axios) => {
     if (bearer_token) {
       axios.defaults.headers.common[
