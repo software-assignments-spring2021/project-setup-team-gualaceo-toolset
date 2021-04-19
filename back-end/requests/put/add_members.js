@@ -1,4 +1,4 @@
-let Playlist = require("../../models/playlists.model");
+let Group = require("../../models/groups.model");
 
 
 const add_member = async (req, res,next) => {
@@ -7,7 +7,7 @@ const add_member = async (req, res,next) => {
 
   let members
   let banned_members
-  let error = await Playlist.findOne({_id:group_id}) //retrieve the group information
+  let error = await Group.findOne({_id:group_id}) //retrieve the group information
     .then(response => {
       members = response.members
       banned_members = response.banned_members
@@ -34,7 +34,7 @@ const add_member = async (req, res,next) => {
     return next(new Error(msg))
   }
 
-  await Playlist.updateOne({_id:group_id},
+  await Group.updateOne({_id:group_id},
   {
     $push:{members:user_id}
   },

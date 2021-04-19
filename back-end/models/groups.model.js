@@ -9,8 +9,16 @@ const groupsSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
-  href: {
+  id: {
     type: String,
+    default: [],
+  },
+  banned_members: {
+    type: Array,
+    default: [],
+  },
+  pool: {
+    type: Array,
     default: [],
   },
 });
