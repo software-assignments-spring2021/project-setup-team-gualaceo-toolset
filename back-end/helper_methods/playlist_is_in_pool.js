@@ -1,9 +1,9 @@
-let Playlist = require("../models/playlists.model");
+let Group = require("../models/groups.model");
 
 const playlist_is_in_pool = async (playlist_id, group_id) =>
 {
   let pool
-  let passed = await Playlist.findOne({_id:group_id}) //retrieve the playlist with the given group id
+  let passed = await Group.findOne({_id:group_id}) //retrieve the playlist with the given group id
     .then(response => {
       pool = response.pool
       return true //no error encountered, so error will be set to null

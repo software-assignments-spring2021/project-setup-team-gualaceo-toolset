@@ -1,5 +1,5 @@
 const axios = require("axios")
-let Playlist = require("../../models/playlists.model");
+let Group = require("../../models/groups.model");
 const set_authentication = require("../other/authentication.js").set_authentication
 const is_in_group = require("../../helper_methods/is_in_group.js").is_in_group
 const is_valid_playlist =  require("../../helper_methods/is_valid_playlist.js").is_valid_playlist
@@ -50,7 +50,7 @@ const add_to_pool = async (req, res, next) => {
 
 
   //check if the playlist is already in the pool
-  await Playlist.updateOne({_id:group_id},
+  await Group.updateOne({_id:group_id},
   {
     $push:{pool:playlist}
   },

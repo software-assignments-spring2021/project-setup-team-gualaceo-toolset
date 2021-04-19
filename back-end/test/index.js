@@ -3,7 +3,7 @@
 
 const assert = require('chai').assert
 const axios = require("axios")
-let Playlist = require("../models/playlists.model");
+let Group = require("../models/groups.model");
 const is_in_group = require('../helper_methods/is_in_group.js').is_in_group
 const is_valid_playlist = require('../helper_methods/is_valid_playlist').is_valid_playlist
 const mongoose = require("mongoose");
@@ -35,9 +35,9 @@ describe('add to pool (and related methods)', async () => {
     const members = ["rbx2co", "jonoto", "123milkman"]
     const banned_members = ["jonoto"]
     const owners = ["rbx2co"]
-    const songs = []
+    const href =""
     const pool = []
-    const playlist = new Playlist({members, banned_members, owners, songs, pool})
+    const playlist = new Group({members, owners, href, banned_members, pool}) //this MUST correspond to the order specified in the schema
     await playlist.save()
       .then(res => {
         console.log("test group saved successfully!")
@@ -87,7 +87,7 @@ describe('add to pool (and related methods)', async () => {
     it('can add to pool', async () => {
       const playlist_id = "3PLPVWNT4CMjqSLpoRThxf" //note, as this is hardcoded, if the playlist is deleted this test will fail! I don't plan on deleting it, but I ever do accidentally, please change the playlist id here
       let status_code
-      let passed = await axios.put(`http://localhost:5000/playlists/add_to_pool/${group_id}/${playlist_id}/${bearer}`) 
+      let passed = await axios.put(`http://localhost:5000/groups/add_to_pool/${group_id}/${playlist_id}/${bearer}`) 
         .then((res) => {
           status_code = res.status
         })
@@ -103,12 +103,13 @@ describe('add to pool (and related methods)', async () => {
       const playlist_id = "3PLPVWNT4CMjqSLpoRThxf" //note, as this is hardcoded, if the playlist is deleted this test will fail! I don't plan on deleting it, but I ever do accidentally, please change the playlist id here
       let status_code
 
-      let passed = await axios.put(`http://localhost:5000/playlists/add_to_pool/${group_id}/${playlist_id}/${bearer}`) 
+      let passed = await axios.put(`http://localhost:5000/groups/add_to_pool/${group_id}/${playlist_id}/${bearer}`) 
         .then((res) => {
           status_code = res.status
           return true
         })
         .catch(err => {
+          console.log(err.message)
           return false
         })
       
@@ -118,7 +119,7 @@ describe('add to pool (and related methods)', async () => {
   
   //delete the temporary group we've created for the sake of these tests
   after(async () => {
-    Playlist.deleteOne({_id: group_id})
+    Group.deleteOne({_id: group_id})
       .then(() => {
         console.log("deleted group successfully!")
       })

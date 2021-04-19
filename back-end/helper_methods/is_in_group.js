@@ -1,9 +1,9 @@
-let Playlist = require("../models/playlists.model");
+let Group = require("../models/groups.model");
 
 const is_in_group = async (user_id, group_id) => { //checks if the user is a member of the specified group, and is also not banned
   let members
   let banned_members
-  let passed = await Playlist.findOne({_id:group_id}) //retrieve the playlist with the given group id
+  let passed = await Group.findOne({_id:group_id}) //retrieve the playlist with the given group id
     .then(response => {
       members = response.members
       banned_members = response.banned_members
