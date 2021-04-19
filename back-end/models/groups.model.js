@@ -9,7 +9,7 @@ const groupsSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
-  href: {
+  id: {
     type: String,
     default: [],
   },
