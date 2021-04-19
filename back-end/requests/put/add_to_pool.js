@@ -1,12 +1,9 @@
-const axios = require("axios");
-let Playlist = require("../../models/groups.model");
-const set_authentication = require("../other/authentication.js")
-  .set_authentication;
-const is_in_group = require("../../helper_methods/is_in_group.js").is_in_group;
-const is_valid_playlist = require("../../helper_methods/is_valid_playlist.js")
-  .is_valid_playlist;
-const playlist_is_in_pool = require("../../helper_methods/playlist_is_in_pool")
-  .playlist_is_in_pool;
+const axios = require("axios")
+let Group = require("../../models/groups.model");
+const set_authentication = require("../other/authentication.js").set_authentication
+const is_in_group = require("../../helper_methods/is_in_group.js").is_in_group
+const is_valid_playlist =  require("../../helper_methods/is_valid_playlist.js").is_valid_playlist
+const playlist_is_in_pool = require("../../helper_methods/playlist_is_in_pool").playlist_is_in_pool
 
 const add_to_pool = async (req, res, next) => {
   const group_id = req.params.group_id;
@@ -52,13 +49,12 @@ const add_to_pool = async (req, res, next) => {
   };
 
   //check if the playlist is already in the pool
-  await Playlist.updateOne(
-    { _id: group_id },
+  await Group.updateOne({_id:group_id},
     {
-      $push: { pool: playlist },
+      $push:{pool:playlist}
     },
-    { safe: true, upsert: true }
-  );
+    {safe: true, upsert: true}
+    )
 
   console.log("Playlist successfully added to pool");
   res.send("successfully added playlist to pool!"); //do not change this message, one of the chai tests depends on it

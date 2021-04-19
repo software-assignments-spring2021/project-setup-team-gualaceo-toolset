@@ -79,7 +79,8 @@ app.put(
 
 //Handle any errors
 app.use((error, req, res, next) => {
-  res.status(error.staus || 500);
+  res.status(error.status || 500);
+  console.log(error.message)
   return res.send(error.message);
 });
 

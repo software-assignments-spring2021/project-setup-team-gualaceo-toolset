@@ -1,18 +1,19 @@
-let Playlist = require("../models/groups.model");
+let Group = require("../models/groups.model");
 
-const playlist_is_in_pool = async (playlist_id, group_id) => {
-  let pool;
-  let passed = await Playlist.findOne({ _id: group_id }) //retrieve the playlist with the given group id
-    .then((response) => {
-      pool = response.pool;
-      return true; //no error encountered, so error will be set to null
+const playlist_is_in_pool = async (playlist_id, group_id) =>
+{
+  let pool
+  let passed = await Group.findOne({_id:group_id}) //retrieve the playlist with the given group id
+    .then(response => {
+      pool = response.pool
+      return true //no error encountered, so error will be set to null
     })
-    .catch((err) => {
-      const msg = "Error: Could not find group with given group id";
-      console.log(msg);
-      console.log(err);
-      return new Error(msg);
-    });
+    .catch(err => {
+      const msg = "Error: Could not find group with given group id" 
+      console.log(msg)
+      console.log(err)
+      return new Error(msg)
+    })
 
   if (passed instanceof Error) {
     return passed;
