@@ -35,16 +35,17 @@ describe('add to pool (and related methods)', async () => {
     const members = ["rbx2co", "jonoto", "123milkman"]
     const banned_members = ["jonoto"]
     const owners = ["rbx2co"]
-    const href =""
+    const id = ""
     const pool = []
-    const playlist = new Group({banned_members: banned_members, members: members, owners: owners, href: href, pool: pool}) //this MUST correspond to the order specified in the schema
-    await playlist.save()
+    const group = new Group({banned_members: banned_members, members: members, owners: owners, id: id, pool: pool}) //this MUST correspond to the order specified in the schema
+    await group.save()
       .then(res => {
         console.log("test group saved successfully!")
-        group_id = playlist._id
+        group_id = group._id
       })
       .catch(err => {
-        console.log("error encountered saving test group, this may cause a crash")
+        console.log(err)
+        console.log("error encountered saving test group, this may cause test failures")
       })
   })
 
@@ -109,7 +110,7 @@ describe('add to pool (and related methods)', async () => {
           return true
         })
         .catch(err => {
-          console.log(err.message)
+          //console.log(err.message)
           return false
         })
       

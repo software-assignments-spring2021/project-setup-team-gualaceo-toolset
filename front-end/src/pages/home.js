@@ -129,7 +129,7 @@ const Home = (props) => {
         console.log(userid);
         axios({
           method: "get",
-          url: `http://localhost:5000/playlists/me`,
+          url: `http://localhost:5000/groups/me`,
           data: { user: `${userid}` },
         })
           .then((res) => {
@@ -162,7 +162,7 @@ const Home = (props) => {
       console.log(groupName);
       await axios({
         method: "get",
-        url: `http://localhost:5000/playlists/id/${groupName}`,
+        url: `http://localhost:5000/groups/id/${groupName}`,
       })
         .then((res) => {
           console.log(res);
@@ -177,7 +177,7 @@ const Home = (props) => {
     if (groupName) {
       /*axios({
         method: "put",
-        url: `http://localhost:5000/playlists/add`,
+        url: `http://localhost:5000/group/add`,
         data: { members: userid },
       })
         .then((res) => {
@@ -210,7 +210,7 @@ const Home = (props) => {
       // Create the playlist
       axios({
         method: "post",
-        url: `https://api.spotify.com/v1/users/${userid}/playlists`,
+        url: `https://api.spotify.com/v1/users/${userid}/group`,
         data: {
           name: groupName,
           description: "This playlist was generated using Synthesize.",
@@ -222,7 +222,7 @@ const Home = (props) => {
           // Add the playlist to the DB
           axios({
             method: "post",
-            url: `http://localhost:5000/playlists/add`,
+            url: `http://localhost:5000/group/add`,
             data: { owners: userid, members: userid, href: res.data.href },
           })
             .then((res) => {
@@ -276,8 +276,14 @@ const Home = (props) => {
           // Add the playlist to the DB
           axios({
             method: "post",
-            url: `http://localhost:5000/playlists/add`,
-            data: { owners: userid, members: userid, href: res.data.href },
+            url: `http://localhost:5000/groups/add`,
+            data: {
+              owners: userid,
+              members: userid,
+              id: res.data.id,
+              banned_members: [],
+              pool: [],
+            },
           })
             .then((res) => {
               console.log(res);

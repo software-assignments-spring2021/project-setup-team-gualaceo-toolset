@@ -15,24 +15,21 @@ const playlist_is_in_pool = async (playlist_id, group_id) =>
       return new Error(msg)
     })
 
-  if (passed instanceof Error)
-  {
-    return passed
+  if (passed instanceof Error) {
+    return passed;
   }
 
-  for (let i = 0; i < pool.length; i++) 
-  { 
-    const user_playlist = pool[i]
-    const cur_playlist_id = user_playlist["playlist_id"]
-    if (cur_playlist_id === playlist_id)
-    {
-      return true
+  for (let i = 0; i < pool.length; i++) {
+    const user_playlist = pool[i];
+    const cur_playlist_id = user_playlist["playlist_id"];
+    if (cur_playlist_id === playlist_id) {
+      return true;
     }
   }
 
-  return false
-}
+  return false;
+};
 
 module.exports = {
-  playlist_is_in_pool: playlist_is_in_pool
-}
+  playlist_is_in_pool: playlist_is_in_pool,
+};
