@@ -17,10 +17,7 @@ import IconButton from "@material-ui/core/IconButton";
 import RemoveIcon from "@material-ui/icons/Remove";
 import styles from "../styles/generatedPlaylistStyles";
 import axios from "axios";
-import {
-  set_authentication,
-  is_expired,
-} from "../components/authentication";
+import { set_authentication, is_expired } from "../components/authentication";
 
 const Playlist = (props) => {
   let history = useHistory();
@@ -30,6 +27,7 @@ const Playlist = (props) => {
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [expandPlayer, setExpandPlayer] = useState(false);
   const [currentSong, setCurrentSong] = useState("");
   let [isOwner, setIsOwner] = useState(params.userStatus === "owner"); //params.userStatus is whatever comes after /generatedPlaylist/ in the url
@@ -71,9 +69,9 @@ const Playlist = (props) => {
   };
 
   useEffect(() => {
-    if (!isGuest && is_expired(localStorage)) //only non-guests should be booted to the landing page
-    {
-      return history.push("/"); 
+    if (!isGuest && is_expired(localStorage)) {
+      //only non-guests should be booted to the landing page
+      return history.push("/");
     }
 
     if (!isGuest && previousSongsRef.current === songs) {
@@ -83,10 +81,11 @@ const Playlist = (props) => {
       })
         .then((res) => {
           setSongs(res.data[0].songs);
+          // console.log(res.data[0].songs);
           setuiLoading(false);
         })
         .catch((err) => console.log(err));
-    } else if (isGuest){
+    } else if (isGuest) {
       setuiLoading(false);
     }
   }, []);
@@ -104,30 +103,33 @@ const Playlist = (props) => {
 
   const handleSongChange = (song) => {
     if (is_expired(localStorage)) {
-      return history.push("/"); 
+      return history.push("/");
     }
     set_authentication(localStorage, axios);
     let deviceid;
-
+    console.log(currentSong);
     axios({
       method: "get",
       url: `https://api.spotify.com/v1/me/player`,
     })
       .then((res) => {
-        console.log((deviceid = res.data.device.id));
-        setCurrentSong(song);
-        console.log(currentSong.id);
+        deviceid = res.data.device.id;
+        // console.log(());
+      })
+      .then((res) => {
         axios({
           method: "put",
           url: `https://api.spotify.com/v1/me/player/play?device_id=${deviceid}`,
           data: {
-            uris: [`spotify:track:${currentSong.id}`],
+            uris: [`spotify:track:${song.id}`],
             position_ms: 0,
           },
         })
           .then((res) => {
-            console.log(res);
-            console.log(currentSong.id);
+            setIsPlaying(true);
+            // console.log(isPlaying);
+            setCurrentSong(song);
+            // console.log(currentSong.id);
           })
           .catch((err) => {
             console.log(err);
@@ -162,17 +164,17 @@ const Playlist = (props) => {
               <Typography variant="h5" className={classes.heading}>
                 Playlist
               </Typography>
-              { !isGuest &&
+              {!isGuest && (
                 <Button
-                color="inherit"
-                onClick={() => {
-                  setOpenConfirmLogout(!openConfirmLogout);
-                }}
-                className={classes.logout}
+                  color="inherit"
+                  onClick={() => {
+                    setOpenConfirmLogout(!openConfirmLogout);
+                  }}
+                  className={classes.logout}
                 >
                   Logout
                 </Button>
-              }
+              )}
               <div style={{ position: "absolute" }}>
                 <Logout
                   open={openConfirmLogout}
@@ -210,7 +212,9 @@ const Playlist = (props) => {
               <div
                 className={classes.cards}
                 key={i}
-                onClick={() => handleSongChange(song)}
+                onClick={() => {
+                  handleSongChange(song);
+                }}
               >
                 <CardContent style={{ marginBottom: "-10px" }}>
                   <Box
@@ -255,6 +259,8 @@ const Playlist = (props) => {
               setExpanded={setExpandPlayer}
               currentSong={currentSong}
               setCurrentSong={setCurrentSong}
+              isPlaying={isPlaying}
+              setIsPlaying={setIsPlaying}
             />
           </div>
         </div>
