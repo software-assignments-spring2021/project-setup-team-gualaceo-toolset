@@ -1,6 +1,6 @@
 let Playlist = require("../../models/playlists.model");
 
-const add_to_ban = async (req, res,next) => {
+const kick_member = async (req, res,next) => {
   const group_id = req.params.group_id
   const user_id = req.params.user_id
 
@@ -16,27 +16,12 @@ const add_to_ban = async (req, res,next) => {
       console.log(msg)
       return new Error(msg)
     })
-
   if(error)
   {
       return next(error)
   }
-  if (banned_members.includes(user_id))  //check if banned already
-  {
-    const msg = "User is already banned"
-    console.log(msg)
-    return next(new Error(msg))
-  }
 
-  //add user to the banned list
-  await Playlist.updateOne({_id:group_id},
-  {
-    $push:{banned_members:user_id}
-  },
-  {safe: true, upsert: true}
-  )
-
-  if(members.includes(user_id))  //if the member is in the group, remove it
+  if(members.includes(user_id))  //if a member is in the group, remove it
   {
     await Playlist.updateOne({_id:group_id},
     { $pullAll: {members: [user_id] }})
@@ -45,5 +30,5 @@ const add_to_ban = async (req, res,next) => {
   res.send("Finished operation")
 }
 module.exports = {
-  add_to_ban: add_to_ban
+  kick_member: kick_member
 }
