@@ -37,7 +37,7 @@ describe('add to pool (and related methods)', async () => {
     const owners = ["rbx2co"]
     const href =""
     const pool = []
-    const playlist = new Group({members, owners, href, banned_members, pool}) //this MUST correspond to the order specified in the schema
+    const playlist = new Group({banned_members: banned_members, members: members, owners: owners, href: href, pool: pool}) //this MUST correspond to the order specified in the schema
     await playlist.save()
       .then(res => {
         console.log("test group saved successfully!")
