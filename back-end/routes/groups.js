@@ -49,21 +49,10 @@ router.put(
   add_to_pool.add_to_pool
 );
 
-router.route("/create").get((req, res) => {
-  const members = "Chris";
-  const owners = "Chris";
-  const id = "abc";
-  const banned_members = "Alex";
-  const newGroup = new Group({ members, owners, id, banned_members});
-  newGroup
-    .save()
-    .then(() => res.json("Group Added!"))
-    .catch((err) => res.status(400).json("Error: " + err));
-});
 
-router.put("/add_members/:group_id/:user_id", add_members.add_members)
-router.put("/add_to_ban/:group_id/:user_id", add_to_ban.add_to_ban)
-router.put("/kick_member/:group_id/:user_id", kick_member.kick_member)
-router.put("/unban/:group_id/:user_id", unban.unban)
+router.get("/add_members/:group_id/:user_id", add_members.add_members)
+router.get("/add_to_ban/:group_id/:user_id", add_to_ban.add_to_ban)
+router.get("/kick_member/:group_id/:user_id", kick_member.kick_member)
+router.get("/unban/:group_id/:user_id", unban.unban)
 
 module.exports = router;

@@ -10,6 +10,7 @@ const add_to_ban = async (req, res,next) => {
     .then(response => {
       members = response.members
       banned_members = response.banned_members
+      owners = response.owners
     })
     .catch(err => {
       const msg = "Cannot find the group" 
@@ -24,6 +25,12 @@ const add_to_ban = async (req, res,next) => {
   if (banned_members.includes(user_id))  //check if banned already
   {
     const msg = "User is already banned"
+    console.log(msg)
+    return next(new Error(msg))
+  }
+  if (owners.includes(user_id))  //group owner cannot be banned
+  {
+    const msg = "User is group owner, cannot be banned"
     console.log(msg)
     return next(new Error(msg))
   }
