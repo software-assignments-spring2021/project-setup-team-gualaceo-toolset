@@ -37,8 +37,9 @@ const Home = (props) => {
   const [userid, setUserID] = useState("");
   const [errors, setErrors] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
+  const [myGroups, setMyGroups] = useState([]);
 
-  const groups = [
+  let groups = [
     {
       name: "Work Buddies",
       owner: true,
@@ -123,17 +124,31 @@ const Home = (props) => {
       method: "get",
       url: `https://api.spotify.com/v1/me`,
     })
-      .then((res) => {
-        let userid = res.data.id;
-        setUserID(res.data.id);
-        console.log(userid);
+      .then((nameRes) => {
+        setUserID(nameRes.data.id);
+        console.log(nameRes.data.id);
         axios({
           method: "get",
-          url: `http://localhost:5000/groups/me`,
-          data: { user: `${userid}` },
+          url: `http://localhost:5000/groups/me/${nameRes.data.id}`,
         })
-          .then((res) => {
-            console.log(res.data);
+          .then((response) => {
+            response.data.forEach((playlist) => {
+              axios({
+                method: "get",
+                url: `https://api.spotify.com/v1/playlists/${playlist.id}`,
+              })
+                .then((res) => {
+                  setMyGroups((myGroups) => [
+                    ...myGroups,
+                    {
+                      name: res.data.name,
+                      owner: playlist.owners.includes(nameRes.data.id),
+                    },
+                  ]);
+                })
+                .catch((err) => console.log(err));
+            });
+            console.log(response.data);
             setuiLoading(false);
           })
           .catch((err) => {
@@ -355,7 +370,7 @@ const Home = (props) => {
             </Toolbar>
           </AppBar>
           {/* <div style={{ position: "absolute" }}> */}
-          <Error error={errors} setError={setErrors} />
+          <Error error={errors} setError={setErrors} severity="error" />
           {/* </div> */}
           <div style={{ marginTop: "-30px" }}>
             <Accordion square={true} className={classes.accordion}>
@@ -410,7 +425,7 @@ const Home = (props) => {
             </Accordion>
           </div>
           <br />
-          {groups.map((group) => (
+          {myGroups.map((group) => (
             <Group group={group} classes={classes} handleVisit={handleVisit} />
           ))}
         </div>

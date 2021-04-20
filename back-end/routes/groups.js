@@ -13,9 +13,12 @@ router.route("/").get((req, res) => {
     .catch((err) => res.status(400).json("Error:" + err));
 });
 
-router.route("/me").get((req, res) => {
-  Group.find({ members: req.body.user })
-    .then((groups) => res.json(groups))
+router.route("/me/:user").get((req, res) => {
+  // console.log(req.params);
+  Group.find({ members: req.params.user })
+    .then((groups) => {
+      res.json(groups);
+    })
     .catch((err) => res.status(400).json("Error:" + err));
 });
 
@@ -46,6 +49,6 @@ router.put(
   add_to_pool.add_to_pool
 );
 
-router.put("/add_members/:group_id/:user_id", add_members.add_members)
+router.put("/add_members/:group_id/:user_id", add_members.add_members);
 
 module.exports = router;

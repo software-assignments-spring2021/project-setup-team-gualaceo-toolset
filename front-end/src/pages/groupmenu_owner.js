@@ -16,6 +16,7 @@ import Loading from "../components/loading";
 import styles from "../styles/groupmenuStyles.js";
 import EdiText from "react-editext";
 import Logout from "../components/logout";
+import Error from "../components/error";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import {
@@ -37,6 +38,7 @@ const GroupMenuOwner = (props) => {
   const [groupName, setGroupName] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [playlistGenerated, setPlaylistGenerated] = useState(false);
+  const [copied, setCopied] = useState("");
 
   const handleViewAllMusic = () => {
     //console.log("You've clicked on view all music");
@@ -50,6 +52,11 @@ const GroupMenuOwner = (props) => {
   };
   const handleGeneratePlaylist = () => {
     setPlaylistGenerated(true);
+  };
+
+  const handleCopyID = () => {
+    navigator.clipboard.writeText(location.state.id);
+    setCopied("Copied Group ID!");
   };
 
   const handleGroupNameChange = (name) => {
@@ -146,7 +153,7 @@ const GroupMenuOwner = (props) => {
                 onClick={() => history.push("/home")}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
-              <Typography className={classes.heading}>
+              <Typography onClick={handleCopyID} className={classes.heading}>
                 Group ID: {groupID}
               </Typography>
               <Button
@@ -166,6 +173,7 @@ const GroupMenuOwner = (props) => {
               </div>
             </Toolbar>
           </AppBar>
+          <Error error={copied} setError={setCopied} severity="success" />
           <Card fullWidth className={classes.flexCard}>
             <CardContent style={{ marginBottom: "-10px" }}>
               <div>Group Name:</div>
