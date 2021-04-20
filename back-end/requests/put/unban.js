@@ -1,4 +1,4 @@
-let Playlist = require("../../models/playlists.model");
+let Group = require("../../models/groups.model");
 
 const unban = async (req, res,next) => {
   const group_id = req.params.group_id
@@ -6,7 +6,7 @@ const unban = async (req, res,next) => {
 
   let members
   let banned_members
-  let error =await Playlist.findOne({_id:group_id}) //retrieve the group information
+  let error =await Group.findOne({_id:group_id}) //retrieve the group information
     .then(response => {
       members = response.members
       banned_members = response.banned_members
@@ -31,7 +31,7 @@ const unban = async (req, res,next) => {
   }
 
 
-  await Playlist.updateOne({_id:group_id},
+  await Group.updateOne({_id:group_id},
     { $pullAll: {banned_members: [user_id] } }
   )
 

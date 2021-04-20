@@ -3,6 +3,9 @@ let Group = require("../models/groups.model");
 const add_to_pool = require("../requests/put/add_to_pool");
 const user_id = require("../requests/get/user_id");
 const add_members = require("../requests/put/add_members");
+const add_to_ban = require("../requests/put/add_to_ban");
+const kick_member = require("../requests/put/kick_member");
+const unban = require("../requests/put/unban");
 
 router.route("/").get((req, res) => {
   Group.find()
@@ -46,6 +49,21 @@ router.put(
   add_to_pool.add_to_pool
 );
 
+router.route("/create").get((req, res) => {
+  const members = "Chris";
+  const owners = "Chris";
+  const id = "abc";
+  const banned_members = "Alex";
+  const newGroup = new Group({ members, owners, id, banned_members});
+  newGroup
+    .save()
+    .then(() => res.json("Group Added!"))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
 router.put("/add_members/:group_id/:user_id", add_members.add_members)
+router.put("/add_to_ban/:group_id/:user_id", add_to_ban.add_to_ban)
+router.put("/kick_member/:group_id/:user_id", kick_member.kick_member)
+router.put("/unban/:group_id/:user_id", unban.unban)
 
 module.exports = router;

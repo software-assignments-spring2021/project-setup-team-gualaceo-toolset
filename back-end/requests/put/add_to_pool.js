@@ -30,38 +30,6 @@ const add_to_pool = async (req, res, next) => {
   }
 
   //check that given playlist isn't already in the pool
-<<<<<<< HEAD
-  let in_pool = await (playlist_is_in_pool(playlist_id, group_id))
-  
-  if (in_pool instanceof Error)
-  {
-    console.log("Error encountered in playlist_is_in_pool within add_to_pool.js")
-    return next(in_pool)
-  } else if (in_pool)
-  {
-    const msg = "Error: playlist to be added already is in the group's pool"
-    console.log(msg)
-    return next(new Error(msg))
-  }
-
-  const playlist = {
-    "added_by": user_id,
-    "playlist_id": playlist_id,
-  }
-
-
-  //check if the playlist is already in the pool
-  await Playlist.updateOne({_id:group_id},
-  {
-    $push:{pool:playlist}
-  },
-  {safe: true, upsert: true}
-  )
-
-  console.log("Playlist successfully added to pool")
-  res.send("successfully added playlist to pool!") //do not change this message, one of the chai tests depends on it
-}
-=======
   let in_pool = await playlist_is_in_pool(playlist_id, group_id);
 
   if (in_pool instanceof Error) {
@@ -91,7 +59,6 @@ const add_to_pool = async (req, res, next) => {
   console.log("Playlist successfully added to pool");
   res.send("successfully added playlist to pool!"); //do not change this message, one of the chai tests depends on it
 };
->>>>>>> master
 module.exports = {
   add_to_pool: add_to_pool,
 };

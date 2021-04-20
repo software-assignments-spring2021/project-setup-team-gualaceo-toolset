@@ -34,7 +34,7 @@ connection.once("open", () => {
 });
 */
 
-
+//     Testing with a localhost database
 const url = 'mongodb://127.0.0.1:27017/local-test'
 mongoose.connect(url, { useNewUrlParser: true,useUnifiedTopology: true })
 const connection = mongoose.connection
@@ -44,6 +44,7 @@ connection.once('open', _ => {
 connection.on('error', err => {
   console.error('connection error:', err)
 })
+
 
 const groupsRouter = require("./routes/groups");
 const usersRouter = require("./routes/users");
