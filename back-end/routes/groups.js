@@ -50,9 +50,9 @@ router.put(
 );
 
 
-router.get("/add_members/:group_id/:user_id", add_members.add_members)
-router.get("/add_to_ban/:group_id/:user_id", add_to_ban.add_to_ban)
-router.get("/kick_member/:group_id/:user_id", kick_member.kick_member)
-router.get("/unban/:group_id/:user_id", unban.unban)
+router.put("/add_members/:group_id/:user_id", add_members.add_members)
+router.put("/add_to_ban/:group_id/:user_id", add_to_ban.add_to_ban)
+router.put("/kick_member/:group_id/:user_id", kick_member.kick_member)
+router.put("/unban/:group_id/:user_id", unban.unban)
 
 module.exports = router;
