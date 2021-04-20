@@ -117,7 +117,111 @@ describe('add to pool (and related methods)', async () => {
       assert.isFalse(passed) //In this case, we desire failure
     })
   })
-  
+  //delete the temporary group we've created for the sake of these tests
+  after(async () => {
+    Group.deleteOne({_id: group_id})
+      .then(() => {
+        console.log("deleted group successfully!")
+      })
+      .catch((err) => {
+        console.log("Error: could not delete group created for these tests")
+        console.log(err)
+      })
+  })
+})
+
+
+
+//Testing add_members endpoint
+describe('testing add_members endpoint', async () => {
+  before(async () => {
+    //connect to MongoDB
+    const uri = process.env.ATLAS_URI;
+    await mongoose.connect(uri, {
+      keepAlive: true,
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+    });
+
+    //create a test group
+    const members = ["Bob","Ben","Bill"]
+    const banned_members = ["Brent"]
+    const owners = ["Bob"]
+    const id = ""
+    const pool = []
+    const group = new Group({banned_members: banned_members, members: members, owners: owners, id: id, pool: pool}) 
+    await group.save()
+      .then(res => {
+        console.log("test group saved successfully!")
+        group_id = group._id
+      })
+      .catch(err => {
+        console.log(err)
+        console.log("error encountered saving test group, this may cause test failures")
+      })
+  })
+
+  describe("testing scenarios where users cannot be added to group", async () => {
+    it("Group id is an object", () => {
+      assert.typeOf(group_id, "object")
+    })
+
+    it("test that 'Bob' is in group", async () => {
+      let in_group = await is_in_group("Bob", group_id)
+      assert.isTrue(in_group)
+    })
+
+    it("test that'Brent' is banned", async () => {
+      let in_group = await is_in_group("Brent", group_id)
+      assert.isTrue(in_group instanceof Error)
+    })
+
+  })
+
+  describe("add_to_pool tests", async () => {
+    it('test trying to add already existing user', async () => {
+      let status_code
+      let user_id ="Brent"
+      let passed = await axios.put(`http://localhost:5000/groups/add_members/${group_id}/${user_id}`) 
+        .then((res) => {
+          status_code = res.status
+          return true
+        })
+        .catch(err => {
+          return false
+        })
+      
+      assert.isFalse(passed) //user already in group doesn't need to be added
+    })
+
+    it('test trying to add banned user', async () => {
+      let user_id ="Brent"
+      let passed = await axios.put(`http://localhost:5000/groups/add_members/${group_id}/${user_id}`) 
+        .then((res) => {
+          return true
+        })
+        .catch(err => {
+          return false
+        })
+      
+      assert.isFalse(passed) //banned user cannot be added 
+    })
+
+    it('test trying to add new user', async () => {
+      let user_id ="Blake"
+      let passed = await axios.put(`http://localhost:5000/groups/add_members/${group_id}/${user_id}`) 
+        .then((res) => {
+          return true
+        })
+        .catch(err => {
+          return false
+        })
+      
+      assert.isTrue(passed) //new user is successfully added
+    })
+
+  })
   //delete the temporary group we've created for the sake of these tests
   after(async () => {
     Group.deleteOne({_id: group_id})
