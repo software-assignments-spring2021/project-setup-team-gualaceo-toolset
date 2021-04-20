@@ -168,19 +168,21 @@ const Home = (props) => {
   // not the id of the spotify playlist
   const handleJoin = async (event) => {
     event.preventDefault();
+    let currGroup = "";
     // 6075333ffd54816234d7fdc6
     if (is_expired(localStorage)) {
       return history.push("/");
     }
     set_authentication(localStorage, axios);
     if (groupName) {
-      console.log(groupName);
+      // console.log(groupName);
       await axios({
         method: "get",
         url: `http://localhost:5000/groups/id/${groupName}`,
       })
         .then((res) => {
-          console.log(res);
+          currGroup = res.data[0];
+          // console.log(res);
         })
         .catch((err) => {
           setGroupName("");
@@ -190,28 +192,49 @@ const Home = (props) => {
       setErrors("You have not entered a valid Group ID.");
     }
     if (groupName) {
-      /*axios({
+      axios({
         method: "put",
-        url: `http://localhost:5000/group/add`,
-        data: { members: userid },
+        url: `http://localhost:5000/groups/add_members/${groupName}/${userid}`,
       })
         .then((res) => {
           console.log(res);
+          if (res.data !== "User already in the group") {
+            axios({
+              method: "get",
+              url: `https://api.spotify.com/v1/playlists/${currGroup.id}`,
+            })
+              .then((res) => {
+                console.log({ name: res.data.name, id: groupName });
+                history.push({
+                  pathname: "/groupMenu",
+                  state: { name: res.data.name, id: groupName },
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          if (err.response.data === "User already in the group") {
+            setErrors("You are already in this group.");
+            console.log(err.response);
+          } else {
+            console.log(err);
+          }
+        });
       //Follow the playlist
       axios({
         method: "put",
-        url: `https://api.spotify.com/v1/playlists/${group}/followers`,
+        url: `https://api.spotify.com/v1/playlists/${currGroup.id}/followers`,
         data: {
           public: true,
         },
       })
         .then((res) => {
-          console.log(res);
-          history.push("/groupMenuOwner");
+          // console.log(res);
         })
-        .catch((err) => console.log(err));*/
+        .catch((err) => console.log(err));
     }
     /* 
 
