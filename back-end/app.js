@@ -47,11 +47,9 @@ connection.on('error', err => {
 
 const groupsRouter = require("./routes/groups");
 const usersRouter = require("./routes/users");
-const playlistsRouter = require("./routes/playlists");
 
 app.use("/groups", groupsRouter);
 app.use("/users", usersRouter);
-app.use("/playlists", playlistsRouter);
 
 // This code disables CORS, it may be necessary for debugging.
 //***We should remove this in the final version***
@@ -95,7 +93,8 @@ app.put(
 
 //Handle any errors
 app.use((error, req, res, next) => {
-  res.status(error.staus || 500);
+  res.status(error.status || 500);
+  console.log(error.message)
   return res.send(error.message);
 });
 
