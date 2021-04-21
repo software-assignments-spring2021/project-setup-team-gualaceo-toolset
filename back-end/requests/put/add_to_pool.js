@@ -8,7 +8,7 @@ const playlist_is_in_pool = require("../../helper_methods/playlist_is_in_pool").
 const add_to_pool = async (req, res, next) => {
   const group_id = req.params.group_id;
   const bearer = req.params.bearer;
-  const playlist_id = req.params.playlist_id;
+  const playlist_id = req.params.playlist_id.trim() //trim any whitespace
   const user_id = req.user_id;
 
   //check that playlist_href is valid

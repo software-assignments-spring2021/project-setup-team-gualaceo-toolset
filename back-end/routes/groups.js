@@ -1,6 +1,7 @@
 const router = require("express").Router();
 let Group = require("../models/groups.model");
 const add_to_pool = require("../requests/put/add_to_pool");
+const remove_from_pool = require("../requests/delete/remove_from_pool")
 const user_id = require("../requests/get/user_id");
 const add_members = require("../requests/put/add_members");
 const add_to_ban = require("../requests/put/add_to_ban");
@@ -43,11 +44,16 @@ router.route("/add").post((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+//get user id, and set it for any routes which require it
 router.use("/add_to_pool/:group_id/:playlist_id/:bearer", user_id.get_user_id);
+router.use("/remove_from_pool/:group_id/:playlist_id/:bearer", user_id.get_user_id)
+
 router.put(
   "/add_to_pool/:group_id/:playlist_id/:bearer",
   add_to_pool.add_to_pool
 );
+
+router.delete("/remove_from_pool/:group_id/:playlist_id/:bearer", remove_from_pool.remove_from_pool)
 
 
 router.put("/add_members/:group_id/:user_id", add_members.add_members)
