@@ -27,7 +27,7 @@ const styles = (theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     flexGrow: 1,
-    marginTop: "-300px",
+    marginTop: "-400px",
   },
   cards: {
     width: "106%",
@@ -94,7 +94,7 @@ const styles = (theme) => ({
     justifyContent: "center",
     flexGrow: 1.5,
     padding: "10px",
-    marginTop: "-90px",
+    marginTop: "-200px",
   },
   logoImage: {
     height: "80px",

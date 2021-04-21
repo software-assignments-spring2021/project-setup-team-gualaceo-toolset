@@ -14,10 +14,10 @@ const styles = (theme) => ({});
 
 const handleLogout = (history) => {
   //clear any Spotify session data
-  localStorage.removeItem('auth_data')
-  localStorage.removeItem('expiry_time')
-  history.push("/")
-}
+  localStorage.removeItem("auth_data");
+  localStorage.removeItem("expiry_time");
+  history.push("/");
+};
 
 const Logout = (props) => {
   const [open, setOpen] = [props.open, props.setOpen];
@@ -26,7 +26,7 @@ const Logout = (props) => {
   return (
     <Container>
       <CssBaseline />
-      <Dialog open={open} disableBgitackdropClick={false}>
+      <Dialog open={open} disableBackdropClick={false}>
         <DialogTitle id="alert-dialog-title">{"Logout?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -37,7 +37,11 @@ const Logout = (props) => {
           <Button onClick={() => setOpen(false)} color="primary">
             Cancel
           </Button>
-          <Button onClick={() => handleLogout(history)} color="primary" autoFocus>
+          <Button
+            onClick={() => handleLogout(history)}
+            color="primary"
+            autoFocus
+          >
             Logout
           </Button>
         </DialogActions>
