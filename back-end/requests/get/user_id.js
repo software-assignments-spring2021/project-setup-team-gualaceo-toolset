@@ -24,6 +24,7 @@ const get_user_id = (req, res, next) => {
             console.log("Something went wrong in the get_user_id endpoint when calling the Spotify API")
             console.error(err)
             return next(new Error("Could not pull user ID from Spotify API"))
+
         })
 }
 

@@ -1,21 +1,7 @@
 let Group = require("../models/groups.model");
 
-const playlist_is_in_pool = async (group_id) =>
+const playlist_is_in_pool = async (playlist_id, group_id) =>
 {
-  let playlist_id = await get_playlist(group_id)
-  .then((response) => 
-  {
-      console.log("Successfully got the playlist_id")
-      return response
-  })
-  .catch(async (err) => 
-  {
-      let msg = "Something went wrong in the get_playlist method"
-      console.log(msg)
-      console.error(err)
-      error = new Error(msg)
-      next(error)
-  })
   let pool
   let passed = await Group.findOne({_id:group_id}) //retrieve the playlist with the given group id
     .then(response => {
