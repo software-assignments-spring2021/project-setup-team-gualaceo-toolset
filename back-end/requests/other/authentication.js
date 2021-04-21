@@ -5,7 +5,7 @@ const set_authentication = (bearer_token, axios) => {
       ] = `Bearer ${bearer_token}`;
       return true //indicates success
     } else {
-        console.log("Error: Invalid bearer token or axios passed to set_authentication in the back-end")
+        console.log("Error: Perhaps no bearer token was passed to set_authentication in the back-end")
         return false //indicates failure
     }
   }
