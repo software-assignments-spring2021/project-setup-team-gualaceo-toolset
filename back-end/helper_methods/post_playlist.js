@@ -1,7 +1,6 @@
 const axios = require("axios")
 let Playlist = require("../models/playlists.model");
 const is_valid_playlist =  require("./is_valid_playlist.js").is_valid_playlist
-const set_authentication = require("../requests/other/authentication.js").set_authentication
 
 const post_playlist = async (bearer,group_id,playlist_id) => {
   //check that playlist_href is valid
