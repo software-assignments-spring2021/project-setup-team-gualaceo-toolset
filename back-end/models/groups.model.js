@@ -17,6 +17,10 @@ const groupsSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  href: {
+    type: String,
+    default: [],
+  },
   pool: {
     type: Array,
     default: [],
