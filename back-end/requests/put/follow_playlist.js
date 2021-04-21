@@ -1,16 +1,17 @@
 const axios = require("axios")
 const set_authentication = require("../other/authentication.js").set_authentication
-const get_playlist =  require("../../helper_methods/get_playlist.js").get_playlist
 
 const follow_playlist = async (req, res, next) => 
 {
 
     const bearer = req.params.bearer
     const user_id = req.user_id //this is set by previous middleware in routing
-    const group_id = req.params.group_id
+    const playlist_id = req.params.playlist_id
+    console.log(playlist_id)
     let error = null
-    let playlist_id = get_playlist(group_id)
-    let URL = `https://api.spotify.com/v1/playlists/${playlist_id}/followers`
+    
+
+    let URL = `	https://api.spotify.com/v1/playlists/${playlist_id}/followers`
 
     if (!user_id) //check for user_id, which should have been acquired from middleware
     {
