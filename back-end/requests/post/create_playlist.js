@@ -1,6 +1,6 @@
 const axios = require("axios");
 const app = require("../../app");
-let Playlist = require("../../models/playlists.model");
+let Group = require("../../models/groups.model");
 const post_playlist = require("../../helper_methods/post_playlist.js").post_playlist
 const set_authentication = require("../other/authentication.js").set_authentication
 

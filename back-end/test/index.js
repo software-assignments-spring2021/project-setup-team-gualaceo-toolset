@@ -35,18 +35,25 @@ describe('add to pool (and related methods)', async () => {
     const members = ["rbx2co", "jonoto", "123milkman"]
     const banned_members = ["jonoto"]
     const owners = ["rbx2co"]
-    const id = ""
+    const playlist_id = ""
     const pool = []
-    const group = new Group({banned_members: banned_members, members: members, owners: owners, id: id, pool: pool}) //this MUST correspond to the order specified in the schema
-    await group.save()
+    const group = new Group({banned_members: banned_members, members: members, owners: owners, playlist_id: playlist_id, pool: pool}) //this MUST correspond to the order specified in the schema
+    let passed = await group.save()
       .then(res => {
         console.log("test group saved successfully!")
         group_id = group._id
+        return true
       })
       .catch(err => {
         console.log(err)
         console.log("error encountered saving test group, this may cause test failures")
+        return false
       })
+
+      if (!passed)
+      {
+        return
+      }
   })
 
   describe("is_in_group tests", async () => {
