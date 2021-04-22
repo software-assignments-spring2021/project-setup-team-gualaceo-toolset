@@ -12,11 +12,11 @@ const post_playlist = async (bearer, group_id, playlist_id) => {
   }
 
   await Group.updateOne({_id:group_id},
-   {playlist_id:playlist_id},
+   {generated_playlist_id:playlist_id},
   {safe: true, upsert: true}
   )
   .then(response => { //if there is a valid response, the playlist must exist
-    console.log(response)
+    //console.log(response)
     return true
   })
   .catch(err => { //if an error is returned, the playlist doesn't exist (or something else was wrong with request)

@@ -45,7 +45,7 @@ const create_playlist = async (req, res, next) => {
         .then((response) => {
             console.log("Successfully created playlist")
             //log the id of the playlist created
-            console.log(response.data.id)
+            //console.log(response.data.id)
             JSON_repsonse=response.data
         })
         .catch((err) => {
