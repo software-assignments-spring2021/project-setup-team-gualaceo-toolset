@@ -6,8 +6,22 @@ const remove_tracks = async (req, res, next) =>
 
     const bearer = req.params.bearer
     const user_id = req.user_id //this is set by previous middleware in routing
-    const playlist_id = req.params.playlist_id
+    const group_id = req.params.group_id
     const track_id = req.params.track_id
+    let playlist_id = await get_playlist(group_id)
+    .then((response) => 
+    {
+        console.log("Successfully got the playlist_id")
+        return response
+    })
+    .catch(async (err) => 
+    {
+        let msg = "Something went wrong in the get_playlist method"
+        console.log(msg)
+        console.error(err)
+        error = new Error(msg)
+        next(error)
+    })
     let tracks = {"tracks": [{"uri":`spotify:track:${track_id}`}]} //req.body.uris
     let URL = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks`
     let error = null
