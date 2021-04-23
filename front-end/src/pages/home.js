@@ -135,7 +135,7 @@ const Home = (props) => {
             response.data.forEach((playlist) => {
               axios({
                 method: "get",
-                url: `https://api.spotify.com/v1/playlists/${playlist.id}`,
+                url: `https://api.spotify.com/v1/playlists/${playlist.generated_playlist_id}`,
               })
                 .then((res) => {
                   setMyGroups((myGroups) => [
@@ -201,7 +201,7 @@ const Home = (props) => {
           if (res.data !== "User already in the group") {
             axios({
               method: "get",
-              url: `https://api.spotify.com/v1/playlists/${currGroup.id}`,
+              url: `https://api.spotify.com/v1/playlists/${currGroup.generated_playlist_id}`,
             })
               .then((res) => {
                 console.log({ name: res.data.name, id: groupName });
@@ -318,13 +318,13 @@ const Home = (props) => {
             data: {
               owners: userid,
               members: userid,
-              generated_playlist_id: res.data.id,
+              generated_playlist_id: response.data.id,
               banned_members: [],
               pool: [],
             },
           })
-            .then((res) => {
-              console.log(res);
+            .then((localRes) => {
+              console.log("localRes =" , localRes);
               axios({
                 method: "put",
                 url: `https://api.spotify.com/v1/playlists/${response.data.id}/followers`,
@@ -336,7 +336,7 @@ const Home = (props) => {
                   console.log(res);
                   history.push({
                     pathname: "/groupMenuOwner",
-                    state: { name: groupName, id: response.data.id },
+                    state: { name: groupName, id: localRes.id },
                   });
                   // history.push("/groupMenuOwner");
                 })
@@ -350,7 +350,7 @@ const Home = (props) => {
     // history.push("/groupMenuOwner");
   };
 
-  const handleVisit = (pageLink) => {
+  const handleVisit = (pageLink, location) => {
     history.push(pageLink);
   };
 

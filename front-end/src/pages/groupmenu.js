@@ -71,6 +71,7 @@ const GroupMenu = (props) => {
   };
 
   useEffect(() => {
+    console.log(location)
     if (is_expired(localStorage)) {
       return history.push("/");
     }
