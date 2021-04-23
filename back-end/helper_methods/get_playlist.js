@@ -1,15 +1,18 @@
 const axios = require("axios")
-let Playlist = require("../models/playlists.model");
+let Group = require("../models/groups.model");
 
 const get_playlist = async (group_id) => {
     
     //check that playlist_href is valid
-    let playlist_id = await Playlist.findOne({_id:group_id})
+    let generated_playlist_id
+    let error
+    let passed = await Group.findOne({_id:group_id})
     .then((response) => 
     {
         console.log("Playlist ID looking")
+        playlist_id = response.generated_playlist_id
         //console.log(tracks)
-        return response.href
+        return true
     })
     .catch((err) => {
         let msg = "Error: Something went wrong in the recommend_songs method. This may be due to bad authorization or seed tracks."
@@ -19,7 +22,12 @@ const get_playlist = async (group_id) => {
         return false
     })
     
-    return playlist_id;
+    if (!passed)
+    {
+      return error
+    }
+    
+    return generated_playlist_id;
 }
 
 module.exports = {
