@@ -33,10 +33,10 @@ router.route("/id/:id").get((req, res) => {
 router.route("/add").post((req, res) => {
   const members = req.body.members;
   const owners = req.body.owners;
-  const id = req.body.id;
+  const generated_playlist_id = req.body.generated_playlist_id;
   const banned_members = req.body.banned_members;
   const pool = req.body.pool;
-  const newGroup = new Group({ members, owners, id, banned_members, pool });
+  const newGroup = new Group({ members: members, owners: owners, generated_playlist_id: generated_playlist_id, banned_members: banned_members, pool:pool })
   newGroup
     .save()
     .then(() => res.json("Group Added!"))

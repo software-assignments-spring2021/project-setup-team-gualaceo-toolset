@@ -318,7 +318,7 @@ const Home = (props) => {
             data: {
               owners: userid,
               members: userid,
-              id: response.data.id,
+              generated_playlist_id: res.data.id,
               banned_members: [],
               pool: [],
             },
