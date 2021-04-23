@@ -100,6 +100,9 @@ const AddMyMusic = (props) => {
             });
 
         //make call asking for playlist contents
+        //I've disabled this for now, as it often leads to throttling errors. So for now, we will only retrieve the user's playlist
+        //names
+        /*
         axios({
             method: "get",
             url: `http://localhost:5000/user_playlists/${get_bearer(localStorage)}/true` //true indicates we want playlists attached
@@ -123,7 +126,7 @@ const AddMyMusic = (props) => {
                 {   setPlaylists(backupPlaylists);
                     setuiLoading(false)
                 }
-            });    
+            });    */
     }, [playlists, haveTracks, history]); // run whenever playlists, haveTracks or history is updated
 
   if (uiLoading === true) {

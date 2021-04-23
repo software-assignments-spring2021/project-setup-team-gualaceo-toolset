@@ -7,7 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
@@ -81,6 +81,8 @@ const styles = (theme) => ({
 
 const Home = (props) => {
   let history = useHistory();
+  let location = useLocation();
+  let state = location.state
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
 
@@ -109,15 +111,18 @@ const Home = (props) => {
     setuiLoading(false);
   }, []);
 
-  const handleJoin = () => {
-    // if (isValidID) {
-    history.push("/groupmenu");
-
-    // }
+  const goBack = () => {
+    history.push({
+      pathname: "/groupMenuOwner",
+      state: state,
+    })
   };
 
   const goToAddMyMusic = () => {
-    history.push("/addMyMusic/owner");
+    history.push({
+      pathname: "/addMyMusic/owner",
+      state: state,
+    })
   };
 
   if (uiLoading === true) {
@@ -138,7 +143,7 @@ const Home = (props) => {
           <AppBar>
             <Toolbar className={classes.toolbar}>
               <Button
-                onClick={() => history.push("/groupMenuOwner")}
+                onClick={goBack}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
               <Typography variant="h5" className={classes.heading}>

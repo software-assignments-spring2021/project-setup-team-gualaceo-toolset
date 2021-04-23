@@ -27,6 +27,7 @@ import {
 
 const GroupMenuOwner = (props) => {
   let location = useLocation();
+  let state = location.state
   let history = useHistory();
   let playlistCard;
   const {
@@ -42,7 +43,10 @@ const GroupMenuOwner = (props) => {
 
   const handleViewAllMusic = () => {
     //console.log("You've clicked on view all music");
-    history.push("/viewMusicOwner");
+    history.push({
+      pathname: "/viewMusicOwner",
+      state: state,
+    });
   };
   const handleViewAllMembers = () => {
     history.push("/membersOwner");

@@ -56,31 +56,32 @@ const Playlist = (props) => {
     })
   }
   return (
-    <Accordion>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <div className={classes.summaryContainer}>
-          <div className={classes.imageContainer}>
-            {/*This should be the playlist image pulled from Spotify*/}
+    <Card className={classes.cardSquareEdges}>
+      <div className={classes.summaryContainer}>
+        <div className={classes.imageContainer}>
+          {/*This should be the playlist image pulled from Spotify*/}
+          {playlist.images[0] &&
             <img
-              className={classes.playlistImage}
-              src={playlist.images[0].url}
-              alt="playlist"
+            className={classes.playlistImage}
+            src={playlist.images[0].url}
+            alt="playlist"
             />
-          </div>
-          <div className={classes.playlistNameContainer}>{playlist.name}</div>
-          <div className={classes.buttonContainer}>
-            <IconButton
-              className={classes.button}
-              color="primary"
-              onFocus={(event) => event.stopPropagation()}
-              onClick={(event) => pressButton(event, added, setAdded)}
-            >
-              {buttonIcon}
-            </IconButton>
-          </div>
+          }
+          
         </div>
-      </AccordionSummary>
-      <Divider />
+        <div className={classes.playlistNameContainer}>{playlist.name}</div>
+        <div className={classes.buttonContainer}>
+          <IconButton
+            className={classes.button}
+            color="primary"
+            onFocus={(event) => event.stopPropagation()}
+            onClick={(event) => pressButton(event, added, setAdded)}
+          >
+            {buttonIcon}
+          </IconButton>
+        </div>
+      </div>
+      {/*<Divider />
       {tracks.items &&
         <AccordionDetails className={classes.accordionDetails}>
           <div className={classes.tracklistContainer}>
@@ -89,8 +90,9 @@ const Playlist = (props) => {
             ))}
           </div>
         </AccordionDetails>
-      }
-    </Accordion>
+      } */}
+    </Card>
+      
   );
 };
 

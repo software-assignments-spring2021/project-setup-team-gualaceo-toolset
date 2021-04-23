@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
@@ -17,7 +17,6 @@ import Logout from "../components/logout";
 import Loading from "../components/loading";
 import Error from "../components/error";
 import styles from "../styles/groupmenuStyles.js";
-import { useLocation } from "react-router-dom";
 
 const GroupMenu = (props) => {
   let history = useHistory();

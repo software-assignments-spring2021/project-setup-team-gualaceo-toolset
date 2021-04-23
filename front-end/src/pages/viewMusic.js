@@ -112,13 +112,10 @@ const Home = (props) => {
   }, []);
 
   const goBack = () => {
-    // if (isValidID) {
     history.push({
       pathname: "/groupmenu",
       state: state,
     })
-
-    // }
   };
 
   const goToAddMyMusic = () => {
