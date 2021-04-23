@@ -1,5 +1,10 @@
-const axios = require("axios")
-//const set_authentication = require("../other/authentication.js").set_authentication
+const axios = require("axios");
+const app = require("../../app");
+let Playlist = require("../../models/playlists.model");
+const post_playlist = require("../../helper_methods/post_playlist.js").post_playlist
+const set_authentication = require("../other/authentication.js").set_authentication
+
+
 
 const create_playlist = async (req, res, next) => {   
 
@@ -12,8 +17,9 @@ const create_playlist = async (req, res, next) => {
     //put spotify user id here
     const user_id = req.user_id //this is set by previous middleware in routing
     //put bearer token here
-    let bearer= req.params.bearer;
-    let token='Bearer '+ bearer;
+    const bearer= req.params.bearer;
+    const token='Bearer '+ bearer;
+    const group_id = req.params.group_id
     let error = null
 
     //specify header used
@@ -43,18 +49,21 @@ const create_playlist = async (req, res, next) => {
             JSON_repsonse=response.data
         })
         .catch((err) => {
-            const msg = "Soemthing went wrong in the create_playlist endpoint"
+            const msg = "Something went wrong in the create_playlist endpoint"
             console.log(msg)
             console.error(err)
             error = new Error(msg)
     })
-
     if (error)
     {
         return next(error)
     }
+    let posted = await post_playlist(bearer,group_id,JSON_repsonse.id);
+    if(!posted)
+    {
+        console.log("error posting playlist ID to database")
+    }
     return res.send(JSON_repsonse)
-
 }
 
 
