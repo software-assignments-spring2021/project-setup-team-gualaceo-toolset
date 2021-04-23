@@ -336,7 +336,7 @@ const Home = (props) => {
                   console.log(res);
                   history.push({
                     pathname: "/groupMenuOwner",
-                    state: { name: groupName, id: localRes.id },
+                    state: { name: groupName, id: localRes.data._id },
                   });
                   // history.push("/groupMenuOwner");
                 })
@@ -350,8 +350,11 @@ const Home = (props) => {
     // history.push("/groupMenuOwner");
   };
 
-  const handleVisit = (pageLink, location) => {
-    history.push(pageLink);
+  const handleVisit = (pageLink, name, group_id) => {
+    history.push({
+      pathname: "/groupMenu",
+      state: { name: name, id: group_id},
+    });
   };
 
   if (uiLoading === true) {
@@ -491,7 +494,7 @@ const Group = (props) => {
     <Card fullWidth className={classes.cards}>
       <CardContent
         style={{ marginBottom: "-10px" }}
-        onClick={() => handleVisit(pageLink)}
+        onClick={() => handleVisit(pageLink, group.name, group.id)}
       >
         <Box className={classes.groupBox}>
           <Box>

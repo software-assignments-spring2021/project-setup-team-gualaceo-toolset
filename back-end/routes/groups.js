@@ -39,7 +39,7 @@ router.route("/add").post((req, res) => {
   const newGroup = new Group({ members: members, owners: owners, generated_playlist_id: generated_playlist_id, banned_members: banned_members, pool:pool })
   newGroup
     .save()
-    .then(() => res.json("Group Added!"))
+    .then((mongooseResponse) => res.json(mongooseResponse))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
