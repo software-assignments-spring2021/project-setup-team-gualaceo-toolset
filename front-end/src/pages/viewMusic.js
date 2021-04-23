@@ -21,6 +21,7 @@ import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
 import { is_expired } from "../components/authentication.js";
 import Logout from "../components/logout";
+import { useLocation } from "react-router-dom";
 
 // import Logout from "../components/logout";
 
@@ -81,6 +82,8 @@ const styles = (theme) => ({
 
 const Home = (props) => {
   let history = useHistory();
+  let location = useLocation();
+  let state = location.state
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
 
@@ -108,15 +111,19 @@ const Home = (props) => {
     setuiLoading(false);
   }, []);
 
-  const handleJoin = () => {
-    // if (isValidID) {
-    history.push("/groupmenu");
-
-    // }
+  const goBack = () => {
+    history.push({
+      pathname: "/groupmenu",
+      state: state,
+    })
   };
 
   const goToAddMyMusic = () => {
-    history.push("/addMyMusic/member");
+
+    history.push({
+      pathname: "/addMyMusic/member",
+      state: state,
+    })
   };
 
   if (uiLoading === true) {
@@ -137,7 +144,7 @@ const Home = (props) => {
           <AppBar>
             <Toolbar className={classes.toolbar}>
               <Button
-                onClick={() => history.push("/groupmenu")}
+                onClick={goBack}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
               <Typography variant="h5" className={classes.heading}>

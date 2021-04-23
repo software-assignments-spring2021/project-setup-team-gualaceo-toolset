@@ -10,6 +10,11 @@ const styles = (theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
+  cardSquareEdges :{
+    display: "flex",
+    justifyContent: "center",
+    borderRadius: "0px",
+  },
   imageContainer: {
     display: "flex",
     height: "75px",
@@ -43,9 +48,10 @@ const styles = (theme) => ({
   },
   summaryContainer: {
     display: "flex",
-    width: "100%",
+    width: "90%",
     height: "120px",
     alignItems: "center",
+    alignSelf: "center",
     justifyContent: "space-between",
   },
   tracklistContainer: {

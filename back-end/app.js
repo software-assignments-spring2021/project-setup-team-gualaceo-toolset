@@ -18,6 +18,7 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 
+app.use(express.urlencoded({ extended: true }));
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, {
@@ -27,12 +28,10 @@ mongoose.connect(uri, {
   useUnifiedTopology: true,
 });
 
-
 const connection = mongoose.connection;
 connection.once("open", () => {
   console.log("MongoDB connection established");
 });
-
 
 /*     Testing with a localhost database
 const url = 'mongodb://127.0.0.1:27017/local-test'
@@ -71,18 +70,28 @@ app.use("/follow_playlist/:bearer/:group_id", user_id.get_user_id)
 app.use("/remove_tracks/:bearer/:group_id/:track_id", user_id.get_user_id)
 app.use("/create_playlist/:bearer/:group_id", user_id.get_user_id)
 
-//endpoints to be used
-app.use(express.urlencoded({extended: true}));
-app.post("/create_playlist/:bearer/:group_id", create_playlist.create_playlist)
-app.post("/add_tracks/:bearer/:group_id", add_tracks.add_tracks)
-app.get("/user_playlists/:bearer/:include_tracks", user_playlists.get_playlists)
-app.get("/recommend_songs/:bearer/limit/:limit/seed_tracks/:seed_tracks", recommend_songs.recommend_songs)
-app.delete("/remove_tracks/:bearer/:playlist_id/:track_id", remove_tracks.remove_tracks)
-app.put("/follow_playlist/:bearer/:group_id", follow_playlist.follow_playlist)
+app.post("/create_playlist/:bearer/", create_playlist.create_playlist);
+app.post("/add_tracks/:bearer/:playlist_id", add_tracks.add_tracks);
+app.get(
+  "/user_playlists/:bearer/:include_tracks",
+  user_playlists.get_playlists
+);
+app.get(
+  "/recommend_songs/:bearer/limit/:limit/seed_tracks/:seed_tracks",
+  recommend_songs.recommend_songs
+);
+app.delete(
+  "/remove_tracks/:bearer/:playlist_id/:track_id",
+  remove_tracks.remove_tracks
+);
+app.put(
+  "/follow_playlist/:bearer/:playlist_id",
+  follow_playlist.follow_playlist
+);
 //Handle any errors
 app.use((error, req, res, next) => {
   res.status(error.status || 500);
-  console.log(error.message)
+  console.log(error.message);
   return res.send(error.message);
 });
 

@@ -37,8 +37,9 @@ const Home = (props) => {
   const [userid, setUserID] = useState("");
   const [errors, setErrors] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
+  const [myGroups, setMyGroups] = useState([]);
 
-  const groups = [
+  let groups = [
     {
       name: "Work Buddies",
       owner: true,
@@ -123,17 +124,31 @@ const Home = (props) => {
       method: "get",
       url: `https://api.spotify.com/v1/me`,
     })
-      .then((res) => {
-        let userid = res.data.id;
-        setUserID(res.data.id);
-        console.log(userid);
+      .then((nameRes) => {
+        setUserID(nameRes.data.id);
         axios({
           method: "get",
-          url: `http://localhost:5000/groups/me`,
-          data: { user: `${userid}` },
+          url: `http://localhost:5000/groups/me/${nameRes.data.id}`,
         })
-          .then((res) => {
-            console.log(res.data);
+          .then((response) => {
+            response.data.forEach((playlist) => { //in this context "playlist" refers to a group.
+              axios({
+                method: "get",
+                url: `https://api.spotify.com/v1/playlists/${playlist.generated_playlist_id}`,
+              })
+                .then((res) => {
+                  setMyGroups((myGroups) => [
+                    ...myGroups,
+                    {
+                      name: res.data.name,
+                      owner: playlist.owners.includes(nameRes.data.id),
+                      id: playlist._id
+                    },
+                  ]);
+                })
+                .catch((err) => console.log(err));
+            });
+            console.log(response.data);
             setuiLoading(false);
           })
           .catch((err) => {
@@ -153,19 +168,21 @@ const Home = (props) => {
   // not the id of the spotify playlist
   const handleJoin = async (event) => {
     event.preventDefault();
+    let currGroup = "";
     // 6075333ffd54816234d7fdc6
     if (is_expired(localStorage)) {
       return history.push("/");
     }
     set_authentication(localStorage, axios);
     if (groupName) {
-      console.log(groupName);
+      // console.log(groupName);
       await axios({
         method: "get",
         url: `http://localhost:5000/groups/id/${groupName}`,
       })
         .then((res) => {
-          console.log(res);
+          currGroup = res.data[0];
+          // console.log(res);
         })
         .catch((err) => {
           setGroupName("");
@@ -175,28 +192,49 @@ const Home = (props) => {
       setErrors("You have not entered a valid Group ID.");
     }
     if (groupName) {
-      /*axios({
+      axios({
         method: "put",
-        url: `http://localhost:5000/group/add`,
-        data: { members: userid },
+        url: `http://localhost:5000/groups/add_members/${groupName}/${userid}`,
       })
         .then((res) => {
           console.log(res);
+          if (res.data !== "User already in the group") {
+            axios({
+              method: "get",
+              url: `https://api.spotify.com/v1/playlists/${currGroup.generated_playlist_id}`,
+            })
+              .then((res) => {
+                console.log({ name: res.data.name, id: groupName });
+                history.push({
+                  pathname: "/groupMenu",
+                  state: { name: res.data.name, id: groupName },
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          if (err.response.data === "User already in the group") {
+            setErrors("You are already in this group.");
+            console.log(err.response);
+          } else {
+            console.log(err);
+          }
+        });
       //Follow the playlist
       axios({
         method: "put",
-        url: `https://api.spotify.com/v1/playlists/${group}/followers`,
+        url: `https://api.spotify.com/v1/playlists/${currGroup.id}/followers`,
         data: {
           public: true,
         },
       })
         .then((res) => {
-          console.log(res);
-          history.push("/groupMenuOwner");
+          // console.log(res);
         })
-        .catch((err) => console.log(err));*/
+        .catch((err) => console.log(err));
     }
     /* 
 
@@ -271,8 +309,8 @@ const Home = (props) => {
           public: true,
         },
       })
-        .then((res) => {
-          console.log(res);
+        .then((response) => {
+          console.log(response);
           // Add the playlist to the DB
           axios({
             method: "post",
@@ -280,36 +318,43 @@ const Home = (props) => {
             data: {
               owners: userid,
               members: userid,
-              generated_playlist_id: res.data.id,
+              generated_playlist_id: response.data.id,
               banned_members: [],
               pool: [],
             },
           })
-            .then((res) => {
-              console.log(res);
+            .then((localRes) => {
+              console.log("localRes =" , localRes);
+              axios({
+                method: "put",
+                url: `https://api.spotify.com/v1/playlists/${response.data.id}/followers`,
+                data: {
+                  public: true,
+                },
+              })
+                .then((res) => {
+                  console.log(res);
+                  history.push({
+                    pathname: "/groupMenuOwner",
+                    state: { name: groupName, id: localRes.data._id },
+                  });
+                  // history.push("/groupMenuOwner");
+                })
+                .catch((err) => console.log(err));
             })
             .catch((err) => console.log(err));
           //Follow the playlist
-          axios({
-            method: "put",
-            url: `https://api.spotify.com/v1/playlists/${res.data.id}/followers`,
-            data: {
-              public: true,
-            },
-          })
-            .then((res) => {
-              console.log(res);
-              history.push("/groupMenuOwner");
-            })
-            .catch((err) => console.log(err));
         })
         .catch((err) => console.log(err));
     }
     // history.push("/groupMenuOwner");
   };
 
-  const handleVisit = (pageLink) => {
-    history.push(pageLink);
+  const handleVisit = (pageLink, name, group_id) => {
+    history.push({
+      pathname: pageLink,
+      state: { name: name, id: group_id},
+    });
   };
 
   if (uiLoading === true) {
@@ -351,7 +396,7 @@ const Home = (props) => {
             </Toolbar>
           </AppBar>
           {/* <div style={{ position: "absolute" }}> */}
-          <Error error={errors} setError={setErrors} />
+          <Error error={errors} setError={setErrors} severity="error" />
           {/* </div> */}
           <div style={{ marginTop: "-30px" }}>
             <Accordion square={true} className={classes.accordion}>
@@ -406,7 +451,7 @@ const Home = (props) => {
             </Accordion>
           </div>
           <br />
-          {groups.map((group) => (
+          {myGroups.map((group) => (
             <Group group={group} classes={classes} handleVisit={handleVisit} />
           ))}
         </div>
@@ -437,6 +482,7 @@ const RegenerateRequested = (props) => {
 
 const Group = (props) => {
   let group = props.group;
+
   let classes = props.classes;
   let handleVisit = props.handleVisit;
   //console.log(group)
@@ -449,7 +495,7 @@ const Group = (props) => {
     <Card fullWidth className={classes.cards}>
       <CardContent
         style={{ marginBottom: "-10px" }}
-        onClick={() => handleVisit(pageLink)}
+        onClick={() => handleVisit(pageLink, group.name, group.id)}
       >
         <Box className={classes.groupBox}>
           <Box>

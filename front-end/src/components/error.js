@@ -35,11 +35,13 @@ const Error = (props) => {
         <Collapse in={error}>
           <Alert
             // className={classes.alert}
-            severity="error"
+            severity={props.severity}
             open={true}
             // onClose={handleEmptyField}
           >
-            <AlertTitle>Error</AlertTitle>
+            <AlertTitle>
+              {props.severity === "error" ? "Error" : "Success"}
+            </AlertTitle>
             <IconButton
               onClick={handleClose}
               className={classes.close}
