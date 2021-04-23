@@ -22,6 +22,7 @@ import { useLocation } from "react-router-dom";
 const GroupMenu = (props) => {
   let history = useHistory();
   let location = useLocation();
+  let state = location.state
   let playlistCard;
   const {
     match: { params },
@@ -34,9 +35,12 @@ const GroupMenu = (props) => {
   const [playlistGenerated, setPlaylistGenerated] = useState(false);
   const [copied, setCopied] = useState("");
 
-  const handleViewAllMusic = () => {
+  const handleViewAllMusic = (state) => {
     //console.log("You've clicked on view all music");
-    history.push("/viewMusic");
+    history.push({
+      pathname: "/viewMusic",
+      state: state,
+    });
   };
   const handleViewAllMembers = () => {
     history.push("/members");
@@ -170,7 +174,7 @@ const GroupMenu = (props) => {
           <Card
             fullWidth
             className={classes.cards}
-            onClick={handleViewAllMusic}
+            onClick={() => handleViewAllMusic(state)}
           >
             <CardContent style={{ marginBottom: "-10px" }}>
               <Typography className={classes.cardText}>

@@ -126,13 +126,12 @@ const Home = (props) => {
     })
       .then((nameRes) => {
         setUserID(nameRes.data.id);
-        console.log(nameRes.data.id);
         axios({
           method: "get",
           url: `http://localhost:5000/groups/me/${nameRes.data.id}`,
         })
           .then((response) => {
-            response.data.forEach((playlist) => {
+            response.data.forEach((playlist) => { //in this context "playlist" refers to a group.
               axios({
                 method: "get",
                 url: `https://api.spotify.com/v1/playlists/${playlist.generated_playlist_id}`,
@@ -143,6 +142,7 @@ const Home = (props) => {
                     {
                       name: res.data.name,
                       owner: playlist.owners.includes(nameRes.data.id),
+                      id: playlist._id
                     },
                   ]);
                 })
@@ -352,7 +352,7 @@ const Home = (props) => {
 
   const handleVisit = (pageLink, name, group_id) => {
     history.push({
-      pathname: "/groupMenu",
+      pathname: pageLink,
       state: { name: name, id: group_id},
     });
   };
@@ -482,6 +482,7 @@ const RegenerateRequested = (props) => {
 
 const Group = (props) => {
   let group = props.group;
+
   let classes = props.classes;
   let handleVisit = props.handleVisit;
   //console.log(group)
