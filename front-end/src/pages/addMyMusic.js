@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, AppBar, Toolbar } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography } from "@material-ui/core";
@@ -39,6 +39,8 @@ const backupPlaylists = [
 const AddMyMusic = (props) => {
   const [playlists, setPlaylists] = useState("unset");
   let history = useHistory();
+  let location = useLocation()
+  let state = location.state
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
@@ -48,9 +50,15 @@ const AddMyMusic = (props) => {
   const goLastPage = () => {
     if (params.userStatus === "owner")
     {
-      return history.push("/viewMusicOwner")
+      return history.push({
+        pathname: "/viewMusicOwner",
+        state: state
+      })
     } else {
-      return history.push("/viewMusic")
+      return history.push({
+        pathname: "/viewMusic",
+        state: state
+      })
     }
   }
 
@@ -92,6 +100,9 @@ const AddMyMusic = (props) => {
             });
 
         //make call asking for playlist contents
+        //I've disabled this for now, as it often leads to throttling errors. So for now, we will only retrieve the user's playlist
+        //names
+        /*
         axios({
             method: "get",
             url: `http://localhost:5000/user_playlists/${get_bearer(localStorage)}/true` //true indicates we want playlists attached
@@ -115,7 +126,7 @@ const AddMyMusic = (props) => {
                 {   setPlaylists(backupPlaylists);
                     setuiLoading(false)
                 }
-            });    
+            });    */
     }, [playlists, haveTracks, history]); // run whenever playlists, haveTracks or history is updated
 
   if (uiLoading === true) {

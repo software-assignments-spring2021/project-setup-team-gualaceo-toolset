@@ -9,7 +9,7 @@ const groupsSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
-  id: {
+  generated_playlist_id: {
     type: String,
     default: [],
   },

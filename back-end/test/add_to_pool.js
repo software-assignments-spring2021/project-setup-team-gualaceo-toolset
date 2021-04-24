@@ -29,9 +29,9 @@ const run_add_to_pool_tests = async bearer => {
       const members = ["rbx2co", "jonoto", "123milkman"]
       const banned_members = ["jonoto"]
       const owners = ["rbx2co"]
-      const id = ""
+      const generated_playlist_id = ""
       const pool = []
-      const group = new Group({banned_members: banned_members, members: members, owners: owners, id: id, pool: pool}) //this MUST correspond to the order specified in the schema
+      const group = new Group({banned_members: banned_members, members: members, owners: owners, generated_playlist_id: generated_playlist_id, pool: pool}) //this MUST correspond to the order specified in the schema
       await group.save()
         .then(res => {
           console.log("test group saved successfully!")

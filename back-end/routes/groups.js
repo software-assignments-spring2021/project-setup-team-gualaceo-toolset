@@ -17,9 +17,12 @@ router.route("/").get((req, res) => {
     .catch((err) => res.status(400).json("Error:" + err));
 });
 
-router.route("/me").get((req, res) => {
-  Group.find({ members: req.body.user })
-    .then((groups) => res.json(groups))
+router.route("/me/:user").get((req, res) => {
+  // console.log(req.params);
+  Group.find({ members: req.params.user })
+    .then((groups) => {
+      res.json(groups);
+    })
     .catch((err) => res.status(400).json("Error:" + err));
 });
 
@@ -34,13 +37,13 @@ router.route("/id/:id").get((req, res) => {
 router.route("/add").post((req, res) => {
   const members = req.body.members;
   const owners = req.body.owners;
-  const id = req.body.id;
+  const generated_playlist_id = req.body.generated_playlist_id;
   const banned_members = req.body.banned_members;
   const pool = req.body.pool;
-  const newGroup = new Group({ members, owners, id, banned_members, pool });
+  const newGroup = new Group({ members: members, owners: owners, generated_playlist_id: generated_playlist_id, banned_members: banned_members, pool:pool })
   newGroup
     .save()
-    .then(() => res.json("Group Added!"))
+    .then((mongooseResponse) => res.json(mongooseResponse))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
