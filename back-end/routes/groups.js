@@ -52,14 +52,21 @@ router.put(
   add_to_pool.add_to_pool
 );
 
-<<<<<<< HEAD
 
-router.put("/add_members/:group_id/:user_id", add_members.add_members)
-router.put("/add_to_ban/:group_id/:user_id", add_to_ban.add_to_ban)
-router.put("/kick_member/:group_id/:user_id", kick_member.kick_member)
-router.put("/unban/:group_id/:user_id", unban.unban)
-=======
-router.put("/add_members/:group_id/:user_id", add_members.add_members);
->>>>>>> master
+router.use("/add_to_pool/:group_id/:playlist_id/:bearer", user_id.get_user_id);
+router.put(
+  "/add_to_pool/:group_id/:playlist_id/:bearer",
+  add_to_pool.add_to_pool
+);
+
+
+router.get("/add_members/:group_id/:user_id", add_members.add_members)
+
+router.use("/add_to_ban/:group_id/:user_id/:bearer", user_id.get_user_id);
+router.put("/add_to_ban/:group_id/:user_id/:bearer", add_to_ban.add_to_ban)
+router.use("/kick_member/:group_id/:user_id/:bearer", user_id.get_user_id)
+router.put("/kick_member/:group_id/:user_id/:bearer", kick_member.kick_member)
+router.use("/unban/:group_id/:user_id/:bearer", user_id.get_user_id)
+router.put("/unban/:group_id/:user_id/:bearer", unban.unban)
 
 module.exports = router;
