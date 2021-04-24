@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
-import Avatar from "@material-ui/core/avatar";
+// import Avatar from "@material-ui/core/avatar";
 import Accordion from "@material-ui/core/Accordion";
 import TextField from "@material-ui/core/TextField";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
+// import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -12,15 +12,16 @@ import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+// import Dialog from "@material-ui/core/Dialog";
+// import DialogActions from "@material-ui/core/DialogActions";
+// import DialogContent from "@material-ui/core/DialogContent";
+// import DialogContentText from "@material-ui/core/DialogContentText";
+// import DialogTitle from "@material-ui/core/DialogTitle";
 import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
-import {is_expired} from "../components/authentication.js"
+import { is_expired } from "../components/authentication.js";
 import Logout from "../components/logout";
+import { useLocation } from "react-router-dom";
 
 // import Logout from "../components/logout";
 
@@ -81,6 +82,8 @@ const styles = (theme) => ({
 
 const Home = (props) => {
   let history = useHistory();
+  let location = useLocation();
+  let state = location.state
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
 
@@ -99,31 +102,29 @@ const Home = (props) => {
     "The Notorious B.I.G. - Juicy",
     "Tyler, the creator - answer",
   ];
-  const songlists_2 = [
-    "Song 1",
-    "Song 2",
-    "Song 3",
-    "Song 4",
-  ];
+  const songlists_2 = ["Song 1", "Song 2", "Song 3", "Song 4"];
 
   useEffect(() => {
-    if (is_expired(localStorage))
-    {
-      return history.push("/"); 
+    if (is_expired(localStorage)) {
+      return history.push("/");
     }
     setuiLoading(false);
   }, []);
 
-  const handleJoin = () => {
-    // if (isValidID) {
-    history.push("/groupmenu");
-
-    // }
+  const goBack = () => {
+    history.push({
+      pathname: "/groupmenu",
+      state: state,
+    })
   };
 
   const goToAddMyMusic = () => {
-    history.push("/addMyMusic/member")
-  }
+
+    history.push({
+      pathname: "/addMyMusic/member",
+      state: state,
+    })
+  };
 
   if (uiLoading === true) {
     return <Loading />;
@@ -143,12 +144,12 @@ const Home = (props) => {
           <AppBar>
             <Toolbar className={classes.toolbar}>
               <Button
-                onClick={() => history.push("/groupmenu")}
+                onClick={goBack}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
               <Typography variant="h5" className={classes.heading}>
                 View All Music
-              </Typography>        
+              </Typography>
               <Button
                 color="inherit"
                 onClick={() => {
@@ -167,18 +168,22 @@ const Home = (props) => {
             </Toolbar>
           </AppBar>
           <div className={classes.addMyMusicButtonContainer}>
-            <Button color="primary" variant="contained" onClick={goToAddMyMusic}>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={goToAddMyMusic}
+            >
               Add My Music
             </Button>
           </div>
           <div>
             <Card fullWidth className={classes.cards}>
-                <TextField
-                  style={{ width: "120%" }}
-                  label="Search"
-                  variant="outlined"
-                  size="small"
-                />
+              <TextField
+                style={{ width: "120%" }}
+                label="Search"
+                variant="outlined"
+                size="small"
+              />
             </Card>
             <Accordion square={true} className={classes.accordion}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -186,83 +191,77 @@ const Home = (props) => {
                   <div style={{ margin: "5px" }}>Your rap playlist 23</div>
                 </Typography>
                 <Divider></Divider>
-                <Button variant="outlined">
-                  Remove
-                </Button>
+                <Button variant="outlined">Remove</Button>
               </AccordionSummary>
               <Divider></Divider>
               {songlists.map((songName) => (
                 <Card fullWidth className={classes.cards}>
-                <CardContent style={{ marginBottom: "-10px" }}>
+                  <CardContent style={{ marginBottom: "-10px" }}>
                     <Box display="flex" flexDirection="row">
-                    <Box>
+                      <Box>
                         <Typography
-                        style={{ marginLeft: "15px", marginTop: "10px" }}
+                          style={{ marginLeft: "15px", marginTop: "10px" }}
                         >
-                        {songName}
+                          {songName}
                         </Typography>
+                      </Box>
                     </Box>
-                    </Box>
-                </CardContent>
+                  </CardContent>
                 </Card>
-            ))}
+              ))}
             </Accordion>
-            
+
             <Accordion square={true} className={classes.accordion}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>
                   <div style={{ margin: "5px" }}>Your playlist 2</div>
                 </Typography>
                 <Divider></Divider>
-                <Button variant="outlined">
-                  Remove
-                </Button>
+                <Button variant="outlined">Remove</Button>
               </AccordionSummary>
               <Divider></Divider>
               {songlists_2.map((songName) => (
                 <Card fullWidth className={classes.cards}>
-                <CardContent style={{ marginBottom: "-10px" }}>
+                  <CardContent style={{ marginBottom: "-10px" }}>
                     <Box display="flex" flexDirection="row">
-                    <Box>
+                      <Box>
                         <Typography
-                        style={{ marginLeft: "15px", marginTop: "10px" }}
+                          style={{ marginLeft: "15px", marginTop: "10px" }}
                         >
-                        {songName}
+                          {songName}
                         </Typography>
+                      </Box>
                     </Box>
-                    </Box>
-                </CardContent>
+                  </CardContent>
                 </Card>
-            ))}
+              ))}
             </Accordion>
-            
           </div>
           {playlists.map((playlistName) => (
             <Accordion square={true} className={classes.accordion}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>
-                <div style={{ margin: "7px" }}>{playlistName}</div>
-              </Typography>
-            </AccordionSummary>
-            <Divider></Divider>
-            {songlists_2.map((songName) => (
-              <Card fullWidth className={classes.cards}>
-              <CardContent style={{ marginBottom: "-10px" }}>
-                  <Box display="flex" flexDirection="row">
-                  <Box>
-                      <Typography
-                      style={{ marginLeft: "15px", marginTop: "10px" }}
-                      >
-                      {songName}
-                      </Typography>
-                  </Box>
-                  </Box>
-              </CardContent>
-              </Card>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>
+                  <div style={{ margin: "7px" }}>{playlistName}</div>
+                </Typography>
+              </AccordionSummary>
+              <Divider></Divider>
+              {songlists_2.map((songName) => (
+                <Card fullWidth className={classes.cards}>
+                  <CardContent style={{ marginBottom: "-10px" }}>
+                    <Box display="flex" flexDirection="row">
+                      <Box>
+                        <Typography
+                          style={{ marginLeft: "15px", marginTop: "10px" }}
+                        >
+                          {songName}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              ))}
+            </Accordion>
           ))}
-          </Accordion>
-          ))}
-
         </div>
       </Container>
     );

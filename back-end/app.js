@@ -12,12 +12,14 @@ const follow_playlist = require("./requests/put/follow_playlist")
 const generate_playlist = require("./requests/post/generate_playlist")
 const cors = require("cors");
 const mongoose = require("mongoose");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 
 require("dotenv").config();
 
 app.use(cors());
 app.use(express.json());
+
+app.use(express.urlencoded({ extended: true }));
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, {
@@ -32,10 +34,22 @@ connection.once("open", () => {
   console.log("MongoDB connection established");
 });
 
-const playlistsRouter = require("./routes/playlists");
+/*     Testing with a localhost database
+const url = 'mongodb://127.0.0.1:27017/local-test'
+mongoose.connect(url, { useNewUrlParser: true,useUnifiedTopology: true })
+const connection = mongoose.connection
+connection.once('open', _ => {
+  console.log('Database connected:', url)
+})
+connection.on('error', err => {
+  console.error('connection error:', err)
+})
+*/
+
+const groupsRouter = require("./routes/groups");
 const usersRouter = require("./routes/users");
 
-app.use("/playlists", playlistsRouter);
+app.use("/groups", groupsRouter);
 app.use("/users", usersRouter);
 
 // This code disables CORS, it may be necessary for debugging.
@@ -59,19 +73,32 @@ app.use("/create_playlist/:bearer/", user_info.get_user_info)
 app.use("/generate_playlist/:playlist_name/:bearer/:demo_index", user_info.get_user_info)
 
 //endpoints to be used
-app.use(express.urlencoded({extended: true}));
-app.post("/create_playlist/:bearer/", create_playlist.create_playlist)
-app.post("/add_tracks/:bearer/:playlist_id", add_tracks.add_tracks)
-app.get("/user_playlists/:bearer/:include_tracks", user_playlists.get_playlists)
-app.get("/recommend_songs/:bearer/limit/:limit/seed_tracks/:seed_tracks", recommend_songs.recommend_songs)
-app.delete("/remove_tracks/:bearer/:playlist_id/:track_id", remove_tracks.remove_tracks)
-app.put("/follow_playlist/:bearer/:playlist_id", follow_playlist.follow_playlist)
 
+
+app.post("/create_playlist/:bearer/", create_playlist.create_playlist);
+app.post("/add_tracks/:bearer/:playlist_id", add_tracks.add_tracks);
 app.post("/generate_playlist/:playlist_name/:bearer/:demo_index", generate_playlist.generate_playlist)
+app.get(
+  "/user_playlists/:bearer/:include_tracks",
+  user_playlists.get_playlists
+);
+app.get(
+  "/recommend_songs/:bearer/limit/:limit/seed_tracks/:seed_tracks",
+  recommend_songs.recommend_songs
+);
+app.delete(
+  "/remove_tracks/:bearer/:playlist_id/:track_id",
+  remove_tracks.remove_tracks
+);
+app.put(
+  "/follow_playlist/:bearer/:playlist_id",
+  follow_playlist.follow_playlist
+);
 
 //Handle any errors
 app.use((error, req, res, next) => {
-  res.status(error.staus || 500);
+  res.status(error.status || 500);
+  console.log(error.message);
   return res.send(error.message);
 });
 

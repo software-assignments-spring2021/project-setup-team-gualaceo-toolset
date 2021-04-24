@@ -1,33 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
 import addNotification from "react-push-notification";
 import backgroundWhite from "../media/background_white.png";
 import axios from "axios";
-import {set_authentication, get_bearer, is_expired} from "../components/authentication.js"
+import {
+  set_authentication,
+  get_bearer,
+  is_expired,
+} from "../components/authentication.js";
 import Logout from "../components/logout";
 import Loading from "../components/loading";
+import Error from "../components/error";
 import styles from "../styles/groupmenuStyles.js";
 
 const GroupMenu = (props) => {
   let history = useHistory();
+  let location = useLocation();
+  let state = location.state
   let playlistCard;
-  const { match: { params } } = props;
+  const {
+    match: { params },
+  } = props;
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [groupID, setGroupID] = useState("");
   const [groupName, setGroupName] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [playlistGenerated, setPlaylistGenerated] = useState(false);
+  const [copied, setCopied] = useState("");
 
-
-  const handleViewAllMusic = () => {
+  const handleViewAllMusic = (state) => {
     //console.log("You've clicked on view all music");
-    history.push("/viewMusic");
+    history.push({
+      pathname: "/viewMusic",
+      state: state,
+    });
   };
   const handleViewAllMembers = () => {
     history.push("/members");
@@ -36,8 +48,13 @@ const GroupMenu = (props) => {
     history.push("/generatedPlaylist");
   };
 
+  const handleCopyID = () => {
+    navigator.clipboard.writeText(location.state.id);
+    setCopied("Copied Group ID!");
+  };
+
   const handleGenerateRequest = () => {
-    console.log("playlist generate request made")
+    console.log("playlist generate request made");
     //When we implement the backend, this should send a notification
     //to the owner of the group.
   };
@@ -57,38 +74,26 @@ const GroupMenu = (props) => {
   };
 
   useEffect(() => {
-    if (is_expired(localStorage))
-    {
-      return history.push("/"); 
+    console.log(location)
+    if (is_expired(localStorage)) {
+      return history.push("/");
     }
     // get group id
-    setGroupID("#4529-9915");
-    setGroupName("Alexa's Party");
+    setGroupID(location.state.id);
+    setGroupName(location.state.name);
     setuiLoading(false);
-    if (params.playlistGenerated === "generated"){ //If the route '/groupMenuOwner/generated' is accessed
-      setPlaylistGenerated(true)
+    if (params.playlistGenerated === "generated") {
+      //If the route '/groupMenuOwner/generated' is accessed
+      setPlaylistGenerated(true);
     }
 
     //set access token if available in local storage
-    set_authentication(localStorage, axios)
+    set_authentication(localStorage, axios);
     //console.log(`Bearer = ${get_bearer(localStorage)}`)
-
-    // Test method to show Bearer token is functional when retrieved from local storage.
-    /*axios({
-      method: "get",
-      url: "https://api.spotify.com/v1/me/playlists",
-    })
-      .then((res) => {
-        console.log(res);
-        setuiLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });*/
-      
   }, []);
 
-  if(playlistGenerated) { // Determines whether to show the user "view generated playlist" or "generate playlist"
+  if (playlistGenerated) {
+    // Determines whether to show the user "view generated playlist" or "generate playlist"
     playlistCard = (
       <Card fullWidth className={classes.cards} onClick={handleViewPlaylist}>
         <CardContent style={{ marginBottom: "-10px" }}>
@@ -97,18 +102,23 @@ const GroupMenu = (props) => {
           </Typography>
         </CardContent>
       </Card>
-    )
+    );
   } else {
     playlistCard = (
       <Card fullWidth className={classes.cards}>
         <CardContent style={{ marginBottom: "-10px" }}>
-          <Typography className={classes.cardText} onClick = {handleGenerateRequest}>
-            <center>Request Playlist generation (append '/generated' to url to simulate owner generating new playlist)</center>
+          <Typography
+            className={classes.cardText}
+            onClick={handleGenerateRequest}
+          >
+            <center>
+              Request Playlist generation (append '/generated' to url to
+              simulate owner generating new playlist)
+            </center>
           </Typography>
         </CardContent>
       </Card>
-    )
-  
+    );
   }
 
   if (uiLoading === true) {
@@ -132,7 +142,7 @@ const GroupMenu = (props) => {
                 onClick={() => history.push("/home")}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
-              <Typography className={classes.heading}>
+              <Typography onClick={handleCopyID} className={classes.heading}>
                 Group ID: {groupID}
               </Typography>
               <Button
@@ -151,7 +161,8 @@ const GroupMenu = (props) => {
                 />
               </div>
             </Toolbar>
-          </AppBar>
+          </AppBar>{" "}
+          <Error error={copied} setError={setCopied} severity="success" />
           <Card fullWidth className={classes.cards}>
             <CardContent style={{ marginBottom: "-10px" }}>
               <Typography className={classes.cardText}>
@@ -159,11 +170,10 @@ const GroupMenu = (props) => {
               </Typography>
             </CardContent>
           </Card>
-
           <Card
             fullWidth
             className={classes.cards}
-            onClick={handleViewAllMusic}
+            onClick={() => handleViewAllMusic(state)}
           >
             <CardContent style={{ marginBottom: "-10px" }}>
               <Typography className={classes.cardText}>
