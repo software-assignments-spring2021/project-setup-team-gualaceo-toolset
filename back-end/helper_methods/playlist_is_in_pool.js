@@ -1,7 +1,9 @@
 let Group = require("../models/groups.model");
+let get_playlist = require("./get_playlist").get_playlist
 
 const playlist_is_in_pool = async (playlist_id, group_id) =>
 {
+  
   let pool
   let passed = await Group.findOne({_id:group_id}) //retrieve the playlist with the given group id
     .then(response => {

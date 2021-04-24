@@ -10,69 +10,107 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import addNotification from 'react-push-notification';
+import addNotification from "react-push-notification";
 import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
-import styles from "../styles/groupmenuStyles.js"
-import EdiText from 'react-editext'
-import {is_expired} from "../components/authentication.js"
+import styles from "../styles/groupmenuStyles.js";
+import EdiText from "react-editext";
 import Logout from "../components/logout";
+import Error from "../components/error";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import {
+  set_authentication,
+  get_bearer,
+  is_expired,
+} from "../components/authentication.js";
 
 const GroupMenuOwner = (props) => {
+  let location = useLocation();
+  let state = location.state
   let history = useHistory();
   let playlistCard;
-  const { match: { params } } = props;
+  const {
+    match: { params },
+  } = props;
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [groupID, setGroupID] = useState("");
   const [groupName, setGroupName] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [playlistGenerated, setPlaylistGenerated] = useState(false);
-  
+  const [copied, setCopied] = useState("");
+
   const handleViewAllMusic = () => {
     //console.log("You've clicked on view all music");
-    history.push("/viewMusicOwner")
+    history.push({
+      pathname: "/viewMusicOwner",
+      state: state,
+    });
   };
   const handleViewAllMembers = () => {
-    history.push("/membersOwner")
+    history.push("/membersOwner");
   };
   const handleViewPlaylist = () => {
     history.push("/generatedPlaylist/owner");
   };
   const handleGeneratePlaylist = () => {
-    setPlaylistGenerated(true)
-  }
-  
+    setPlaylistGenerated(true);
+  };
+
+  const handleCopyID = () => {
+    navigator.clipboard.writeText(location.state.id);
+    setCopied("Copied Group ID!");
+  };
+
+  const handleGroupNameChange = (name) => {
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "put",
+      url: `https://api.spotify.com/v1/playlists/${location.state.id}`,
+      data: {
+        name: name,
+      },
+    })
+      .then((res) => {
+        setGroupName(name);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const handleTestNotification = () => {
-
-    
-    let notifMessage = 'A user within the group ' + groupName + ' has requested that you generate/regenerate the playlist for that group'
+    let notifMessage =
+      "A user within the group " +
+      groupName +
+      " has requested that you generate/regenerate the playlist for that group";
     addNotification({
-      title: 'User requested new playlist generation',
-      subtitle: 'New playlist request',
+      title: "User requested new playlist generation",
+      subtitle: "New playlist request",
       message: notifMessage,
-      theme: 'darkblue',
+      theme: "darkblue",
       native: true,
     });
   };
 
   useEffect(() => {
-    if (is_expired(localStorage))
-    {
-        return history.push("/"); 
+    if (is_expired(localStorage)) {
+      return history.push("/");
     }
     // get group id
-    setGroupID("#8941-1125");
-    setGroupName("Gaming Friends");
+    setGroupID(location.state.id);
+    setGroupName(location.state.name);
     setuiLoading(false);
-    if (params.playlistGenerated === "generated"){ //If the route '/groupMenuOwner/generated' is accessed
-      setPlaylistGenerated(true)
+    if (params.playlistGenerated === "generated") {
+      //If the route '/groupMenuOwner/generated' is accessed
+      setPlaylistGenerated(true);
     }
   }, []);
 
-
-  if(playlistGenerated) { // Determines whether to show the user "view generated playlist" or "generate playlist"
+  if (playlistGenerated) {
+    // Determines whether to show the user "view generated playlist" or "generate playlist"
     playlistCard = (
       <Card fullWidth className={classes.cards} onClick={handleViewPlaylist}>
         <CardContent style={{ marginBottom: "-10px" }}>
@@ -81,18 +119,21 @@ const GroupMenuOwner = (props) => {
           </Typography>
         </CardContent>
       </Card>
-    )
+    );
   } else {
     playlistCard = (
-      <Card fullWidth className={classes.cards} onClick={handleGeneratePlaylist}>
+      <Card
+        fullWidth
+        className={classes.cards}
+        onClick={handleGeneratePlaylist}
+      >
         <CardContent style={{ marginBottom: "-10px" }}>
           <Typography className={classes.cardText}>
             <center>Generate Playlist</center>
           </Typography>
         </CardContent>
       </Card>
-    )
-  
+    );
   }
 
   if (uiLoading === true) {
@@ -116,9 +157,9 @@ const GroupMenuOwner = (props) => {
                 onClick={() => history.push("/home")}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
-              <Typography className={classes.heading}>
+              <Typography onClick={handleCopyID} className={classes.heading}>
                 Group ID: {groupID}
-              </Typography>      
+              </Typography>
               <Button
                 color="inherit"
                 onClick={() => {
@@ -136,18 +177,16 @@ const GroupMenuOwner = (props) => {
               </div>
             </Toolbar>
           </AppBar>
+          <Error error={copied} setError={setCopied} severity="success" />
           <Card fullWidth className={classes.flexCard}>
             <CardContent style={{ marginBottom: "-10px" }}>
-              <div>
-                Group Name:
-              </div>
+              <div>Group Name:</div>
               <Typography className={classes.flexCard}>
-                
                 <div>
                   <EdiText
                     type="text"
                     value={groupName}
-                    onSave={setGroupName}
+                    onSave={handleGroupNameChange}
                   />
                 </div>
               </Typography>
@@ -184,7 +223,9 @@ const GroupMenuOwner = (props) => {
           >
             <CardContent style={{ marginBottom: "-10px" }}>
               <Typography className={classes.cardText}>
-                <center>Test Notifications (not intended for final product)</center>
+                <center>
+                  Test Notifications (not intended for final product)
+                </center>
               </Typography>
             </CardContent>
           </Card>
