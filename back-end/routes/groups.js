@@ -60,7 +60,7 @@ router.put(
 );
 
 
-router.get("/add_members/:group_id/:user_id", add_members.add_members)
+router.put("/add_members/:group_id/:user_id", add_members.add_members)
 
 router.use("/add_to_ban/:group_id/:user_id/:bearer", user_id.get_user_id);
 router.put("/add_to_ban/:group_id/:user_id/:bearer", add_to_ban.add_to_ban)
