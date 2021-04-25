@@ -1,7 +1,7 @@
 const axios = require("axios")
 const set_authentication = require("../other/authentication.js").set_authentication
 
-const get_user_info = (req, res, next) => {//middleware to acquire and set user_id and country
+const get_user_id = (req, res, next) => {//middleware to acquire and set user_id and country
     const bearer = req.params.bearer
 
     if (!set_authentication(bearer, axios))
@@ -30,5 +30,5 @@ const get_user_info = (req, res, next) => {//middleware to acquire and set user_
 
 
 module.exports = {
-    get_user_info: get_user_info
+    get_user_id: get_user_id
 }
