@@ -21,6 +21,8 @@ if (!bearer)
   console.log("No bearer specified (specify using --bearer=<bearer_token>). Aborting.")
   return
 }
+
+//Run the add to pool and remove from pool tests
 run_add_to_pool_tests(bearer)
 
 //create a group for testing purposes

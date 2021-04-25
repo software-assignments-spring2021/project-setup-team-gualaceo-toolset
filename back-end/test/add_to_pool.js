@@ -10,7 +10,9 @@ const mongoose = require("mongoose");
 const set_authentication = require("../requests/other/authentication").set_authentication
 
 const sample_playlist_id = "3PLPVWNT4CMjqSLpoRThxf" //note, as this is hardcoded, if the playlist is deleted this test will fail! I don't plan on deleting it, but I ever do accidentally, please change the playlist id here
-
+const other_user_sample_playlist_one = "26HeHZSvi7Q9BmRhxJxwt9"
+const other_user_sample_playlist_two = "76bxZcSKj8D5lFnc2BgtWd"
+let user_id = ""
 const run_add_to_pool_tests = async bearer => {
  //Testing for add_to_pool endpoint
   describe('add to pool/remove from pool (and related methods)', async () => {
@@ -26,11 +28,19 @@ const run_add_to_pool_tests = async bearer => {
       });
 
       //create a test group
-      const members = ["rbx2co", "jonoto", "123milkman"]
+      const members = ["jonoto", "123milkman", "serus5"]
       const banned_members = ["jonoto"]
       const owners = ["rbx2co"]
       const generated_playlist_id = ""
-      const pool = []
+      const playlist_one = {
+        added_by: "serus5",
+        playlist_id: other_user_sample_playlist_one,
+      };
+      const playlist_two = {
+        added_by: "serus5",
+        playlist_id: other_user_sample_playlist_two,
+      }
+      const pool = [playlist_one, playlist_two]
       const group = new Group({banned_members: banned_members, members: members, owners: owners, generated_playlist_id: generated_playlist_id, pool: pool}) //this MUST correspond to the order specified in the schema
       await group.save()
         .then(res => {
@@ -41,15 +51,47 @@ const run_add_to_pool_tests = async bearer => {
           console.log(err)
           console.log("error encountered saving test group, this may cause test failures")
         })
-    })
+      if (!set_authentication(bearer, axios))
+      {
+        console.log("Error: could not run get_user_id due to bad authentication")
+        return;
+      }
 
+      //get current user's user_id
+      let passed = await axios("https://api.spotify.com/v1/me")
+        .then((response) => {
+          data = response.data
+          user_id = data.id
+          //console.log("Successfully pulled User ID from Spotify API")
+          return true
+        })
+        .catch((err) => {
+          return false
+        })
+      if (!passed)
+      {
+        console.log("could not get user_id")
+        return
+      }
+      console.log("user_id = ", user_id)
+      
+    
+      //add the currently logged in user to the members and owners list
+      await Group.updateOne(
+        { _id: group_id },
+        {
+          $push: { members: user_id , owners: user_id},
+        },
+        { safe: true, upsert: true }
+      );
+    })
     describe("is_in_group tests", async () => {
       it("Group id is an object", () => {
         assert.typeOf(group_id, "object")
       })
 
-      it("'rbx2co' is in group", async () => {
-        let in_group = await is_in_group("rbx2co", group_id)
+      it("current user is in group", async () => {
+        let in_group = await is_in_group(user_id, group_id)
         assert.isTrue(in_group)
       })
 
@@ -79,6 +121,9 @@ const run_add_to_pool_tests = async bearer => {
     })
 
     describe("add_to_pool tests", async () => {
+      // must add the currently logged in user first as a member and owner
+
+
       it('can add to pool', async () => {
         const playlist_id = sample_playlist_id 
         let status_code
@@ -130,6 +175,46 @@ const run_add_to_pool_tests = async bearer => {
 
       it ('can not remove from pool if already removed', async () => {
         const playlist_id = sample_playlist_id 
+        let status_code
+        let error = null
+        let passed = await axios.delete(`http://localhost:5000/groups/remove_from_pool/${group_id}/${playlist_id}/${bearer}`) 
+          .then((res) => {
+            status_code = res.status
+          })
+          .catch(err => {
+            error = err
+          })
+        
+        assert.isNotNull(error) //indicates success
+      })
+
+      it ('can remove playlists added by other users if you are an owner', async () => {
+        const playlist_id = other_user_sample_playlist_one
+
+        let status_code
+        let error = null
+        let passed = await axios.delete(`http://localhost:5000/groups/remove_from_pool/${group_id}/${playlist_id}/${bearer}`) 
+          .then((res) => {
+            status_code = res.status
+          })
+          .catch(err => {
+            error = err
+          })
+        
+        assert.strictEqual(status_code, 200) //indicates success
+      })
+      
+      it ('can not remove playlists added by others if not owner', async () => {
+        //remove the current user from the owners list
+        await Group.updateOne(
+          { _id: group_id },
+          {
+            $pull: { owners: user_id},
+          },
+          { safe: true, upsert: true }
+        );
+        
+        const playlist_id = other_user_sample_playlist_two
         let status_code
         let error = null
         let passed = await axios.delete(`http://localhost:5000/groups/remove_from_pool/${group_id}/${playlist_id}/${bearer}`) 
