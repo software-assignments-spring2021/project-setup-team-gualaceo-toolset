@@ -3,6 +3,9 @@ let Group = require("../models/groups.model");
 const add_to_pool = require("../requests/put/add_to_pool");
 const user_id = require("../requests/get/user_id");
 const add_members = require("../requests/put/add_members");
+const add_to_ban = require("../requests/put/add_to_ban");
+const kick_member = require("../requests/put/kick_member");
+const unban = require("../requests/put/unban");
 
 router.route("/").get((req, res) => {
   Group.find()
@@ -49,6 +52,21 @@ router.put(
   add_to_pool.add_to_pool
 );
 
-router.put("/add_members/:group_id/:user_id", add_members.add_members);
+
+router.use("/add_to_pool/:group_id/:playlist_id/:bearer", user_id.get_user_id);
+router.put(
+  "/add_to_pool/:group_id/:playlist_id/:bearer",
+  add_to_pool.add_to_pool
+);
+
+
+router.put("/add_members/:group_id/:user_id", add_members.add_members)
+
+router.use("/add_to_ban/:group_id/:user_id/:bearer", user_id.get_user_id);
+router.put("/add_to_ban/:group_id/:user_id/:bearer", add_to_ban.add_to_ban)
+router.use("/kick_member/:group_id/:user_id/:bearer", user_id.get_user_id)
+router.put("/kick_member/:group_id/:user_id/:bearer", kick_member.kick_member)
+router.use("/unban/:group_id/:user_id/:bearer", user_id.get_user_id)
+router.put("/unban/:group_id/:user_id/:bearer", unban.unban)
 
 module.exports = router;
