@@ -21,6 +21,10 @@ const groupsSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  playlist_is_generated: {
+    type: Boolean,
+    default: false
+  },
 });
 
 const groupsModel = mongoose.model("Groups", groupsSchema);

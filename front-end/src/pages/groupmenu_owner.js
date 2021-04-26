@@ -28,6 +28,7 @@ import {
 const GroupMenuOwner = (props) => {
   let location = useLocation();
   let state = location.state
+  let group_id = state.id
   let history = useHistory();
   let playlistCard;
   const {
@@ -49,13 +50,42 @@ const GroupMenuOwner = (props) => {
     });
   };
   const handleViewAllMembers = () => {
-    history.push("/membersOwner");
+    history.push({
+      pathname: "/membersOwner",
+      state: state,
+    })
   };
-  const handleViewPlaylist = () => {
-    history.push("/generatedPlaylist/owner");
+  const handleViewPlaylist = async () => {
+    let passed = await axios(`http://localhost:5000/groups/playlist_id/${group_id}/${get_bearer(localStorage)}`)
+      .then(res => {
+          state.generated_playlist_id = res.data.generated_playlist_id
+          return true
+        })
+        .catch(err => {
+          console.log(err)
+          return false
+        })
+    if (!passed)
+    {
+      return
+    }
+
+    return history.push({
+      pathname: "/generatedPlaylist/owner",
+      state: state
+    });
   };
   const handleGeneratePlaylist = () => {
-    setPlaylistGenerated(true);
+    axios({
+      method: "post",
+      url: `http://localhost:5000/generate_playlist/"new_playlist"/${group_id}/${get_bearer(localStorage)}`
+    })
+      .then(res => {
+        setPlaylistGenerated(true);
+      })
+      .catch(err => {
+        console.log("Error: could not generate playlist")
+      })
   };
 
   const handleCopyID = () => {
@@ -103,11 +133,17 @@ const GroupMenuOwner = (props) => {
     setGroupID(location.state.id);
     setGroupName(location.state.name);
     setuiLoading(false);
-    if (params.playlistGenerated === "generated") {
-      //If the route '/groupMenuOwner/generated' is accessed
-      setPlaylistGenerated(true);
-    }
-  }, []);
+    
+    axios(`http://localhost:5000/groups/playlist_is_generated/${group_id}/${get_bearer(localStorage)}`)
+      .then(res => {
+        console.log("playlist_is_generated=",res.data.playlist_is_generated)
+        setPlaylistGenerated(res.data.playlist_is_generated)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    
+  }, [history, playlistGenerated, location.state.id, location.state, params.playlistGenerated, group_id]);
 
   if (playlistGenerated) {
     // Determines whether to show the user "view generated playlist" or "generate playlist"

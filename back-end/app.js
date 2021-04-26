@@ -5,10 +5,11 @@ const user_id = require("./requests/get/user_id");
 const user_playlists = require("./requests/get/user_playlists");
 const express = require("express");
 const app = express();
-const remove_tracks = require("./requests/post/remove_tracks");
-const create_playlist = require("./requests/post/create_playlist");
-const add_tracks = require("./requests/post/add_tracks");
-const follow_playlist = require("./requests/put/follow_playlist");
+const remove_tracks = require("./requests/post/remove_tracks")
+const create_playlist = require("./requests/post/create_playlist")
+const add_tracks = require("./requests/post/add_tracks")
+const follow_playlist = require("./requests/put/follow_playlist")
+const generate_playlist = require("./requests/post/generate_playlist")
 const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -66,14 +67,19 @@ app.use((req, res, next) => {
 
 // app.use("/static", express.static("public")); //Anything within the /public directory is delivered statically by accessing /static/filename in your browser
 
-//Get and set user_id if required (middleware)
+//Get and set user info if required (middleware)
 app.use("/user_playlists/:bearer/:include_tracks", user_id.get_user_id) // sets res.user_id to the user_id (if the bearer token is valid)
-app.use("/follow_playlist/:bearer/:group_id", user_id.get_user_id)
-app.use("/remove_tracks/:bearer/:group_id/:track_id", user_id.get_user_id)
-app.use("/create_playlist/:bearer/:group_id", user_id.get_user_id)
+app.use("/follow_playlist/:bearer/:playlist_id", user_id.get_user_id)
+app.use("/remove_tracks/:bearer/:playlist_id/:track_id", user_id.get_user_id)
+app.use("/create_playlist/:bearer/", user_id.get_user_id)
+app.use("/generate_playlist/:playlist_name/:group_id/:bearer/", user_id.get_user_id)
+
+//endpoints to be used
+
 
 app.post("/create_playlist/:bearer/", create_playlist.create_playlist);
 app.post("/add_tracks/:bearer/:playlist_id", add_tracks.add_tracks);
+app.post("/generate_playlist/:playlist_name/:group_id/:bearer/", generate_playlist.generate_playlist)
 app.get(
   "/user_playlists/:bearer/:include_tracks",
   user_playlists.get_playlists
@@ -90,6 +96,7 @@ app.put(
   "/follow_playlist/:bearer/:playlist_id",
   follow_playlist.follow_playlist
 );
+
 //Handle any errors
 app.use((error, req, res, next) => {
   res.status(error.status || 500);

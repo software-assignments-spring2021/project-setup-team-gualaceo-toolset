@@ -2,49 +2,75 @@ import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
 import Avatar from "@material-ui/core/avatar";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import Loading from "../components/loading";
 import styles from "../styles/bannedMembersStyles";
-import {is_expired} from "../components/authentication.js"
+import {get_bearer, is_expired} from "../components/authentication.js"
 import Logout from "../components/logout";
+import axios from "axios"
 
 const BannedMembers = (props) => {
   let history = useHistory();
+  let location = useLocation()
+  let state = location.state
+  let group_id = state.id
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
+  const [bannedMembers, setBannedMembers] = useState(null)
 
 
-  const BannedMembers = [
-    {
-      name: "Jerry",
-      username: "tro11er",
-    },
-    {
-      name: "Alfredo",
-      username: "al23",
-    },
-    {
-      name: "Jackie",
-      username: "jackijax",
-    },
-    {
-      name: "Henry",
-      username: "hen-wryyy",
-    },
-  ];
+  // const BannedMembers = [
+  //   {
+  //     name: "Jerry",
+  //     username: "tro11er",
+  //   },
+  //   {
+  //     name: "Alfredo",
+  //     username: "al23",
+  //   },
+  //   {
+  //     name: "Jackie",
+  //     username: "jackijax",
+  //   },
+  //   {
+  //     name: "Henry",
+  //     username: "hen-wryyy",
+  //   },
+  // ];
+
+  const goLastPage = () => {
+    return history.push({
+      pathname: "/membersOwner",
+      state: state
+    })
+  }
 
   useEffect(() => {
     if (is_expired(localStorage))
     {
         return history.push("/"); 
-    }
-
-    setuiLoading(false);
+    } 
+    axios(`http://localhost:5000/groups/get_banned_members/${group_id}/${get_bearer(localStorage)}`)
+    .then(res => {
+      console.log("res=",res)
+      let newBannedMembers = []
+      res.data.banned_members.forEach(member => {
+        newBannedMembers.push({
+          name: member,
+        })
+      })
+      setBannedMembers(newBannedMembers)
+      setuiLoading(false);
+    })
+    .catch(err => {
+      console.log("Error encountered in bannedMembers.js")
+      console.log(err)
+    })
   }, []);
 
   const handleUnban = (username) => {
@@ -63,7 +89,7 @@ const BannedMembers = (props) => {
             <AppBar>
               <Toolbar className={classes.toolbar}>
                 <Button
-                  onClick={() => history.push("/membersOwner")}
+                  onClick={goLastPage}
                   startIcon={<ArrowBackIosIcon className={classes.back} />}
                 ></Button>
                 <Typography variant="h5" className={classes.heading}>
@@ -86,7 +112,7 @@ const BannedMembers = (props) => {
                 </div>
               </Toolbar>
             </AppBar>
-            {BannedMembers.map((member) => (
+            {bannedMembers.map((member) => (
               <Card fullWidth className={classes.cards}>
                 <CardContent className={classes.cardContent}>
                   <Box className={classes.member}>
@@ -96,11 +122,6 @@ const BannedMembers = (props) => {
                     <Box>
                       <Typography className={classes.cardText}>
                         {member.name}
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <Typography className={classes.cardText}>
-                        ({member.username})
                       </Typography>
                     </Box>
                     <Box>

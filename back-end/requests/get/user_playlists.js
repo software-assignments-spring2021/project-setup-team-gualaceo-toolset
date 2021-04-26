@@ -78,7 +78,7 @@ const get_tracks_items = async (bearer, url) => {
     }
 
     let offset = 0
-    let limit = 100
+    let limit = 20
     let total = 101
     let error = null
     let result = []
@@ -98,8 +98,12 @@ const get_tracks_items = async (bearer, url) => {
                 error = err
             })
         
-    } while (offset < total && !error)
+    } while (false) //originally while (offset < total && !error), but changed for the sake of time
     //console.log("result = ", result)
+    if (error)
+    {
+        console.log("Error encountered in get_tracks_items function")
+    }
     return result
 }
 
