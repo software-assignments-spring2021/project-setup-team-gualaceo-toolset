@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
 import Avatar from "@material-ui/core/avatar";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
@@ -14,6 +14,9 @@ import Logout from "../components/logout";
 
 const BannedMembers = (props) => {
   let history = useHistory();
+  let location = useLocation()
+  let state = location.state
+  let group_id = state.id
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
@@ -37,6 +40,13 @@ const BannedMembers = (props) => {
       username: "hen-wryyy",
     },
   ];
+
+  const goLastPage = () => {
+    return history.push({
+      pathname: "/membersOwner",
+      state: state
+    })
+  }
 
   useEffect(() => {
     if (is_expired(localStorage))
@@ -63,7 +73,7 @@ const BannedMembers = (props) => {
             <AppBar>
               <Toolbar className={classes.toolbar}>
                 <Button
-                  onClick={() => history.push("/membersOwner")}
+                  onClick={goLastPage}
                   startIcon={<ArrowBackIosIcon className={classes.back} />}
                 ></Button>
                 <Typography variant="h5" className={classes.heading}>

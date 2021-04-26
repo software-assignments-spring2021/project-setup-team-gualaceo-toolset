@@ -50,7 +50,7 @@ const GroupMenuOwner = (props) => {
   };
   const handleViewAllMembers = () => {
     history.push({
-      pathname: "/memberOwner",
+      pathname: "/membersOwner",
       state: state,
     })
   };
