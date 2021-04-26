@@ -42,7 +42,10 @@ const GroupMenu = (props) => {
     });
   };
   const handleViewAllMembers = () => {
-    history.push("/members");
+    history.push({
+      pathname: "/members",
+      state: state,
+    })
   };
   const handleViewPlaylist = () => {
     history.push("/generatedPlaylist");

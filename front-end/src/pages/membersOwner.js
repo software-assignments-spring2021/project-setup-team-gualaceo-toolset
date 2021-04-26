@@ -2,30 +2,27 @@ import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
 import Avatar from "@material-ui/core/avatar";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation} from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import Loading from "../components/loading";
 import styles from "../styles/membersStyles";
+import axios from "axios"
 import members from "./members";
-import {is_expired} from "../components/authentication.js"
+import {get_bearer, is_expired} from "../components/authentication.js"
 import Logout from "../components/logout";
 
 const MembersOwner = (props) => {
   let history = useHistory();
+  let location = useLocation()
+  let state = location.state
+  let group_id = state.id
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
-  const memberlist = [
-    { name: "Ryan B", owner: false, self: false },
-    { name: "Alexa H", owner: true, self: true },
-    { name: "Dennis K", owner: false, self: false },
-    { name: "Chris Z", owner: false, self: false },
-    { name: "Calvin L", owner: false, self: false },
-    { name: "Mo L", owner: false, self: false },
-  ];
+  const [memberlist, setMemberlist] = useState(null)
 
   const handleBan = (member) => {
     console.log(member.name + " is banned")
@@ -36,7 +33,17 @@ const MembersOwner = (props) => {
   }
 
   const goToBanList = () => {
-    history.push("/bannedMembers")
+    return history.push({
+      pathname: "bannedMembers",
+      state: state
+    })
+  }
+
+  const goLastPage = () => {
+    return history.push({
+      pathname: "/groupMenuOwner",
+      state: state
+    })
   }
 
   useEffect(() => {
@@ -44,8 +51,26 @@ const MembersOwner = (props) => {
     {
       return history.push("/"); 
     }
-    setuiLoading(false);
-  }, []);
+
+    axios(`http://localhost:5000/groups/get_members_and_owners/${group_id}/${get_bearer(localStorage)}`)
+      .then(res => {
+        console.log("res=",res)
+        let new_memberlist = []
+        res.data.members.forEach(member => {
+          new_memberlist.push({
+            name: member,
+            owner: res.data.owners.includes(member),
+            self: res.data.requester === member
+          })
+        })
+        setMemberlist(new_memberlist)
+        setuiLoading(false);
+      })
+      .catch(err => {
+        console.log("Error encountered in membersOwner.js")
+        console.log(err)
+      })
+  }, [history, memberlist]);
 
   if (uiLoading === true) {
     return <Loading />;
@@ -59,7 +84,7 @@ const MembersOwner = (props) => {
             <AppBar>
               <Toolbar className={classes.toolbar}>
                 <Button
-                  onClick={() => history.push("/groupMenuOwner")}
+                  onClick={goLastPage}
                   startIcon={<ArrowBackIosIcon className={classes.back} />}
                 ></Button>
                 <Typography variant="h5" className={classes.heading}>

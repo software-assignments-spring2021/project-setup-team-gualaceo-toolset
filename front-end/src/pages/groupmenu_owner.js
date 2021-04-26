@@ -50,7 +50,10 @@ const GroupMenuOwner = (props) => {
     });
   };
   const handleViewAllMembers = () => {
-    history.push("/membersOwner");
+    history.push({
+      pathname: "/membersOwner",
+      state: state,
+    })
   };
   const handleViewPlaylist = async () => {
     let passed = await axios(`http://localhost:5000/groups/playlist_id/${group_id}/${get_bearer(localStorage)}`)
