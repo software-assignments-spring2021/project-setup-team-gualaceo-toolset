@@ -55,20 +55,19 @@ const MembersOwner = (props) => {
     axios(`http://localhost:5000/groups/get_members_and_owners/${group_id}/${get_bearer(localStorage)}`)
       .then(res => {
         console.log("res=",res)
-        let memberlist = []
+        let new_memberlist = []
         res.data.members.forEach(member => {
-          memberlist.push({
+          new_memberlist.push({
             name: member,
             owner: res.data.owners.includes(member),
             self: res.data.requester === member
           })
         })
-        console.log(memberlist)
-        setMemberlist(memberlist)
+        setMemberlist(new_memberlist)
         setuiLoading(false);
       })
       .catch(err => {
-        console.log("Error encountered in members.js")
+        console.log("Error encountered in membersOwner.js")
         console.log(err)
       })
   }, [history, memberlist]);

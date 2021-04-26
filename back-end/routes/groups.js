@@ -7,6 +7,7 @@ const get_members_and_owners = require("../requests/get/get_members_and_owners")
 const add_to_ban = require("../requests/put/add_to_ban");
 const kick_member = require("../requests/put/kick_member");
 const unban = require("../requests/put/unban");
+const get_banned_members = require("../requests/get/get_banned_members");
 
 router.route("/").get((req, res) => {
   Group.find()
@@ -62,6 +63,8 @@ router.put(
 
 router.use("/get_members_and_owners/:group_id/:bearer", user_id.get_user_id)
 router.get("/get_members_and_owners/:group_id/:bearer", get_members_and_owners.get_members_and_owners)
+router.use("/get_banned_members/:group_id/:bearer", user_id.get_user_id)
+router.get("/get_banned_members/:group_id/:bearer", get_banned_members.get_banned_members)
 
 
 router.put("/add_members/:group_id/:user_id", add_members.add_members)
