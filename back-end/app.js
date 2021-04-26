@@ -72,14 +72,14 @@ app.use("/user_playlists/:bearer/:include_tracks", user_id.get_user_id) // sets 
 app.use("/follow_playlist/:bearer/:playlist_id", user_id.get_user_id)
 app.use("/remove_tracks/:bearer/:playlist_id/:track_id", user_id.get_user_id)
 app.use("/create_playlist/:bearer/", user_id.get_user_id)
-app.use("/generate_playlist/:playlist_name/:bearer/:demo_index", user_id.get_user_id)
+app.use("/generate_playlist/:playlist_name/:group_id/:bearer/", user_id.get_user_id)
 
 //endpoints to be used
 
 
 app.post("/create_playlist/:bearer/", create_playlist.create_playlist);
 app.post("/add_tracks/:bearer/:playlist_id", add_tracks.add_tracks);
-app.post("/generate_playlist/:playlist_name/:bearer/:demo_index", generate_playlist.generate_playlist)
+app.post("/generate_playlist/:playlist_name/:group_id/:bearer/", generate_playlist.generate_playlist)
 app.get(
   "/user_playlists/:bearer/:include_tracks",
   user_playlists.get_playlists

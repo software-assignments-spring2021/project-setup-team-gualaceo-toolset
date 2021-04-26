@@ -2,20 +2,8 @@ const axios = require("axios")
 const user_playlists = require("../get/user_playlists")
 const set_authentication = require("../other/authentication.js").set_authentication
 const get_tracks_items = user_playlists.get_tracks_items
-
-const dummy_playlists_1 = ["2vCtLzopIe4ENfaTP31l3p",
-    "0y67ofGW3OL8Pu2wZHiVWq",
-    "3FWMoF9oFOliCd2USOfMLv",
-    "7m6CZ8gq94Kee4ZLkph5ZL"
-]
-
-const dummy_playlists_2 = ["1tnqexNp5xYsxj4JMiUnXK",
-	"1uW7OkSuL2qngPiiDvNY5E",
-	"2vCtLzopIe4ENfaTP31l3p",
-	"5n07yWC7B3URSNk78zdFsg",
-	"0mHy3nmHppsVXDDw8bNVPB",
-	"4bZJLok2TNq0bnUHNqMdVB"
-]
+let Group = require("../../models/groups.model");
+let post_playlist = require("../../helper_methods/post_playlist").post_playlist
 
 //Generate playlist from a pool of playlists
 //Requires permission to create a playlist on the user's account
@@ -23,7 +11,7 @@ const generate_playlist = async (req, res, next) => {
 
     const bearer = req.params.bearer
     const playlist_name = req.params.playlist_name
-    const demo_index = parseInt(req.params.demo_index)
+    const group_id = req.params.group_id
     const user_id = req.user_id //this is set by previous middleware in routing
     const country = req.country //set by previous middleware
 
@@ -32,13 +20,34 @@ const generate_playlist = async (req, res, next) => {
     const common_artists_ratio = 0.2 //max ratio of songs from common artists
     const common_recs_ratio = 0.4 //ratio of recommendations obtained using the common songs and artists
 
-    //for sake of the demo, retrieve specified dummy data
-    let dummy_playlists
-    if (demo_index === 1)
+    //Retrieve the group's pool (if id is valid, and user is owner)
+    let pool
+    let generated_playlist_id
+    let owners
+    let error = await Group.findOne({_id: group_id})
+        .then(res => {
+            pool = res.pool
+            owners = res.owners
+            generated_playlist_id = res.generated_playlist_id
+            return null
+        })
+        .catch(err => {
+            const msg = "Error, could not find group in generate_playlist.js"
+            console.log(msg)
+            console.log(err)
+            return new Error(msg)
+        })
+    
+    if (error)
     {
-        dummy_playlists = dummy_playlists_1
-    } else {
-        dummy_playlists = dummy_playlists_2
+        return next(error)
+    }
+
+    if (!owners.includes(user_id))
+    {
+        const msg = "Error: User is not an owner, can not generate playlist"
+        console.log(msg)
+        return next(new Error(msg))
     }
 
     let total_songs = 50 //songs that will be added to the playlist, should not exceed 100
@@ -59,7 +68,7 @@ const generate_playlist = async (req, res, next) => {
         return next(new Error(msg))
     }
 
-    let playlists = await get_playlists(dummy_playlists) //get an array of playlists
+    let playlists = await get_playlists(pool) //get an array of playlists
 
     if (playlists instanceof Error) //check if an error was thrown by get_playlists
     {
@@ -80,21 +89,28 @@ const generate_playlist = async (req, res, next) => {
     let remaining_tracks = total_songs - uris.length
     await add_remaining_recs(uris, user_arrays, remaining_tracks, inserted_songs, country)
     shuffleArray(uris)
-    let created = await create_playlist(uris, user_id, playlist_name, bearer)
-    if (created instanceof Error)
+    let new_playlist_id = await create_playlist(uris, user_id, playlist_name, bearer, generated_playlist_id) //will check if the generated_playlist_id is still valid first
+    if (new_playlist_id instanceof Error)
     {
-        return next(created)
+        return next(new_playlist_id)
+    }
+
+    let added_tracks = await add_songs_to_playlist(uris, user_id, bearer, new_playlist_id)
+    if (added_tracks instanceof Error)
+    {
+        return next(added_tracks)
     }
     
-    return res.send(created)
+    return res.send(added_tracks)
 }
 
 const get_playlists = async (playlist_ids) => { //returns an array of playlists and their tracks from an input of the playlist_ids
     let result = []
     let error = null
-    await async_for_each(playlist_ids, async (playlist_id) => {
+    await async_for_each(playlist_ids, async (playlist_object) => {
         //get the playlist info
         let cur_playlist
+        let playlist_id = playlist_object.playlist_id
         await axios(`https://api.spotify.com/v1/playlists/${playlist_id}`) 
             .then(async res => {
                 cur_playlist = res.data
@@ -471,7 +487,24 @@ const add_remaining_recs = async (uris, user_arrays, remaining_count, inserted_s
     //console.log("user_arrays = ", user_arrays)
 }
 
-const create_playlist = async (uris, user_id, playlist_name, bearer) => {
+const create_playlist = async (uris, user_id, playlist_name, bearer, generated_playlist_id, group_id) => { 
+    
+    //check if the playlist created with the group still exists
+    let exists = await axios(`https://api.spotify.com/v1/playlists/${generated_playlist_id}`)
+        .then(res => {
+            return true
+        })
+        .catch(err => {
+            console.log("Playlist does not exist, generating a new one.")
+            return false
+        })
+
+    if (exists)
+    {
+        //should clear the current playlist
+        return generated_playlist_id
+    }
+
     let playlist_id
     let error
      //specify header used
@@ -479,6 +512,7 @@ const create_playlist = async (uris, user_id, playlist_name, bearer) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${bearer}`
     }
+    //create a new playlist on the owner's spotify account
     let CREATE_URL = `https://api.spotify.com/v1/users/${user_id}/playlists`;
     let desc = "Generated by Synthesize"
     let created = await axios({
@@ -508,9 +542,29 @@ const create_playlist = async (uris, user_id, playlist_name, bearer) => {
         return error
     }
 
-    //send request to add_tracks
-    let ADD_URL = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks`;
+    console.log("playlist_id = ", playlist_id )
+    passed = await post_playlist(bearer, group_id, playlist_id)
+    
+    if (!passed)
+    {   
+        const msg = "Error: failed to post playlist"
+        error = new Error(msg)
+        console.log(msg)
+        return error
+    }
+
+    return playlist_id 
+}
+
+const add_songs_to_playlist = async (uris, user_id, bearer, generated_playlist_id) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${bearer}`
+    }
+
+    let ADD_URL = `https://api.spotify.com/v1/playlists/${generated_playlist_id}/tracks`;
     let JSON_RESPONSE
+    let error
     await axios({
         method: "post",
         url: ADD_URL,
