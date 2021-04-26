@@ -41,6 +41,7 @@ const AddMyMusic = (props) => {
   let history = useHistory();
   let location = useLocation()
   let state = location.state
+  let group_id = state.id
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
@@ -79,11 +80,12 @@ const AddMyMusic = (props) => {
         }) //makes a call to the back-end
             .then((response) => {  
                 console.log(response.data)
-                console.log(playlists);
+                
             
                 if (playlists === "unset")
                 {
                   setPlaylists(response.data); //stores the result from the api call in playlists
+                  //console.log("playlists=", playlists);
                   setuiLoading(false);
                 }
             })
@@ -102,31 +104,7 @@ const AddMyMusic = (props) => {
         //make call asking for playlist contents
         //I've disabled this for now, as it often leads to throttling errors. So for now, we will only retrieve the user's playlist
         //names
-        /*
-        axios({
-            method: "get",
-            url: `http://localhost:5000/user_playlists/${get_bearer(localStorage)}/true` //true indicates we want playlists attached
-        }) //makes a call to the back-end
-            .then((response) => {  
-                console.log(response.data)
-                console.log(playlists);
-                if (!haveTracks)
-                {   
-                    setHaveTracks(true)
-                    setPlaylists(response.data); //stores the result from the api call in playlists
-                    setuiLoading(false);
-                }
-            })
-            .catch((err) => {
-                console.log("error encountered making request to user_playlists endpoint")
-                console.error(err);
-                console.log(err)
-
-                if (playlists === "unset") 
-                {   setPlaylists(backupPlaylists);
-                    setuiLoading(false)
-                }
-            });    */
+      
     }, [playlists, haveTracks, history]); // run whenever playlists, haveTracks or history is updated
 
   if (uiLoading === true) {
@@ -163,7 +141,7 @@ const AddMyMusic = (props) => {
           </AppBar>
           <div className={classes.playlistContainer}>
             {playlists.map((item) => (
-              <Playlist playlist={item} has_tracks={haveTracks}></Playlist>
+              <Playlist playlist={item} group_id={group_id} has_tracks={haveTracks}></Playlist>
             ))}
           </div>
         </Container>

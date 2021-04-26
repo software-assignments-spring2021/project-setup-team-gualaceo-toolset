@@ -13,14 +13,37 @@ import styles from "../styles/playlistComponentStyles.js";
 import {get_bearer, set_authentication} from "../components/authentication"
 import axios from "axios"
 
-const pressButton = (event, added, setAdded) => {
+const pressButton = (event, added, setAdded, playlist, group_id) => {
   event.stopPropagation(); //Prevents dropdown from opening when button is pressed
-  setAdded(!added);
+  const playlist_id = playlist.id
+  if (!added)
+  { 
+    console.log("making request to ", `http://localhost:5000/groups/add_to_pool${group_id}/${playlist_id}/${get_bearer(localStorage)}`)
+    axios(
+      {
+        method: "put",
+        url: `http://localhost:5000/groups/add_to_pool/${group_id}/${playlist_id}/${get_bearer(localStorage)}`,
+        
+      }
+    )
+      .then(res => {
+        console.log("res = ", res)
+        setAdded(true);
+      })
+      .catch(err => {
+        console.log(err)
+        console.log("Error encountered adding the playlist to the group")
+      })
+  } else {
+    //should actually remove the group
+    setAdded(false);
+  }
   //In a later sprint (2 or 3), we should also actually add the playlist to the pool
 };
 
 const Playlist = (props) => {
   const playlist = props.playlist;
+  const group_id = props.group_id
   const { classes } = props;
   const [added, setAdded] = useState(false); //keeps track of whether the playlist has been added to the pool or not.
   let buttonIcon;
@@ -46,15 +69,7 @@ const Playlist = (props) => {
             return
         })
     */
-  console.log("playlist: ", playlist);
-  console.log("tracks: ", tracks)
-  console.log("tracks.items:" )
-  if (tracks.items)
-  {
-    tracks.items.forEach((item) => {
-        console.log(item)
-    })
-  }
+  
   return (
     <Card className={classes.cardSquareEdges}>
       <div className={classes.summaryContainer}>
@@ -75,7 +90,7 @@ const Playlist = (props) => {
             className={classes.button}
             color="primary"
             onFocus={(event) => event.stopPropagation()}
-            onClick={(event) => pressButton(event, added, setAdded)}
+            onClick={(event) => pressButton(event, added, setAdded, playlist, group_id)}
           >
             {buttonIcon}
           </IconButton>
