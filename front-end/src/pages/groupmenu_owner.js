@@ -49,7 +49,10 @@ const GroupMenuOwner = (props) => {
     });
   };
   const handleViewAllMembers = () => {
-    history.push("/membersOwner");
+    history.push({
+      pathname: "/memberOwner",
+      state: state,
+    })
   };
   const handleViewPlaylist = () => {
     history.push("/generatedPlaylist/owner");

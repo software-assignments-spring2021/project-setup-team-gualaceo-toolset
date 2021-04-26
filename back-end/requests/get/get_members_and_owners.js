@@ -33,7 +33,8 @@ const get_members_and_owners = async (req, res, next) => {
 
     return res.json({
         members: members,
-        owners: owners
+        owners: owners,
+        requester: user_id,
     })
 }
 
