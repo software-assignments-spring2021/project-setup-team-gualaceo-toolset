@@ -70,8 +70,7 @@ const AddMyMusic = (props) => {
       return history.push("/"); 
     }
     //setuiLoading(false);
-    
-    console.log("fetching playlists");
+  
 
         //make call for playlists without track contents
         axios({

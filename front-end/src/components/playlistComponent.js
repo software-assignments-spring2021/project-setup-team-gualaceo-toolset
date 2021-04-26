@@ -18,7 +18,6 @@ const pressButton = (event, added, setAdded, playlist, group_id) => {
   const playlist_id = playlist.id
   if (!added)
   { 
-    console.log("making request to ", `http://localhost:5000/groups/add_to_pool${group_id}/${playlist_id}/${get_bearer(localStorage)}`)
     axios(
       {
         method: "put",
@@ -27,7 +26,6 @@ const pressButton = (event, added, setAdded, playlist, group_id) => {
       }
     )
       .then(res => {
-        console.log("res = ", res)
         setAdded(true);
       })
       .catch(err => {
