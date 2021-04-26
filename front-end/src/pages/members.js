@@ -55,7 +55,7 @@ const Members = (props) => {
         console.log("Error encountered in members.js")
         console.log(err)
       })
-  }, [history, memberlist]);
+  }, [history]);
 
   if (uiLoading === true) {
     return <Loading />;
