@@ -101,6 +101,23 @@ const generate_playlist = async (req, res, next) => {
         return next(added_tracks)
     }
     
+    error = await Group.updateOne({_id: group_id}, {playlist_is_generated: true})
+        .then(res => {
+            console.log("successfully set playlist_is_generated to true")
+            return false
+        })
+        .catch(err => {
+            const msg = "Error: could not set playlist_is_generated to true"
+            console.log(msg)
+            console.log(err)
+            return new Error(msg)
+        })
+    
+    if (error)
+    {
+        return next(error)
+    }
+    
     return res.send(added_tracks)
 }
 

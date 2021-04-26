@@ -28,6 +28,7 @@ import {
 const GroupMenuOwner = (props) => {
   let location = useLocation();
   let state = location.state
+  let group_id = state.id
   let history = useHistory();
   let playlistCard;
   const {
@@ -55,7 +56,13 @@ const GroupMenuOwner = (props) => {
     history.push("/generatedPlaylist/owner");
   };
   const handleGeneratePlaylist = () => {
-    setPlaylistGenerated(true);
+    axios(`localhost:5000/generate_playlist/"new_playlist"/${group_id}/${get_bearer(localStorage)}/`)
+      .then(res => {
+        setPlaylistGenerated(true);
+      })
+      .catch(err => {
+        console.log("Error: could not generate playlist")
+      })
   };
 
   const handleCopyID = () => {
@@ -103,6 +110,7 @@ const GroupMenuOwner = (props) => {
     setGroupID(location.state.id);
     setGroupName(location.state.name);
     setuiLoading(false);
+    
     if (params.playlistGenerated === "generated") {
       //If the route '/groupMenuOwner/generated' is accessed
       setPlaylistGenerated(true);
