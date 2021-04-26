@@ -69,4 +69,57 @@ router.put("/kick_member/:group_id/:user_id/:bearer", kick_member.kick_member)
 router.use("/unban/:group_id/:user_id/:bearer", user_id.get_user_id)
 router.put("/unban/:group_id/:user_id/:bearer", unban.unban)
 
+router.use("/playlist_id/:group_id/:bearer", user_id.get_user_id)
+router.get("/playlist_id/:group_id/:bearer", async (req, res, next) => {
+  let group_id = req.params.group_id
+  let generated_playlist_id
+  let error = await Group.findOne({_id: group_id})
+    .then(res => {
+      generated_playlist_id = res.generated_playlist_id
+    })
+    .catch(err => {
+      console.log(err)
+      return new Error(err)
+    })
+
+  if (error)
+  {
+    return next(error)
+  }
+
+  return res.json({generated_playlist_id: generated_playlist_id})
+})
+router.use("/playlist_is_generated/:group_id/:bearer", user_id.get_user_id)
+router.get("/playlist_is_generated/:group_id/:bearer", async (req, res, next) => {
+  let user_id = req.user_id
+  let group_id = req.params.group_id
+  let members
+  let playlist_is_generated
+  let error = await Group.findOne({_id: group_id})
+    .then(res => {
+      playlist_is_generated = res.playlist_is_generated
+      members = res.members
+    })
+    .catch(err => {
+      const msg = "Error: could not retrieve group"
+      console.log(msg)
+      console.log(err)
+      return new Error(msg)
+    })
+  if (error)
+  {
+    return next(error)
+  }
+
+  if (!members.includes(user_id))
+  {
+    const msg = "Error: user not in group"
+    console.log(msg)
+    return new Error(msg)
+  }
+
+  return res.json({playlist_is_generated: playlist_is_generated})
+  
+})
+
 module.exports = router;

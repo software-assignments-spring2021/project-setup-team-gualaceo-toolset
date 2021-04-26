@@ -52,11 +52,31 @@ const GroupMenuOwner = (props) => {
   const handleViewAllMembers = () => {
     history.push("/membersOwner");
   };
-  const handleViewPlaylist = () => {
-    history.push("/generatedPlaylist/owner");
+  const handleViewPlaylist = async () => {
+    let passed = await axios(`http://localhost:5000/groups/playlist_id/${group_id}/${get_bearer(localStorage)}`)
+      .then(res => {
+          state.generated_playlist_id = res.data.generated_playlist_id
+          return true
+        })
+        .catch(err => {
+          console.log(err)
+          return false
+        })
+    if (!passed)
+    {
+      return
+    }
+
+    return history.push({
+      pathname: "/generatedPlaylist/owner",
+      state: state
+    });
   };
   const handleGeneratePlaylist = () => {
-    axios(`localhost:5000/generate_playlist/"new_playlist"/${group_id}/${get_bearer(localStorage)}/`)
+    axios({
+      method: "post",
+      url: `http://localhost:5000/generate_playlist/"new_playlist"/${group_id}/${get_bearer(localStorage)}`
+    })
       .then(res => {
         setPlaylistGenerated(true);
       })
@@ -111,11 +131,16 @@ const GroupMenuOwner = (props) => {
     setGroupName(location.state.name);
     setuiLoading(false);
     
-    if (params.playlistGenerated === "generated") {
-      //If the route '/groupMenuOwner/generated' is accessed
-      setPlaylistGenerated(true);
-    }
-  }, []);
+    axios(`http://localhost:5000/groups/playlist_is_generated/${group_id}/${get_bearer(localStorage)}`)
+      .then(res => {
+        console.log("playlist_is_generated=",res.data.playlist_is_generated)
+        setPlaylistGenerated(res.data.playlist_is_generated)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    
+  }, [history, playlistGenerated, location.state.id, location.state, params.playlistGenerated, group_id]);
 
   if (playlistGenerated) {
     // Determines whether to show the user "view generated playlist" or "generate playlist"

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
 import Avatar from "@material-ui/core/avatar";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, CardContent } from "@material-ui/core";
@@ -21,6 +21,10 @@ import { set_authentication, is_expired } from "../components/authentication";
 
 const Playlist = (props) => {
   let history = useHistory();
+  let location = useLocation()
+  let state = location.state
+  let group_id = state.id
+  let generated_playlist_id = state.generated_playlist_id
   const {
     match: { params },
   } = props;
@@ -77,10 +81,10 @@ const Playlist = (props) => {
     if (!isGuest && previousSongsRef.current === songs) {
       axios({
         method: "get",
-        url: `http://localhost:5000/playlists/`,
+        url: `https://api.spotify.com/v1/playlists/${generated_playlist_id}/tracks`,
       })
         .then((res) => {
-          setSongs(res.data[0].songs);
+          setSongs(res.data.songs);
           // console.log(res.data[0].songs);
           setuiLoading(false);
         })
