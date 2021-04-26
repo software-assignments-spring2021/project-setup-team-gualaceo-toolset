@@ -21,6 +21,7 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
+
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, {
   keepAlive: true,
@@ -34,7 +35,7 @@ connection.once("open", () => {
   console.log("MongoDB connection established");
 });
 
-/*     Testing with a localhost database
+/*Testing with a localhost database
 const url = 'mongodb://127.0.0.1:27017/local-test'
 mongoose.connect(url, { useNewUrlParser: true,useUnifiedTopology: true })
 const connection = mongoose.connection
@@ -45,6 +46,7 @@ connection.on('error', err => {
   console.error('connection error:', err)
 })
 */
+
 
 const groupsRouter = require("./routes/groups");
 const usersRouter = require("./routes/users");
