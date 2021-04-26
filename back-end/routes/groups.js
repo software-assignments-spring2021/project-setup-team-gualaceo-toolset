@@ -3,6 +3,7 @@ let Group = require("../models/groups.model");
 const add_to_pool = require("../requests/put/add_to_pool");
 const user_id = require("../requests/get/user_id");
 const add_members = require("../requests/put/add_members");
+const get_members_and_owners = require("../requests/get/get_members_and_owners")
 const add_to_ban = require("../requests/put/add_to_ban");
 const kick_member = require("../requests/put/kick_member");
 const unban = require("../requests/put/unban");
@@ -58,6 +59,9 @@ router.put(
   "/add_to_pool/:group_id/:playlist_id/:bearer",
   add_to_pool.add_to_pool
 );
+
+router.use("/get_members_and_owners/:group_id/:bearer", user_id.get_user_id)
+router.get("/get_members_and_owners/:group_id/:bearer", get_members_and_owners.get_members_and_owners)
 
 
 router.put("/add_members/:group_id/:user_id", add_members.add_members)
