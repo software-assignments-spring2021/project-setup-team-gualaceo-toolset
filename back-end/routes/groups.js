@@ -52,6 +52,11 @@ router.route("/add").post((req, res) => {
 //get user id, and set it for any routes which require it
 router.use("/add_to_pool/:group_id/:playlist_id/:bearer", user_id.get_user_id);
 router.use("/remove_from_pool/:group_id/:playlist_id/:bearer", user_id.get_user_id)
+router.use("/get_members_and_owners/:group_id/:bearer",user_id.get_user_id)
+router.use("/get_banned_members/:group_id/:bearer", user_id.get_user_id)
+
+router.get("/get_members_and_owners/:group_id/:bearer", get_members_and_owners.get_members_and_owners)
+router.get("/get_banned_members/:group_id/:bearer", get_banned_members.get_banned_members)
 
 router.put(
   "/add_to_pool/:group_id/:playlist_id/:bearer",
