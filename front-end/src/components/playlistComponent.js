@@ -13,6 +13,17 @@ import styles from "../styles/playlistComponentStyles.js";
 import {get_bearer, set_authentication} from "../components/authentication"
 import axios from "axios"
 
+const pool_has_playlist = (pool, playlist_id) => {
+  for (let i = 0; i < pool.length; i++)
+  {
+    if (pool[i].playlist_id === playlist_id) //playlist was added by the current user to the pool already
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
 const pressButton = (event, added, setAdded, playlist, group_id) => {
   event.stopPropagation(); //Prevents dropdown from opening when button is pressed
   const playlist_id = playlist.id
@@ -42,8 +53,10 @@ const pressButton = (event, added, setAdded, playlist, group_id) => {
 const Playlist = (props) => {
   const playlist = props.playlist;
   const group_id = props.group_id
+  const pool = props.pool
   const { classes } = props;
-  const [added, setAdded] = useState(false); //keeps track of whether the playlist has been added to the pool or not.
+  let addedAtLoad = pool_has_playlist(pool, playlist.id)
+  const [added, setAdded] = useState(addedAtLoad); //keeps track of whether the playlist has been added to the pool or not.
   let buttonIcon;
 
   if (!added) {
