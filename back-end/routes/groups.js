@@ -9,6 +9,7 @@ const add_to_ban = require("../requests/put/add_to_ban");
 const kick_member = require("../requests/put/kick_member");
 const unban = require("../requests/put/unban");
 const get_banned_members = require("../requests/get/get_banned_members");
+let get_pool = require("../requests/get/get_pool")
 
 router.route("/").get((req, res) => {
   Group.find()
@@ -72,6 +73,10 @@ router.use("/kick_member/:group_id/:user_id/:bearer", user_id.get_user_id)
 router.put("/kick_member/:group_id/:user_id/:bearer", kick_member.kick_member)
 router.use("/unban/:group_id/:user_id/:bearer", user_id.get_user_id)
 router.put("/unban/:group_id/:user_id/:bearer", unban.unban)
+
+//get pool endpoint
+router.use("/get_pool/:group_id/:bearer", user_id.get_user_id)
+router.get("/get_pool/:group_id/:bearer", get_pool.get_pool)
 
 router.use("/playlist_id/:group_id/:bearer", user_id.get_user_id)
 router.get("/playlist_id/:group_id/:bearer", async (req, res, next) => {
