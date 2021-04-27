@@ -95,8 +95,7 @@ const AddMyMusic = (props) => {
                     method: "get",
                     url: `http://localhost:5000/groups/get_pool/${group_id}/${bearer}`
                   })
-                    .then(poolRes => {
-                      console.log("poolRes = ", poolRes)
+                    .then(poolRes => { 
                       setPool(poolRes.data.pool);
                       setuiLoading(false);
                     })
