@@ -77,6 +77,13 @@ const generate_playlist = async (req, res, next) => {
 
     let user_arrays = get_user_arrays(playlists)
 
+    if (empty_user_arrays(user_arrays))
+    {
+        const msg = "Error: no songs inside of any of the users' playlists"
+        //console.log(msg)
+        return next(new Error(msg))
+    }
+
     let occurrences = get_occurrences(user_arrays)
 
     let uris = [] //should be an array of track uri's (spotify:track:${track_id})
@@ -191,6 +198,21 @@ const get_user_arrays = (playlists) => { //gets an object of user arrays, each c
     })
 
     return user_songs
+}
+
+const empty_user_arrays = (user_arrays) => { //returns true if no songs are in any of the user arrays
+    let result = true
+    
+    Object.keys(user_arrays).forEach(user_id => {
+        let user_array = user_arrays[user_id]
+        //console.log("user_array = ", user_array)
+        if (user_array.length > 0)
+        {   
+            result = false
+        }
+    })
+
+    return result
 }
 
 const get_occurrences = (user_arrays) => { //gets an object of the format {song_occurrences: [], artist_occurrences: []}

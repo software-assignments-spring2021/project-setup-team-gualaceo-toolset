@@ -36,8 +36,16 @@ const backupPlaylists = [
     },
 ];
 
+const backupPool = [
+  {
+    added_by: "nobody",
+    playlist_id: "12345"
+  }
+]
+
 const AddMyMusic = (props) => {
   const [playlists, setPlaylists] = useState("unset");
+  const [pool, setPool] = useState(null)
   let history = useHistory();
   let location = useLocation()
   let state = location.state
@@ -73,19 +81,30 @@ const AddMyMusic = (props) => {
   
 
         //make call for playlists without track contents
+        let bearer = get_bearer(localStorage)
         axios({
             method: "get",
-            url: `http://localhost:5000/user_playlists/${get_bearer(localStorage)}/false` //true indicates we want playlists attached
+            url: `http://localhost:5000/user_playlists/${bearer}/false` //true indicates we want playlists attached
         }) //makes a call to the back-end
             .then((response) => {  
-                console.log(response.data)
-                
-            
                 if (playlists === "unset")
                 {
                   setPlaylists(response.data); //stores the result from the api call in playlists
-                  //console.log("playlists=", playlists);
-                  setuiLoading(false);
+                  //get and set the pool
+                  axios({
+                    method: "get",
+                    url: `http://localhost:5000/groups/get_pool/${group_id}/${bearer}`
+                  })
+                    .then(poolRes => { 
+                      setPool(poolRes.data.pool);
+                      setuiLoading(false);
+                    })
+                    .catch(err => {
+                      console.log("Error: Could not get pool")
+                      console.error(err)
+                      setPool(backupPool)
+                      setuiLoading(false)
+                    })
                 }
             })
             .catch((err) => {
@@ -96,6 +115,7 @@ const AddMyMusic = (props) => {
                 if (playlists === "unset")
                 {
                     setPlaylists(backupPlaylists);
+                    setPool(backupPool)
                     setuiLoading(false)
                 }
             });
@@ -140,7 +160,7 @@ const AddMyMusic = (props) => {
           </AppBar>
           <div className={classes.playlistContainer}>
             {playlists.map((item) => (
-              <Playlist playlist={item} group_id={group_id} has_tracks={haveTracks}></Playlist>
+              <Playlist playlist={item} pool={pool} group_id={group_id} has_tracks={haveTracks}></Playlist>
             ))}
           </div>
         </Container>

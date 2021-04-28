@@ -13,7 +13,23 @@ import styles from "../styles/playlistComponentStyles.js";
 import {get_bearer, set_authentication} from "../components/authentication"
 import axios from "axios"
 
-const pressButton = (event, added, setAdded, playlist, group_id) => {
+const pool_has_playlist = (pool, playlist_id) => {
+  for (let i = 0; i < pool.length; i++)
+  {
+    if (pool[i].playlist_id === playlist_id) //playlist was added by the current user to the pool already
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+const pressButton = (event, added, setAdded, playlist, group_id, buttonEnabled, setButtonEnabled) => {
+  if (!buttonEnabled)
+  {
+    return
+  }
+  setButtonEnabled(false)
   event.stopPropagation(); //Prevents dropdown from opening when button is pressed
   const playlist_id = playlist.id
   if (!added)
@@ -22,19 +38,32 @@ const pressButton = (event, added, setAdded, playlist, group_id) => {
       {
         method: "put",
         url: `http://localhost:5000/groups/add_to_pool/${group_id}/${playlist_id}/${get_bearer(localStorage)}`,
-        
       }
     )
       .then(res => {
         setAdded(true);
+        setButtonEnabled(true)
       })
       .catch(err => {
         console.log(err)
         console.log("Error encountered adding the playlist to the group")
+        setButtonEnabled(true)
       })
   } else {
     //should actually remove the group
-    setAdded(false);
+    axios({
+      method: "delete",
+      url: `http://localhost:5000/groups/remove_from_pool/${group_id}/${playlist_id}/${get_bearer(localStorage)}`
+    })
+      .then(res => {
+        setAdded(false);
+        setButtonEnabled(true)
+      })
+      .catch(err => {
+        console.log(err)
+        console.log("Error encountered removing the playlist from the group")
+        setButtonEnabled(true)
+      })
   }
   //In a later sprint (2 or 3), we should also actually add the playlist to the pool
 };
@@ -42,8 +71,11 @@ const pressButton = (event, added, setAdded, playlist, group_id) => {
 const Playlist = (props) => {
   const playlist = props.playlist;
   const group_id = props.group_id
+  const pool = props.pool
   const { classes } = props;
-  const [added, setAdded] = useState(false); //keeps track of whether the playlist has been added to the pool or not.
+  let addedAtLoad = pool_has_playlist(pool, playlist.id)
+  const [added, setAdded] = useState(addedAtLoad); //keeps track of whether the playlist has been added to the pool or not.
+  const [buttonEnabled, setButtonEnabled] = useState(true)
   let buttonIcon;
 
   if (!added) {
@@ -88,7 +120,7 @@ const Playlist = (props) => {
             className={classes.button}
             color="primary"
             onFocus={(event) => event.stopPropagation()}
-            onClick={(event) => pressButton(event, added, setAdded, playlist, group_id)}
+            onClick={(event) => pressButton(event, added, setAdded, playlist, group_id, buttonEnabled, setButtonEnabled)}
           >
             {buttonIcon}
           </IconButton>
