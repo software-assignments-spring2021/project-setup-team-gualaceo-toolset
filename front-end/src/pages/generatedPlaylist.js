@@ -24,6 +24,7 @@ const Playlist = (props) => {
   let location = useLocation()
   let state = location.state
   let group_id = state.id
+  let playlist_id = state.generated_playlist_id
   const {
     match: { params },
   } = props;
@@ -53,7 +54,7 @@ const Playlist = (props) => {
     }
   };
 
-  const handleRemoveSong = (delIndex, event) => {
+  const handleRemoveSong = async (delIndex, event) => {
     event.stopPropagation(); //Prevents song from opening when remove button is pressed
 
     console.log("removing song with key ", delIndex);
@@ -61,6 +62,30 @@ const Playlist = (props) => {
     let song_id = songs[delIndex].id
     console.log("deleting song ", song_id)
 
+    //make delete request to spotify
+    let tracks = {"tracks": [{"uri":`spotify:track:${song_id}`}]} 
+    let URL = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks`
+    let error = null
+
+    error = await axios({
+        method: "delete",
+        url: URL,
+        data: tracks,
+      })
+      .then(res => {
+        console.log(res)
+        return false
+      })
+      .catch(err => {
+        console.log("Error: could not remove track from playlist")
+        console.log(err)
+        return true
+      })
+    
+    if (error)
+    {
+      return
+    }
 
     let newSongs = []; //create a new array with every element except for the one we want to delete
     let curIndex = 0;
