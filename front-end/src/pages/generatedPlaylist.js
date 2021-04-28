@@ -41,16 +41,23 @@ const Playlist = (props) => {
 
   const handleAddMusic = () => {
     console.log("add songs");
-    history.push("/addSongs");
+    history.push({
+      pathname: "/addSongs",
+      state:state
+    });
   };
 
   const handleGoBack = () => {
     if (isOwner) {
-      history.push("/groupMenuOwner/generated");
-    } else if (isGuest) {
-      history.push("/groupMenuGuest/generated");
+      history.push({
+        pathname: "/groupMenuOwner/generated",
+        state: state
+      });
     } else {
-      history.push("/groupMenu/generated");
+      history.push({
+        pathname: "/groupMenu/generated",
+        state: state
+      });
     }
   };
 
@@ -63,6 +70,10 @@ const Playlist = (props) => {
     console.log("deleting song ", song_id)
 
     //make delete request to spotify
+    if (is_expired(localStorage)){ //first check that the bearer has not yet expired first
+      return history.push("/");
+    }
+
     let tracks = {"tracks": [{"uri":`spotify:track:${song_id}`}]} 
     let URL = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks`
     let error = null
