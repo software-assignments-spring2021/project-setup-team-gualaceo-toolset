@@ -58,7 +58,21 @@ const get_generated_playlist = async (req, res, next) => {
         return next(error)
     }
     
-    res.send(tracks)
+    let curated_tracks = [] //strip any unecessary information for sake of front-end
+    tracks.forEach(track => {
+        let curated_track = {}
+        curated_track.title = track.track.name
+        if (!track.track.artists[0]) //no artist info available
+        {
+            curated_track.artist = "Unknown"
+        } else {
+        curated_track.artist = track.track.artists[0].name
+        }
+        curated_track.id = track.track.id
+        curated_tracks.push(curated_track)
+    })
+
+    res.send(curated_tracks)
 }
 
 module.exports = {
