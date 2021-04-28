@@ -17,14 +17,13 @@ import IconButton from "@material-ui/core/IconButton";
 import RemoveIcon from "@material-ui/icons/Remove";
 import styles from "../styles/generatedPlaylistStyles";
 import axios from "axios";
-import { set_authentication, is_expired } from "../components/authentication";
+import { set_authentication, is_expired, get_bearer } from "../components/authentication";
 
 const Playlist = (props) => {
   let history = useHistory();
   let location = useLocation()
   let state = location.state
   let group_id = state.id
-  let generated_playlist_id = state.generated_playlist_id
   const {
     match: { params },
   } = props;
@@ -58,6 +57,10 @@ const Playlist = (props) => {
     event.stopPropagation(); //Prevents song from opening when remove button is pressed
 
     console.log("removing song with key ", delIndex);
+    
+    let song_id = songs[delIndex].id
+    console.log("deleting song ", song_id)
+
 
     let newSongs = []; //create a new array with every element except for the one we want to delete
     let curIndex = 0;
@@ -81,11 +84,11 @@ const Playlist = (props) => {
     if (!isGuest && previousSongsRef.current === songs) {
       axios({
         method: "get",
-        url: `https://api.spotify.com/v1/playlists/${generated_playlist_id}/tracks`,
+        url: `http://localhost:5000/groups/get_generated_playlist/${group_id}/${get_bearer(localStorage)}`,
       })
         .then((res) => {
           setSongs(res.data.songs);
-          // console.log(res.data[0].songs);
+          console.log(res.data.songs);
           setuiLoading(false);
         })
         .catch((err) => console.log(err));

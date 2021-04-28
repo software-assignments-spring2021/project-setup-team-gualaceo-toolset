@@ -71,8 +71,8 @@ const get_generated_playlist = async (req, res, next) => {
         curated_track.id = track.track.id
         curated_tracks.push(curated_track)
     })
-
-    res.send(curated_tracks)
+    
+    res.json({songs: curated_tracks})
 }
 
 module.exports = {
