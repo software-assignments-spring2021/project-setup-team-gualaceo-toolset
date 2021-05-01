@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
-import Avatar from "@material-ui/core/avatar";
+import Avatar from "@material-ui/core/Avatar";
 import Accordion from "@material-ui/core/Accordion";
 import TextField from "@material-ui/core/TextField";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
