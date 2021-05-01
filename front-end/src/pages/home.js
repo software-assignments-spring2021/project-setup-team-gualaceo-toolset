@@ -226,7 +226,7 @@ const Home = (props) => {
       //Follow the playlist
       axios({
         method: "put",
-        url: `https://api.spotify.com/v1/playlists/${currGroup.id}/followers`,
+        url: `https://api.spotify.com/v1/playlists/${currGroup.generated_playlist_id}/followers`,
         data: {
           public: true,
         },
