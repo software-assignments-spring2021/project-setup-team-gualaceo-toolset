@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent } from "@material-ui/core";
@@ -26,6 +26,10 @@ import _ from "lodash";
 
 const AddSongs = (props) => {
   let history = useHistory();
+  let location = useLocation()
+  let state = location.state
+  let group_id = state.id
+  let playlist_id = state.generated_playlist_id
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,6 +48,13 @@ const AddSongs = (props) => {
         return prev;
       }, {});
   };
+
+  const handleGoBack = () => {
+    history.push({
+      pathname: "/generatedPlaylist/owner",
+      state:state
+    });
+  }
 
   const handleSearchTermChange = (term) => {
     let editedRes = [];
@@ -145,7 +156,7 @@ const AddSongs = (props) => {
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
             <Button
-              onClick={() => history.push("/generatedPlaylist/owner")}
+              onClick={handleGoBack}
               startIcon={<ArrowBackIosIcon className={classes.back} />}
             ></Button>
             <Typography variant="h5" className={classes.heading}>

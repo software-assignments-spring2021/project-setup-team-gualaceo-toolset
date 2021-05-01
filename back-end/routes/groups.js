@@ -8,6 +8,7 @@ const get_members_and_owners = require("../requests/get/get_members_and_owners")
 const add_to_ban = require("../requests/put/add_to_ban");
 const kick_member = require("../requests/put/kick_member");
 const unban = require("../requests/put/unban");
+const get_generated_playlist = require("../requests/get/get_generated_playlist")
 const get_banned_members = require("../requests/get/get_banned_members");
 let get_pool = require("../requests/get/get_pool")
 
@@ -77,6 +78,10 @@ router.put("/unban/:group_id/:user_id/:bearer", unban.unban)
 //get pool endpoint
 router.use("/get_pool/:group_id/:bearer", user_id.get_user_id)
 router.get("/get_pool/:group_id/:bearer", get_pool.get_pool)
+
+//get generated playlist endpoint
+router.use("/get_generated_playlist/:group_id/:bearer", user_id.get_user_id)
+router.get("/get_generated_playlist/:group_id/:bearer", get_generated_playlist.get_generated_playlist)
 
 router.use("/playlist_id/:group_id/:bearer", user_id.get_user_id)
 router.get("/playlist_id/:group_id/:bearer", async (req, res, next) => {
