@@ -39,39 +39,6 @@ const Home = (props) => {
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [myGroups, setMyGroups] = useState([]);
 
-  let groups = [
-    {
-      name: "Work Buddies",
-      owner: true,
-      generationRequested: true,
-    },
-    {
-      name: "Alexa's Party",
-      owner: false,
-      generationRequested: true,
-    },
-    {
-      name: "Gaming Friends",
-      owner: true,
-      generationRequested: false,
-    },
-    {
-      name: "Grandma's House",
-      owner: false,
-      generationRequested: false,
-    },
-    {
-      name: "Grandpa's House",
-      owner: false,
-      generationRequested: false,
-    },
-    {
-      name: "Josh's Party",
-      owner: false,
-      generationRequested: false,
-    },
-  ];
-
   const getParamValues = (url) => {
     return url
       .slice(1)
@@ -131,7 +98,8 @@ const Home = (props) => {
           url: `http://localhost:5000/groups/me/${nameRes.data.id}`,
         })
           .then((response) => {
-            response.data.forEach((playlist) => { //in this context "playlist" refers to a group.
+            response.data.forEach((playlist) => {
+              //in this context "playlist" refers to a group.
               axios({
                 method: "get",
                 url: `https://api.spotify.com/v1/playlists/${playlist.generated_playlist_id}`,
@@ -142,13 +110,15 @@ const Home = (props) => {
                     {
                       name: res.data.name,
                       owner: playlist.owners.includes(nameRes.data.id),
-                      id: playlist._id
+                      id: playlist._id,
                     },
                   ]);
                 })
                 .catch((err) => console.log(err));
             });
             console.log(response.data);
+          })
+          .then((res) => {
             setuiLoading(false);
           })
           .catch((err) => {
@@ -207,7 +177,7 @@ const Home = (props) => {
                 console.log({ name: res.data.name, id: groupName });
                 history.push({
                   pathname: "/groupMenu",
-                  state: { name: res.data.name, id: groupName },
+                  state: { name: res.data.name, id: groupName, userid: userid },
                 });
               })
               .catch((err) => {
@@ -236,58 +206,6 @@ const Home = (props) => {
         })
         .catch((err) => console.log(err));
     }
-    /* 
-
-    if (groupName) {
-      console.log(groupName);
-      // return history.push("/groupMenuOwner");
-      if (is_expired(localStorage)) {
-        return history.push("/");
-      }
-      set_authentication(localStorage, axios);
-      // Create the playlist
-      axios({
-        method: "post",
-        url: `https://api.spotify.com/v1/users/${userid}/group`,
-        data: {
-          name: groupName,
-          description: "This playlist was generated using Synthesize.",
-          public: true,
-        },
-      })
-        .then((res) => {
-          console.log(res);
-          // Add the playlist to the DB
-          axios({
-            method: "post",
-            url: `http://localhost:5000/group/add`,
-            data: { owners: userid, members: userid, href: res.data.href },
-          })
-            .then((res) => {
-              console.log(res);
-            })
-            .catch((err) => console.log(err));
-          //Follow the playlist
-          axios({
-            method: "put",
-            url: `https://api.spotify.com/v1/playlists/${res.data.id}/followers`,
-            data: {
-              public: true,
-            },
-          })
-            .then((res) => {
-              console.log(res);
-              history.push("/groupMenuOwner");
-            })
-            .catch((err) => console.log(err));
-        })
-        .catch((err) => console.log(err));
-    }
-    // if (isValidID) {
-    history.push("/groupMenu");
-
-    // }
- */
   };
 
   const handleCreate = (event) => {
@@ -324,7 +242,7 @@ const Home = (props) => {
             },
           })
             .then((localRes) => {
-              console.log("localRes =" , localRes);
+              console.log("localRes =", localRes);
               axios({
                 method: "put",
                 url: `https://api.spotify.com/v1/playlists/${response.data.id}/followers`,
@@ -336,7 +254,11 @@ const Home = (props) => {
                   console.log(res);
                   history.push({
                     pathname: "/groupMenuOwner",
-                    state: { name: groupName, id: localRes.data._id },
+                    state: {
+                      name: groupName,
+                      id: localRes.data._id,
+                      userid: userid,
+                    },
                   });
                   // history.push("/groupMenuOwner");
                 })
@@ -353,7 +275,7 @@ const Home = (props) => {
   const handleVisit = (pageLink, name, group_id) => {
     history.push({
       pathname: pageLink,
-      state: { name: name, id: group_id},
+      state: { name: name, id: group_id, userid: userid },
     });
   };
 
