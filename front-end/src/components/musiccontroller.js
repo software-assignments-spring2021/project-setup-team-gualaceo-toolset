@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Typography, DialogTitle } from "@material-ui/core";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
-import Avatar from "@material-ui/core/avatar";
+import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import Slider from "@material-ui/core/Slider";
 import Dialog from "@material-ui/core/Dialog";
