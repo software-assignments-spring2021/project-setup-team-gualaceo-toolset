@@ -87,7 +87,7 @@ describe("Check user info", async () => {
       let status_code;
 
       let passed = await axios
-        .get(`http://localhost:5000/groups/id/${group}`)
+        .get(`${back_end_uri}/groups/id/${group}`)
         .then((res) => {
           status_code = res.status;
         })
@@ -104,7 +104,7 @@ describe("Check user info", async () => {
     it("can add a new user", async () => {
       let status_code;
       let passed = await axios
-        .post(`http://localhost:5000/users/add`, {
+        .post(`${back_end_uri}/users/add`, {
           username: "dk3730",
         })
         .then((res) => {
