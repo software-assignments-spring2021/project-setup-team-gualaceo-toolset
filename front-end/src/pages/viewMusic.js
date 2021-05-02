@@ -1,31 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
 // import Avatar from "@material-ui/core/avatar";
-import Accordion from "@material-ui/core/Accordion";
 import TextField from "@material-ui/core/TextField";
-// import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { useHistory, Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
-import Box from "@material-ui/core/Box";
-// import Dialog from "@material-ui/core/Dialog";
-// import DialogActions from "@material-ui/core/DialogActions";
-// import DialogContent from "@material-ui/core/DialogContent";
-// import DialogContentText from "@material-ui/core/DialogContentText";
-// import DialogTitle from "@material-ui/core/DialogTitle";
 import backgroundWhite from "../media/background_white.png";
+
+import Error from "../components/error";
 import Loading from "../components/loading";
+import Logout from "../components/logout";
+
 import {
   get_bearer,
   set_authentication,
   is_expired,
 } from "../components/authentication.js";
-import Logout from "../components/logout";
+
 import { useLocation } from "react-router-dom";
+
 import axios from "axios";
 
 import styles from "../styles/viewMusicStyles";
@@ -38,7 +33,7 @@ const ViewMusic = (props) => {
   const [uiLoading, setuiLoading] = useState(true);
   const [playlists, setPlaylists] = useState([]);
   const [initPlaylists, setInitPlaylists] = useState([]);
-
+  const [errors, setErrors] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
 
   useEffect(() => {
@@ -114,10 +109,27 @@ const ViewMusic = (props) => {
     }
   };
 
-  const handleSpotifyOpen = (id) => {
-    console.log(location.state);
-    window.open(`https://open.spotify.com/playlist/${id}`, "_blank");
-    console.log(location.state);
+  const handleRemove = (playlist) => {
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "delete",
+      url: `http://localhost:5000/groups/remove_from_pool/${
+        location.state.id
+      }/${playlist.id}/${get_bearer(localStorage)}`,
+    })
+      .then((res) => {
+        setErrors(
+          `You have removed ${playlist.name} from the pool, but the songs from this list will not be removed until the playlist is regenerated.`
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    console.log(playlist);
   };
 
   const goBack = () => {
@@ -175,7 +187,8 @@ const ViewMusic = (props) => {
                 />
               </div>
             </Toolbar>
-          </AppBar>
+          </AppBar>{" "}
+          <Error error={errors} setError={setErrors} severity="info" />
           <div className={classes.addMyMusicButtonContainer}>
             <Button
               color="primary"
@@ -195,30 +208,41 @@ const ViewMusic = (props) => {
               // onKeyDown={handleKeyDown}
             />
           </div>
-          {playlists.map((playlist) => (
-            <a
-              style={{ textDecoration: "none" }}
-              rel="noopener noreferrer"
-              href={`https://open.spotify.com/playlist/${playlist.id}`}
-              target="_blank"
-              // onClick={() => handleSpotifyOpen(playlist.id)}
-            >
-              <Card className={classes.cards}>
-                <div className={classes.cardContent}>
-                  <div style={{ flex: 1 }}>
-                    <Typography>
-                      <div style={{ margin: "7px" }}>{playlist.name}</div>
-                    </Typography>
+          {playlists.map((playlist, i) => (
+            <div key={i} style={{ display: "flex", width: "100%" }}>
+              <a
+                style={{ textDecoration: "none", display: "flex" }}
+                rel="noopener noreferrer"
+                href={`https://open.spotify.com/playlist/${playlist.id}`}
+                target="_blank"
+                // onClick={() => handleSpotifyOpen(playlist.id)}
+              >
+                <Card style={{ flex: 1, width: "100%" }}>
+                  <div className={classes.cardContent}>
+                    <div>
+                      <Typography>
+                        <div style={{ margin: "7px" }}>{playlist.name}</div>
+                      </Typography>
+                    </div>
                   </div>
-                  {/* <Divider></Divider> */}
-                  <div style={{ flex: 1, marginRight: "-90px" }}>
-                    {playlist.can_remove ? (
-                      <Button variant="outlined">Remove</Button>
-                    ) : null}
+                </Card>
+              </a>
+              {playlist.can_remove ? (
+                <Card>
+                  <div style={{ flex: 1 }} className={classes.removeButton}>
+                    <div>
+                      <Button
+                        onClick={() => {
+                          handleRemove(playlist);
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </Card>
-            </a>
+                </Card>
+              ) : null}
+            </div>
           ))}
         </div>
       </Container>

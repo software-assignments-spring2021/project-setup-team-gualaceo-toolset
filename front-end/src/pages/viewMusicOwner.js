@@ -156,7 +156,7 @@ const ViewMusicOwner = (props) => {
                 />
               </div>
             </Toolbar>
-          </AppBar>{" "}
+          </AppBar>
           <Error error={errors} setError={setErrors} severity="info" />
           <div className={classes.addMyMusicButtonContainer}>
             <Button
@@ -178,8 +178,8 @@ const ViewMusicOwner = (props) => {
                 // onKeyDown={handleKeyDown}
               />
             </div>
-            {playlists.map((playlist) => (
-              <div style={{ display: "flex", width: "100%" }}>
+            {playlists.map((playlist, i) => (
+              <div key={i} style={{ display: "flex", width: "100%" }}>
                 <a
                   style={{ textDecoration: "none", display: "flex" }}
                   rel="noopener noreferrer"
