@@ -84,14 +84,20 @@ const ViewMusic = (props) => {
         console.log(err);
       });
   }, []);
+  let searchResults = playlists;
 
   const handleSearchTermChange = (event) => {
     console.log(event.target.value);
-    console.log(initPlaylists);
     console.log(playlists);
     if (event.target.value !== "") {
-      let searchResults = [];
-      playlists.forEach((playlist) => {
+      // playlists.filter((result) => {
+      //   // console.log(result);
+      //   return result.name
+      //     .toLowerCase()
+      //     .includes(event.target.value.toLowerCase());
+      // });
+      // searchResults = [];
+      searchResults.forEach((playlist) => {
         if (playlist.name.includes(event.target.value)) {
           searchResults.push(playlist);
         }

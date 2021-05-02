@@ -23,8 +23,15 @@ const styles = (theme) => ({
   },
   cardContent: {
     margin: "10px",
-    marginLeft: "20px",
-    marginRight: "20px",
+    // marginLeft: "20px",
+    textAlign: "right",
+    // marginRight: "20px",
+    display: "flex",
+  },
+  removeButton: {
+    margin: "10px",
+
+    textAlign: "right",
     display: "flex",
   },
   heading: {
