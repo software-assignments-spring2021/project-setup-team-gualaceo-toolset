@@ -1,129 +1,150 @@
 import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
-// import Avatar from "@material-ui/core/Avatar";
-import Accordion from "@material-ui/core/Accordion";
+// import Avatar from "@material-ui/core/avatar";
 import TextField from "@material-ui/core/TextField";
-// import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
-import Box from "@material-ui/core/Box";
-// import Dialog from "@material-ui/core/Dialog";
-// import DialogActions from "@material-ui/core/DialogActions";
-// import DialogContent from "@material-ui/core/DialogContent";
-// import DialogContentText from "@material-ui/core/DialogContentText";
-// import DialogTitle from "@material-ui/core/DialogTitle";
 import backgroundWhite from "../media/background_white.png";
+
+import Error from "../components/error";
 import Loading from "../components/loading";
-import { is_expired } from "../components/authentication.js";
 import Logout from "../components/logout";
+
+import {
+  get_bearer,
+  set_authentication,
+  is_expired,
+} from "../components/authentication.js";
+
 import { useLocation } from "react-router-dom";
 
-// import Logout from "../components/logout";
+import axios from "axios";
 
-const styles = (theme) => ({
-  root: {
-    padding: theme.spacing(2),
-    backgroundSize: "contain",
-  },
-  accordion: {
-    marginTop: "10px",
-    boxShadow: "0 8px 18px -12px rgba(0,0,0,0.3)",
-    borderRadius: "10px",
-    top: "10%",
-    border: "0px solid rgba(0, 0, 0, .125)",
-  },
-  avatar: {
-    height: 50,
-    width: 40,
-    flexShrink: 0,
-    flexGrow: 0,
-    borderRadius: "8px",
-  },
-  back: { color: theme.palette.secondary.main },
-  backgroundImg: {
-    position: "absolute",
-    width: "100%",
-    left: "0%",
-    top: "0%",
-    height: "100%",
-    objectFit: "cover",
-    zIndex: "-1",
-  },
-  cards: {
-    marginTop: "10px",
-    boxShadow: "0 8px 18px -12px rgba(0,0,0,0.3)",
-    "&:hover": {
-      boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
-    },
-    top: "10%",
-  },
-  heading: {
-    // marginRight: "auto",
-    // marginLeft: "-20px",
-    color: theme.palette.secondary.main,
-    fontWeight: "900",
-  },
-  logout: { color: theme.palette.secondary.contrastText },
-  toolbar: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-  addMyMusicButtonContainer: {
-    display: "flex",
-    justifyContent: "center",
-    paddingBottom: "10px",
-  },
-});
+import styles from "../styles/viewMusicStyles";
 
-const Home = (props) => {
+const ViewMusic = (props) => {
   let history = useHistory();
   let location = useLocation();
-  let state = location.state
+  let state = location.state;
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
-
+  const [playlists, setPlaylists] = useState([]);
+  const [initPlaylists, setInitPlaylists] = useState([]);
+  const [errors, setErrors] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
-
-  const playlists = [
-    "Frank's playlist",
-    "Alexa's playlist",
-    "Sam's playlist",
-    "Bob's playlist",
-    "Bob's playlist 2",
-  ];
-  const songlists = [
-    "Kendrick Lamar - Humble",
-    "Tyler, the creator - Boredom",
-    "The Notorious B.I.G. - Juicy",
-    "Tyler, the creator - answer",
-  ];
-  const songlists_2 = ["Song 1", "Song 2", "Song 3", "Song 4"];
 
   useEffect(() => {
     if (is_expired(localStorage)) {
       return history.push("/");
     }
-    setuiLoading(false);
+    set_authentication(localStorage, axios);
+    axios({
+      method: "get",
+      url: `http://localhost:5000/groups/get_pool/${state.id}/${get_bearer(
+        localStorage
+      )}`,
+    })
+      .then((res) => {
+        res.data.pool.forEach((pl) => {
+          axios({
+            method: "get",
+            url: `https://api.spotify.com/v1/playlists/${pl.playlist_id}`,
+          })
+            .then((response) => {
+              setPlaylists((playlists) => [
+                ...playlists,
+                {
+                  name: response.data.name,
+                  can_remove: pl.added_by === state.userid,
+                  id: pl.playlist_id,
+                },
+              ]);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        });
+      })
+      .then((res) => {
+        setuiLoading(false);
+      })
+      .then((res) => {
+        console.log(playlists);
+        setInitPlaylists(playlists);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
+  let searchResults = playlists;
+
+  const handleSearchTermChange = (event) => {
+    console.log(event.target.value);
+    console.log(playlists);
+    if (event.target.value !== "") {
+      // playlists.filter((result) => {
+      //   // console.log(result);
+      //   return result.name
+      //     .toLowerCase()
+      //     .includes(event.target.value.toLowerCase());
+      // });
+      // searchResults = [];
+      searchResults.forEach((playlist) => {
+        if (playlist.name.includes(event.target.value)) {
+          searchResults.push(playlist);
+        }
+      });
+      setPlaylists(searchResults);
+    } else {
+      setPlaylists(initPlaylists);
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.keyCode === 46 || event.keyCode === 8) {
+      handleSearchTermChange(event);
+    }
+  };
+
+  const handleRemove = (playlist) => {
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "delete",
+      url: `http://localhost:5000/groups/remove_from_pool/${
+        location.state.id
+      }/${playlist.id}/${get_bearer(localStorage)}`,
+    })
+      .then((res) => {
+        setErrors(
+          `You have removed ${playlist.name} from the pool, but the songs from this list will not be removed until the playlist is regenerated.`
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    console.log(playlist);
+  };
 
   const goBack = () => {
     history.push({
       pathname: "/groupmenu",
       state: state,
-    })
+    });
   };
 
   const goToAddMyMusic = () => {
-
     history.push({
       pathname: "/addMyMusic/member",
       state: state,
-    })
+    });
+    // console.log(state);
   };
 
   if (uiLoading === true) {
@@ -166,7 +187,8 @@ const Home = (props) => {
                 />
               </div>
             </Toolbar>
-          </AppBar>
+          </AppBar>{" "}
+          <Error error={errors} setError={setErrors} severity="info" />
           <div className={classes.addMyMusicButtonContainer}>
             <Button
               color="primary"
@@ -177,90 +199,50 @@ const Home = (props) => {
             </Button>
           </div>
           <div>
-            <Card fullWidth className={classes.cards}>
-              <TextField
-                style={{ width: "120%" }}
-                label="Search"
-                variant="outlined"
-                size="small"
-              />
-            </Card>
-            <Accordion square={true} className={classes.accordion}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>
-                  <div style={{ margin: "5px" }}>Your rap playlist 23</div>
-                </Typography>
-                <Divider></Divider>
-                <Button variant="outlined">Remove</Button>
-              </AccordionSummary>
-              <Divider></Divider>
-              {songlists.map((songName) => (
-                <Card fullWidth className={classes.cards}>
-                  <CardContent style={{ marginBottom: "-10px" }}>
-                    <Box display="flex" flexDirection="row">
-                      <Box>
-                        <Typography
-                          style={{ marginLeft: "15px", marginTop: "10px" }}
-                        >
-                          {songName}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </CardContent>
-                </Card>
-              ))}
-            </Accordion>
-
-            <Accordion square={true} className={classes.accordion}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>
-                  <div style={{ margin: "5px" }}>Your playlist 2</div>
-                </Typography>
-                <Divider></Divider>
-                <Button variant="outlined">Remove</Button>
-              </AccordionSummary>
-              <Divider></Divider>
-              {songlists_2.map((songName) => (
-                <Card fullWidth className={classes.cards}>
-                  <CardContent style={{ marginBottom: "-10px" }}>
-                    <Box display="flex" flexDirection="row">
-                      <Box>
-                        <Typography
-                          style={{ marginLeft: "15px", marginTop: "10px" }}
-                        >
-                          {songName}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </CardContent>
-                </Card>
-              ))}
-            </Accordion>
+            <TextField
+              className={classes.search}
+              label="Search"
+              variant="outlined"
+              size="small"
+              onChange={handleSearchTermChange}
+              // onKeyDown={handleKeyDown}
+            />
           </div>
-          {playlists.map((playlistName) => (
-            <Accordion square={true} className={classes.accordion}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>
-                  <div style={{ margin: "7px" }}>{playlistName}</div>
-                </Typography>
-              </AccordionSummary>
-              <Divider></Divider>
-              {songlists_2.map((songName) => (
-                <Card fullWidth className={classes.cards}>
-                  <CardContent style={{ marginBottom: "-10px" }}>
-                    <Box display="flex" flexDirection="row">
-                      <Box>
-                        <Typography
-                          style={{ marginLeft: "15px", marginTop: "10px" }}
-                        >
-                          {songName}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </CardContent>
+          {playlists.map((playlist, i) => (
+            <div key={i} style={{ display: "flex", width: "100%" }}>
+              <a
+                style={{ textDecoration: "none", display: "flex" }}
+                rel="noopener noreferrer"
+                href={`https://open.spotify.com/playlist/${playlist.id}`}
+                target="_blank"
+                // onClick={() => handleSpotifyOpen(playlist.id)}
+              >
+                <Card style={{ flex: 1, width: "100%" }}>
+                  <div className={classes.cardContent}>
+                    <div>
+                      <Typography>
+                        <div style={{ margin: "7px" }}>{playlist.name}</div>
+                      </Typography>
+                    </div>
+                  </div>
                 </Card>
-              ))}
-            </Accordion>
+              </a>
+              {playlist.can_remove ? (
+                <Card>
+                  <div style={{ flex: 1 }} className={classes.removeButton}>
+                    <div>
+                      <Button
+                        onClick={() => {
+                          handleRemove(playlist);
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ) : null}
+            </div>
           ))}
         </div>
       </Container>
@@ -268,4 +250,4 @@ const Home = (props) => {
   }
 };
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(ViewMusic);

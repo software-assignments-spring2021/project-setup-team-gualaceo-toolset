@@ -10,7 +10,6 @@ import { IconButton } from "@material-ui/core";
 
 const Error = (props) => {
   const { classes } = props;
-  const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = [props.error, props.setError];
 
   const handleClose = () => {
@@ -20,25 +19,17 @@ const Error = (props) => {
   return (
     <div className={classes.root}>
       <div
-        // onClose={handleEmptyField}
-        // open={this.state.openEmptyField}
         style={
           error
             ? {
                 display: "block",
-                // zIndex: 9999,
                 top: "700px",
               }
             : { display: "none" }
         }
       >
         <Collapse in={error}>
-          <Alert
-            // className={classes.alert}
-            severity={props.severity}
-            open={true}
-            // onClose={handleEmptyField}
-          >
+          <Alert severity={props.severity} open={true}>
             <AlertTitle>
               {props.severity === "error" ? "Error" : "Success"}
             </AlertTitle>

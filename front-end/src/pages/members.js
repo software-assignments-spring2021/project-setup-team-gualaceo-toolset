@@ -11,50 +11,53 @@ import Loading from "../components/loading";
 import Logout from "../components/logout";
 import axios from "axios";
 import styles from "../styles/membersStyles.js";
-import {get_bearer, is_expired} from "../components/authentication.js"
+import { get_bearer, is_expired } from "../components/authentication.js";
 
 const Members = (props) => {
   let history = useHistory();
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
-  const [memberlist, setMemberlist] = useState(null)
-  let location = useLocation()
-  let state = location.state
-  let group_id = state.id
+  const [memberlist, setMemberlist] = useState(null);
+  let location = useLocation();
+  let state = location.state;
+  let group_id = state.id;
 
   const goLastPage = () => {
     return history.push({
       pathname: "/groupMenu",
-      state: state
-    })
-  }
+      state: state,
+    });
+  };
 
   useEffect(() => {
-    if (is_expired(localStorage))
-    {
-      return history.push("/"); 
+    if (is_expired(localStorage)) {
+      return history.push("/");
     }
 
-    axios(`http://localhost:5000/groups/get_members_and_owners/${group_id}/${get_bearer(localStorage)}`)
-      .then(res => {
-        console.log("res=",res)
-        let new_memberlist = []
-        res.data.members.forEach(member => {
+    axios(
+      `http://localhost:5000/groups/get_members_and_owners/${group_id}/${get_bearer(
+        localStorage
+      )}`
+    )
+      .then((res) => {
+        console.log("res=", res);
+        let new_memberlist = [];
+        res.data.members.forEach((member) => {
           new_memberlist.push({
             name: member,
             owner: res.data.owners.includes(member),
-            self: res.data.requester === member
-          })
-        })
-        console.log(new_memberlist)
-        setMemberlist(new_memberlist)
+            self: res.data.requester === member,
+          });
+        });
+        console.log(new_memberlist);
+        setMemberlist(new_memberlist);
         setuiLoading(false);
       })
-      .catch(err => {
-        console.log("Error encountered in members.js")
-        console.log(err)
-      })
+      .catch((err) => {
+        console.log("Error encountered in members.js");
+        console.log(err);
+      });
   }, [history]);
 
   if (uiLoading === true) {
@@ -92,8 +95,9 @@ const Members = (props) => {
                 </div>
               </Toolbar>
             </AppBar>
-            {memberlist.map((member) => (
+            {memberlist.map((member, i) => (
               <Card
+                key={i}
                 fullWidth
                 className={member.owner ? classes.cardsALT : classes.cards}
               >
