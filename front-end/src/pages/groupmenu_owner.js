@@ -5,11 +5,6 @@ import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import addNotification from "react-push-notification";
 import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
@@ -218,8 +213,12 @@ const GroupMenuOwner = (props) => {
                 onClick={() => history.push("/home")}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
-              <Typography onClick={handleCopyID} className={classes.heading}>
-                Group ID: {groupID}
+              <Typography
+                variant="caption"
+                onClick={handleCopyID}
+                className={classes.heading}
+              >
+                <center>Group ID: {groupID}</center>
               </Typography>
               <Button
                 color="inherit"

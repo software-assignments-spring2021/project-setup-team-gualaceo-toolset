@@ -46,6 +46,7 @@ const styles = (theme) => ({
     justifyContent: "space-between",
   },
   search: { width: "100%", marginTop: "10px", marginBottom: "10px" },
+
   addMyMusicButtonContainer: {
     display: "flex",
     justifyContent: "center",
