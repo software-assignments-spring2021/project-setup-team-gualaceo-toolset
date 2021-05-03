@@ -67,13 +67,13 @@ router.put(
 
 router.delete("/remove_from_pool/:group_id/:playlist_id/:bearer", remove_from_pool.remove_from_pool)
 
-router.use("/add_members/:group_id/:user_i", user_id.get_user_id);
+router.use("/add_members/:group_id/:bearer", user_id.get_user_id);
 router.use("/add_to_ban/:group_id/:user_id/:bearer", user_id.get_user_id);
 router.use("/kick_member/:group_id/:user_id/:bearer", user_id.get_user_id)
 router.use("/unban/:group_id/:user_id/:bearer", user_id.get_user_id)
 
 
-router.put("/add_members/:group_id/:user_id", add_members.add_members)
+router.put("/add_members/:group_id/:bearer", add_members.add_members)
 router.put("/add_to_ban/:group_id/:user_id/:bearer", add_to_ban.add_to_ban)
 router.put("/kick_member/:group_id/:user_id/:bearer", kick_member.kick_member)
 router.put("/unban/:group_id/:user_id/:bearer", unban.unban)
