@@ -70,7 +70,7 @@ app.use((req, res, next) => {
 
 //Get and set user info if required (middleware)
 app.use("/user_playlists/:bearer/:include_tracks", user_id.get_user_id) // sets res.user_id to the user_id (if the bearer token is valid)
-app.use("/follow_playlist/:bearer/:playlist_id", user_id.get_user_id)
+app.use("/follow_playlist/:bearer/:group_id", user_id.get_user_id)
 app.use("/remove_tracks/:bearer/:playlist_id/:track_id", user_id.get_user_id)
 app.use("/create_playlist/:group_id/:bearer/", user_id.get_user_id)
 app.use("/generate_playlist/:playlist_name/:group_id/:bearer/", user_id.get_user_id)
@@ -93,8 +93,8 @@ app.delete(
   "/remove_tracks/:bearer/:playlist_id/:track_id",
   remove_tracks.remove_tracks
 );
-app.get(
-  "/follow_playlist/:bearer/:playlist_id",
+app.put(
+  "/follow_playlist/:bearer/:group_id",
   follow_playlist.follow_playlist
 );
 
