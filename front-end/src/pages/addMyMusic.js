@@ -75,7 +75,6 @@ const AddMyMusic = (props) => {
   }
 
   useEffect(() => {
-
     if (is_expired(localStorage))
     {
       return history.push("/"); 

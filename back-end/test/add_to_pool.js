@@ -12,6 +12,8 @@ const set_authentication = require("../requests/other/authentication").set_authe
 const sample_playlist_id = "3PLPVWNT4CMjqSLpoRThxf" //note, as this is hardcoded, if the playlist is deleted this test will fail! I don't plan on deleting it, but I ever do accidentally, please change the playlist id here
 const other_user_sample_playlist_one = "26HeHZSvi7Q9BmRhxJxwt9"
 const other_user_sample_playlist_two = "76bxZcSKj8D5lFnc2BgtWd"
+require("dotenv").config();
+
 let user_id = ""
 const run_add_to_pool_tests = async bearer => {
  //Testing for add_to_pool endpoint
@@ -20,7 +22,6 @@ const run_add_to_pool_tests = async bearer => {
     before(async () => {
       //connect to MongoDB
       const uri = process.env.ATLAS_URI;
-      const back_end_uri = process.env.REACT_APP_BACK_END_URI
       await mongoose.connect(uri, {
         keepAlive: true,
         useNewUrlParser: true,
@@ -128,7 +129,7 @@ const run_add_to_pool_tests = async bearer => {
       it('can add to pool', async () => {
         const playlist_id = sample_playlist_id 
         let status_code
-        let passed = await axios.put(`${back_end_uri}/groups/add_to_pool/${group_id}/${playlist_id}/${bearer}`) 
+        let passed = await axios.put(`http://localhost:5000/groups/add_to_pool/${group_id}/${playlist_id}/${bearer}`) 
           .then((res) => {
             status_code = res.status
           })
@@ -143,7 +144,7 @@ const run_add_to_pool_tests = async bearer => {
       it('can not add the same playlist twice', async () => {
         const playlist_id = sample_playlist_id 
 
-        let passed = await axios.put(`${back_end_uri}/groups/add_to_pool/${group_id}/${playlist_id}/${bearer}`) 
+        let passed = await axios.put(`http://localhost:5000/groups/add_to_pool/${group_id}/${playlist_id}/${bearer}`) 
           .then((res) => {
             status_code = res.status
             return true
@@ -162,7 +163,7 @@ const run_add_to_pool_tests = async bearer => {
         //note that this assumes the add_to_pool test passed
         const playlist_id = sample_playlist_id 
         let status_code
-        let passed = await axios.delete(`${back_end_uri}/groups/remove_from_pool/${group_id}/${playlist_id}/${bearer}`) 
+        let passed = await axios.delete(`http://localhost:5000/groups/remove_from_pool/${group_id}/${playlist_id}/${bearer}`) 
           .then((res) => {
             status_code = res.status
           })
@@ -178,7 +179,7 @@ const run_add_to_pool_tests = async bearer => {
         const playlist_id = sample_playlist_id 
         let status_code
         let error = null
-        let passed = await axios.delete(`${back_end_uri}/groups/remove_from_pool/${group_id}/${playlist_id}/${bearer}`) 
+        let passed = await axios.delete(`http://localhost:5000/groups/remove_from_pool/${group_id}/${playlist_id}/${bearer}`) 
           .then((res) => {
             status_code = res.status
           })
@@ -194,7 +195,7 @@ const run_add_to_pool_tests = async bearer => {
 
         let status_code
         let error = null
-        let passed = await axios.delete(`${back_end_uri}/groups/remove_from_pool/${group_id}/${playlist_id}/${bearer}`) 
+        let passed = await axios.delete(`http://localhost:5000/groups/remove_from_pool/${group_id}/${playlist_id}/${bearer}`) 
           .then((res) => {
             status_code = res.status
           })
@@ -218,7 +219,7 @@ const run_add_to_pool_tests = async bearer => {
         const playlist_id = other_user_sample_playlist_two
         let status_code
         let error = null
-        let passed = await axios.delete(`${back_end_uri}/groups/remove_from_pool/${group_id}/${playlist_id}/${bearer}`) 
+        let passed = await axios.delete(`http://localhost:5000/groups/remove_from_pool/${group_id}/${playlist_id}/${bearer}`) 
           .then((res) => {
             status_code = res.status
           })

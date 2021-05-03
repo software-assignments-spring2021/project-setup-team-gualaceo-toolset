@@ -12,9 +12,7 @@ const mongoose = require("mongoose");
 const run_add_to_pool_tests = require("./add_to_pool.js").run_add_to_pool_tests
 const set_authentication = require("../requests/other/authentication").set_authentication
 
-
 require("dotenv").config();
-const back_end_uri = process.env.REACT_APP_BACK_END_URI
 
 const bearer = process.env.npm_config_bearer
 if (!bearer)
@@ -71,7 +69,7 @@ describe("Check user info", async () => {
       const user = "denniskuzminer"; //note, as this is hardcoded,
       let status_code;
       let passed = await axios
-        .get(`back_end_uri/groups/me/${user}`)
+        .get(`http://localhost:5000/groups/me/${user}`)
         .then((res) => {
           status_code = res.status;
         })
@@ -88,7 +86,7 @@ describe("Check user info", async () => {
       let status_code;
 
       let passed = await axios
-        .get(`${back_end_uri}/groups/id/${group}`)
+        .get(`http://localhost:5000/groups/id/${group}`)
         .then((res) => {
           status_code = res.status;
         })
@@ -105,7 +103,7 @@ describe("Check user info", async () => {
     it("can add a new user", async () => {
       let status_code;
       let passed = await axios
-        .post(`${back_end_uri}/users/add`, {
+        .post(`http://localhost:5000/users/add`, {
           username: "dk3730",
         })
         .then((res) => {
