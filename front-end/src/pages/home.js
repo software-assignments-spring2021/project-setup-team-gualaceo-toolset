@@ -105,13 +105,17 @@ const Home = (props) => {
                 url: `https://api.spotify.com/v1/playlists/${playlist.generated_playlist_id}`,
               })
                 .then((res) => {
+                  console.log(res.data);
                   setMyGroups((myGroups) => [
                     ...myGroups,
                     {
                       name: res.data.name,
                       owner: playlist.owners.includes(nameRes.data.id),
                       id: playlist._id,
-                      image: res.data.images[1].url,
+                      image:
+                        res.data.images.length !== 0
+                          ? res.data.images[1].url
+                          : null,
                     },
                   ]);
                 })
