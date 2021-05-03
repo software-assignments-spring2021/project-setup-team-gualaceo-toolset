@@ -21,7 +21,7 @@ import styles from "../styles/groupmenuStyles.js";
 const GroupMenu = (props) => {
   let history = useHistory();
   let location = useLocation();
-  let state = location.state
+  let state = location.state;
   let playlistCard;
   const {
     match: { params },
@@ -45,7 +45,7 @@ const GroupMenu = (props) => {
     history.push({
       pathname: "/members",
       state: state,
-    })
+    });
   };
   const handleViewPlaylist = () => {
     history.push("/generatedPlaylist");
@@ -77,7 +77,7 @@ const GroupMenu = (props) => {
   };
 
   useEffect(() => {
-    console.log(location)
+    console.log(location);
     if (is_expired(localStorage)) {
       return history.push("/");
     }
@@ -145,8 +145,12 @@ const GroupMenu = (props) => {
                 onClick={() => history.push("/home")}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
-              <Typography onClick={handleCopyID} className={classes.heading}>
-                Group ID: {groupID}
+              <Typography
+                variant="caption"
+                onClick={handleCopyID}
+                className={classes.heading}
+              >
+                <center>Group ID: {groupID}</center>
               </Typography>
               <Button
                 color="inherit"
@@ -164,7 +168,7 @@ const GroupMenu = (props) => {
                 />
               </div>
             </Toolbar>
-          </AppBar>{" "}
+          </AppBar>
           <Error error={copied} setError={setCopied} severity="success" />
           <Card fullWidth className={classes.cards}>
             <CardContent style={{ marginBottom: "-10px" }}>

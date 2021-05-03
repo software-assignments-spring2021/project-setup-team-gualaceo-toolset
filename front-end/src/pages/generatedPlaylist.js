@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
-import Avatar from "@material-ui/core/avatar";
+import Avatar from "@material-ui/core/Avatar";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { useHistory, useLocation } from "react-router-dom";
 import Button from "@material-ui/core/Button";
@@ -17,14 +17,18 @@ import IconButton from "@material-ui/core/IconButton";
 import RemoveIcon from "@material-ui/icons/Remove";
 import styles from "../styles/generatedPlaylistStyles";
 import axios from "axios";
-import { set_authentication, is_expired } from "../components/authentication";
+import {
+  set_authentication,
+  is_expired,
+  get_bearer,
+} from "../components/authentication";
 
 const Playlist = (props) => {
   let history = useHistory();
-  let location = useLocation()
-  let state = location.state
-  let group_id = state.id
-  let generated_playlist_id = state.generated_playlist_id
+  let location = useLocation();
+  let state = location.state;
+  let group_id = state.id;
+  let playlist_id = state.generated_playlist_id;
   const {
     match: { params },
   } = props;
@@ -34,30 +38,71 @@ const Playlist = (props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [expandPlayer, setExpandPlayer] = useState(false);
   const [currentSong, setCurrentSong] = useState("");
+  const [members, setMembers] = useState([]);
   let [isOwner, setIsOwner] = useState(params.userStatus === "owner"); //params.userStatus is whatever comes after /generatedPlaylist/ in the url
   let [isGuest, setIsGuest] = useState(params.userStatus === "guest");
   const [songs, setSongs] = useState([]);
+  const [playlistAvatar, setPlaylistAvatar] = useState("");
   const previousSongsRef = useRef(songs);
 
   const handleAddMusic = () => {
     console.log("add songs");
-    history.push("/addSongs");
+    history.push({
+      pathname: "/addSongs",
+      state: state,
+    });
   };
 
   const handleGoBack = () => {
     if (isOwner) {
-      history.push("/groupMenuOwner/generated");
-    } else if (isGuest) {
-      history.push("/groupMenuGuest/generated");
+      history.push({
+        pathname: "/groupMenuOwner/generated",
+        state: state,
+      });
     } else {
-      history.push("/groupMenu/generated");
+      history.push({
+        pathname: "/groupMenu/generated",
+        state: state,
+      });
     }
   };
 
-  const handleRemoveSong = (delIndex, event) => {
+  const handleRemoveSong = async (delIndex, event) => {
     event.stopPropagation(); //Prevents song from opening when remove button is pressed
 
     console.log("removing song with key ", delIndex);
+
+    let song_id = songs[delIndex].id;
+    console.log("deleting song ", song_id);
+
+    //make delete request to spotify
+    if (is_expired(localStorage)) {
+      //first check that the bearer has not yet expired first
+      return history.push("/");
+    }
+
+    let tracks = { tracks: [{ uri: `spotify:track:${song_id}` }] };
+    let URL = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks`;
+    let error = null;
+
+    error = await axios({
+      method: "delete",
+      url: URL,
+      data: tracks,
+    })
+      .then((res) => {
+        console.log(res);
+        return false;
+      })
+      .catch((err) => {
+        console.log("Error: could not remove track from playlist");
+        console.log(err);
+        return true;
+      });
+
+    if (error) {
+      return;
+    }
 
     let newSongs = []; //create a new array with every element except for the one we want to delete
     let curIndex = 0;
@@ -77,15 +122,56 @@ const Playlist = (props) => {
       //only non-guests should be booted to the landing page
       return history.push("/");
     }
+    set_authentication(localStorage, axios);
 
     if (!isGuest && previousSongsRef.current === songs) {
       axios({
         method: "get",
-        url: `https://api.spotify.com/v1/playlists/${generated_playlist_id}/tracks`,
+        url: `http://localhost:5000/groups/get_generated_playlist/${group_id}/${get_bearer(
+          localStorage
+        )}`,
       })
         .then((res) => {
-          setSongs(res.data.songs);
-          // console.log(res.data[0].songs);
+          axios({
+            method: "get",
+            url: `https://api.spotify.com/v1/playlists/${location.state.generated_playlist_id}`,
+          })
+            .then((response) => {
+              setPlaylistAvatar(response.data.images[0].url);
+            })
+            .catch((err) => console.log(err));
+          axios(
+            `http://localhost:5000/groups/get_members_and_owners/${group_id}/${get_bearer(
+              localStorage
+            )}`
+          )
+            .then((res) => {
+              console.log(res);
+              setMembers(res.data.members);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          res.data.songs.forEach((song) => {
+            axios({
+              method: "get",
+              url: `https://api.spotify.com/v1/tracks/${song.id}`,
+            })
+              .then((response) => {
+                setSongs((songs) => [
+                  ...songs,
+                  {
+                    artist: song.artist,
+                    id: song.id,
+                    title: song.title,
+                    image: response.data.album.images[1].url,
+                  },
+                ]);
+              })
+              .catch((err) => console.log(err));
+          });
+        })
+        .then((res) => {
           setuiLoading(false);
         })
         .catch((err) => console.log(err));
@@ -93,10 +179,6 @@ const Playlist = (props) => {
       setuiLoading(false);
     }
   }, []);
-
-  const handleLogout = () => {
-    history.push("/");
-  };
 
   const handleExpandPlayer = () => {
     if (expandPlayer === false) {
@@ -166,7 +248,7 @@ const Playlist = (props) => {
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
               <Typography variant="h5" className={classes.heading}>
-                Playlist
+                {location.state.name}
               </Typography>
               {!isGuest && (
                 <Button
@@ -189,14 +271,16 @@ const Playlist = (props) => {
           </AppBar>
           <div>
             <center>
-              <Avatar className={classes.playlistAvatar} variant="rounded" />
+              <Avatar
+                className={classes.playlistAvatar}
+                src={playlistAvatar}
+                variant="rounded"
+              />
             </center>
             <center>
               <Typography className={classes.contributors}>
-                Contributors:
-                {
-                  " Ryan Bello, Mohammad Abualhassan, Dennis Kuzminer, Chris Zheng, Calvin Liang"
-                }
+                Members:
+                {` ${members.toString().replace(",", ", ")}`}
               </Typography>
             </center>
           </div>
@@ -230,15 +314,18 @@ const Playlist = (props) => {
                       <Avatar
                         className={classes.albumCover}
                         variant="rounded"
+                        src={song.image}
                       />
                     </Box>
                     <Box className={classes.songDetails}>
-                      <Typography className={classes.songTitle}>
-                        {song.title}
-                      </Typography>
-                      <Typography className={classes.artist}>
-                        {song.artist}
-                      </Typography>
+                      <center>
+                        <Typography className={classes.songTitle}>
+                          {song.title}
+                        </Typography>
+                        <Typography className={classes.artist}>
+                          {song.artist}
+                        </Typography>
+                      </center>
                     </Box>
                     <Box className={classes.removeButtonContainer}>
                       {isOwner && (

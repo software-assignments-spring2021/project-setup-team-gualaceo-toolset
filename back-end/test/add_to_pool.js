@@ -20,7 +20,7 @@ const run_add_to_pool_tests = async bearer => {
     before(async () => {
       //connect to MongoDB
       const uri = process.env.ATLAS_URI;
-      const back_end_uri = process.env.BACK_END_URI
+      const back_end_uri = process.env.REACT_APP_BACK_END_URI
       await mongoose.connect(uri, {
         keepAlive: true,
         useNewUrlParser: true,

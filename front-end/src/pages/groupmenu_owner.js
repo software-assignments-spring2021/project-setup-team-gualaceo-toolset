@@ -5,11 +5,6 @@ import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import addNotification from "react-push-notification";
 import backgroundWhite from "../media/background_white.png";
 import Loading from "../components/loading";
@@ -30,8 +25,8 @@ const back_end_uri = process.env.REACT_APP_BACK_END_URI
 
 const GroupMenuOwner = (props) => {
   let location = useLocation();
-  let state = location.state
-  let group_id = state.id
+  let state = location.state;
+  let group_id = state.id;
   let history = useHistory();
   let playlistCard;
   const {
@@ -56,39 +51,44 @@ const GroupMenuOwner = (props) => {
     history.push({
       pathname: "/membersOwner",
       state: state,
-    })
+    });
   };
   const handleViewPlaylist = async () => {
-    let passed = await axios(`${back_end_uri}/groups/playlist_id/${group_id}/${get_bearer(localStorage)}`)
-      .then(res => {
-          state.generated_playlist_id = res.data.generated_playlist_id
-          return true
-        })
-        .catch(err => {
-          console.log(err)
-          return false
-        })
-    if (!passed)
-    {
-      return
+    let passed = await axios(
+      `${back_end_uri}/groups/playlist_id/${group_id}/${get_bearer(
+        localStorage
+      )}`
+    )
+      .then((res) => {
+        state.generated_playlist_id = res.data.generated_playlist_id;
+        return true;
+      })
+      .catch((err) => {
+        console.log(err);
+        return false;
+      });
+    if (!passed) {
+      return;
     }
 
     return history.push({
       pathname: "/generatedPlaylist/owner",
-      state: state
+      state: state,
     });
   };
   const handleGeneratePlaylist = () => {
     axios({
       method: "post",
-      url: `${back_end_uri}/generate_playlist/"new_playlist"/${group_id}/${get_bearer(localStorage)}`
+      url: `${back_end_uri}/generate_playlist/"new_playlist"/${group_id}/${get_bearer(
+        localStorage
+      )}`,
     })
-      .then(res => {
+      .then((res) => {
         setPlaylistGenerated(true);
       })
-      .catch(err => {
-        console.log("Error: could not generate playlist")
-      })
+      .catch((err) => {
+        console.log("Error: could not generate playlist");
+      });
   };
 
   const handleCopyID = () => {
@@ -101,15 +101,25 @@ const GroupMenuOwner = (props) => {
       return history.push("/");
     }
     set_authentication(localStorage, axios);
+    console.log(location.state);
     axios({
-      method: "put",
-      url: `https://api.spotify.com/v1/playlists/${location.state.id}`,
-      data: {
-        name: name,
-      },
+      method: "get",
+      url: `${back_end_uri}/groups/playlist_id/${group_id}/${get_bearer(
+        localStorage
+      )}`,
     })
-      .then((res) => {
-        setGroupName(name);
+      .then((response) => {
+        axios({
+          method: "put",
+          url: `https://api.spotify.com/v1/playlists/${response.data.generated_playlist_id}`,
+          data: {
+            name: name,
+          },
+        })
+          .then((res) => {
+            setGroupName(name);
+          })
+          .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
   };
@@ -136,17 +146,27 @@ const GroupMenuOwner = (props) => {
     setGroupID(location.state.id);
     setGroupName(location.state.name);
     setuiLoading(false);
-    
-    axios(`${back_end_uri}/groups/playlist_is_generated/${group_id}/${get_bearer(localStorage)}`)
-      .then(res => {
-        console.log("playlist_is_generated=",res.data.playlist_is_generated)
-        setPlaylistGenerated(res.data.playlist_is_generated)
+
+    axios(
+      `${back_end_uri}/groups/playlist_is_generated/${group_id}/${get_bearer(
+        localStorage
+      )}`
+    )
+      .then((res) => {
+        console.log("playlist_is_generated=", res.data.playlist_is_generated);
+        setPlaylistGenerated(res.data.playlist_is_generated);
       })
-      .catch(err => {
-        console.log(err)
-      })
-    
-  }, [history, playlistGenerated, location.state.id, location.state, params.playlistGenerated, group_id]);
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [
+    history,
+    playlistGenerated,
+    location.state.id,
+    location.state,
+    params.playlistGenerated,
+    group_id,
+  ]);
 
   if (playlistGenerated) {
     // Determines whether to show the user "view generated playlist" or "generate playlist"
@@ -196,8 +216,12 @@ const GroupMenuOwner = (props) => {
                 onClick={() => history.push("/home")}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
-              <Typography onClick={handleCopyID} className={classes.heading}>
-                Group ID: {groupID}
+              <Typography
+                variant="caption"
+                onClick={handleCopyID}
+                className={classes.heading}
+              >
+                <center>Group ID: {groupID}</center>
               </Typography>
               <Button
                 color="inherit"
