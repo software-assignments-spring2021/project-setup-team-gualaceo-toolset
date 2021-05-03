@@ -30,6 +30,8 @@ mongoose.connect(uri, {
   useUnifiedTopology: true,
 });
 
+let front_end_uri = process.env.FRONT_END_URI
+
 const connection = mongoose.connection;
 connection.once("open", () => {
   console.log("MongoDB connection established");
@@ -54,10 +56,8 @@ const usersRouter = require("./routes/users");
 app.use("/groups", groupsRouter);
 app.use("/users", usersRouter);
 
-// This code disables CORS, it may be necessary for debugging.
-//***We should remove this in the final version***
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "YOUR-DOMAIN.TLD"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Origin", front_end_uri); // update to match the domain you will make the request from
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
