@@ -93,7 +93,7 @@ app.delete(
   "/remove_tracks/:bearer/:playlist_id/:track_id",
   remove_tracks.remove_tracks
 );
-app.put(
+app.get(
   "/follow_playlist/:bearer/:playlist_id",
   follow_playlist.follow_playlist
 );

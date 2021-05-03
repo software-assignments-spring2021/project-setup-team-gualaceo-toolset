@@ -8,6 +8,7 @@ const follow_playlist = async (req, res, next) =>
     const bearer = req.params.bearer
     const user_id = req.user_id //this is set by previous middleware in routing
     const group_id = req.params.group_id
+    const public=req.body.public
     let error = null
     let playlist_id = get_playlist(group_id)
     let URL = `https://api.spotify.com/v1/playlists/${playlist_id}/followers`
@@ -25,9 +26,19 @@ const follow_playlist = async (req, res, next) =>
         return next(new Error(msg))
     }
 
+    const token='Bearer '+ bearer;
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+
     await axios(({
         method: "put",
         url: URL,
+        data: {
+            "public": true
+          },
+        headers: headers,
       }))
         .then((response) => 
         {
