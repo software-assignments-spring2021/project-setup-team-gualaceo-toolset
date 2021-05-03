@@ -15,6 +15,8 @@ import {get_bearer, is_expired} from "../components/authentication.js"
 import Logout from "../components/logout";
 
 const MembersOwner = (props) => {
+  let back_end_uri 
+  back_end_uri = process.env.REACT_APP_BACK_END_URI
   let history = useHistory();
   let location = useLocation()
   let state = location.state
@@ -52,7 +54,7 @@ const MembersOwner = (props) => {
       return history.push("/"); 
     }
 
-    axios(`http://localhost:5000/groups/get_members_and_owners/${group_id}/${get_bearer(localStorage)}`)
+    axios(`${back_end_uri}/groups/get_members_and_owners/${group_id}/${get_bearer(localStorage)}`)
       .then(res => {
         console.log("res=",res)
         let new_memberlist = []

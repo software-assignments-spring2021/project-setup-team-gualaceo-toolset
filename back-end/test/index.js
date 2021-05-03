@@ -14,6 +14,7 @@ const set_authentication = require("../requests/other/authentication").set_authe
 
 
 require("dotenv").config();
+const back_end_uri = process.env.REACT_APP_BACK_END_URI
 
 const bearer = process.env.npm_config_bearer
 if (!bearer)
@@ -70,7 +71,7 @@ describe("Check user info", async () => {
       const user = "denniskuzminer"; //note, as this is hardcoded,
       let status_code;
       let passed = await axios
-        .get(`http://localhost:5000/groups/me/${user}`)
+        .get(`back_end_uri/groups/me/${user}`)
         .then((res) => {
           status_code = res.status;
         })

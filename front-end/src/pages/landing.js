@@ -34,7 +34,7 @@ const Landing = (props) => {
     REACT_APP_CLIENT_ID,
     REACT_APP_AUTHORIZE_URL,
     REACT_APP_REDIRECT_URL,
-    BACK_END_URI
+    REACT_APP_BACK_END_URI
   } = process.env;
 
   const spotifyApi = new SpotifyWebApi();

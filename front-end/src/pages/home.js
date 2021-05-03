@@ -39,6 +39,10 @@ const Home = (props) => {
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [myGroups, setMyGroups] = useState([]);
 
+  require("dotenv").config();
+  let back_end_uri 
+  back_end_uri = process.env.REACT_APP_BACK_END_URI
+
   let groups = [
     {
       name: "Work Buddies",
@@ -84,6 +88,7 @@ const Home = (props) => {
   };
 
   useEffect(() => {
+    
     const { setExpiryTime, history, location } = props;
     try {
       if (_.isEmpty(location.hash)) {
@@ -128,7 +133,7 @@ const Home = (props) => {
         setUserID(nameRes.data.id);
         axios({
           method: "get",
-          url: `http://localhost:5000/groups/me/${nameRes.data.id}`,
+          url: `${back_end_uri}/groups/me/${nameRes.data.id}`,
         })
           .then((response) => {
             response.data.forEach((playlist) => { //in this context "playlist" refers to a group.
@@ -178,7 +183,7 @@ const Home = (props) => {
       // console.log(groupName);
       await axios({
         method: "get",
-        url: `http://localhost:5000/groups/id/${groupName}`,
+        url: `${back_end_uri}/groups/id/${groupName}`,
       })
         .then((res) => {
           currGroup = res.data[0];
@@ -194,7 +199,7 @@ const Home = (props) => {
     if (groupName) {
       axios({
         method: "put",
-        url: `http://localhost:5000/groups/add_members/${groupName}/${userid}`,
+        url: `${back_end_uri}/groups/add_members/${groupName}/${userid}`,
       })
         .then((res) => {
           console.log(res);
@@ -260,7 +265,7 @@ const Home = (props) => {
           // Add the playlist to the DB
           axios({
             method: "post",
-            url: `http://localhost:5000/group/add`,
+            url: `${back_end_uri}/group/add`,
             data: { owners: userid, members: userid, href: res.data.href },
           })
             .then((res) => {
@@ -314,7 +319,7 @@ const Home = (props) => {
           // Add the playlist to the DB
           axios({
             method: "post",
-            url: `http://localhost:5000/groups/add`,
+            url: `${back_end_uri}/groups/add`,
             data: {
               owners: userid,
               members: userid,

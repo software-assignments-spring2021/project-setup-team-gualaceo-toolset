@@ -16,6 +16,9 @@ import Playlist from "../components/playlistComponent.js";
 
 import styles from "../styles/addMyMusicStyles.js";
 
+require("dotenv").config();
+const back_end_uri = process.env.REACT_APP_BACK_END_URI
+
 const backupPlaylists = [
     {
         name: "My Playlist",
@@ -84,7 +87,7 @@ const AddMyMusic = (props) => {
         let bearer = get_bearer(localStorage)
         axios({
             method: "get",
-            url: `http://localhost:5000/user_playlists/${bearer}/false` //true indicates we want playlists attached
+            url: `${back_end_uri}/user_playlists/${bearer}/false` //true indicates we want playlists attached
         }) //makes a call to the back-end
             .then((response) => {  
                 if (playlists === "unset")
@@ -93,7 +96,7 @@ const AddMyMusic = (props) => {
                   //get and set the pool
                   axios({
                     method: "get",
-                    url: `http://localhost:5000/groups/get_pool/${group_id}/${bearer}`
+                    url: `${back_end_uri}/groups/get_pool/${group_id}/${bearer}`
                   })
                     .then(poolRes => { 
                       setPool(poolRes.data.pool);

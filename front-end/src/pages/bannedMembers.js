@@ -13,6 +13,9 @@ import {get_bearer, is_expired} from "../components/authentication.js"
 import Logout from "../components/logout";
 import axios from "axios"
 
+require("dotenv").config();
+const back_end_uri = process.env.REACT_APP_BACK_END_URI
+
 const BannedMembers = (props) => {
   let history = useHistory();
   let location = useLocation()
@@ -55,7 +58,7 @@ const BannedMembers = (props) => {
     {
         return history.push("/"); 
     } 
-    axios(`http://localhost:5000/groups/get_banned_members/${group_id}/${get_bearer(localStorage)}`)
+    axios(`${back_end_uri}/groups/get_banned_members/${group_id}/${get_bearer(localStorage)}`)
     .then(res => {
       console.log("res=",res)
       let newBannedMembers = []

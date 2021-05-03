@@ -13,7 +13,8 @@ import styles from "../styles/playlistComponentStyles.js";
 import {get_bearer, set_authentication} from "../components/authentication"
 import axios from "axios"
 
-const back_end_uri = process.env.BACK_END_URI
+require("dotenv").config();
+let back_end_uri = process.env.REACT_APP_BACK_END_URI
 
 const pool_has_playlist = (pool, playlist_id) => {
   for (let i = 0; i < pool.length; i++)
@@ -71,6 +72,7 @@ const pressButton = (event, added, setAdded, playlist, group_id, buttonEnabled, 
 };
 
 const Playlist = (props) => {
+  
   const playlist = props.playlist;
   const group_id = props.group_id
   const pool = props.pool
