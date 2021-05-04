@@ -25,7 +25,9 @@ const MembersOwner = (props) => {
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [memberlist, setMemberlist] = useState(null);
   const [errors, setErrors] = useState("");
-  const [refreshCount, setRefreshCount] = useState(0);
+  const [refreshCount, setRefreshCount] = useState(0); //there's no actual need to keep track of the number of refreshes,
+                                                       //but we just add this to the depencies array so we can refresh the page
+                                                       //whenever a user is successfully kicked or banned.
 
   const handleBan = (member) => {
     if (is_expired(localStorage)) {

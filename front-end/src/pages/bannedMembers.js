@@ -22,6 +22,10 @@ const BannedMembers = (props) => {
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [bannedMembers, setBannedMembers] = useState(null)
+  const [refreshCount, setRefreshCount] = useState(0);  //there's no actual need to keep track of the number of refreshes,
+                                                        //but we just add this to the depencies array so we can refresh the page
+                                                        //whenever a user is successfully kicked or banned.
+
 
 
   // const BannedMembers = [
@@ -71,7 +75,7 @@ const BannedMembers = (props) => {
       console.log("Error encountered in bannedMembers.js")
       console.log(err)
     })
-  });
+  }, [refreshCount]);
 
   const handleUnban = (member) => {
     if (is_expired(localStorage)) {
@@ -84,6 +88,7 @@ const BannedMembers = (props) => {
     })
       .then((res) => {
           console.log(`You have unbanned ${member.name}`)
+          setRefreshCount(refreshCount + 1);
       })
       .catch((err) => {
         console.log(err);
