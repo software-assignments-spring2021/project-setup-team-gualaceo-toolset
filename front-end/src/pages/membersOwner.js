@@ -50,6 +50,24 @@ const MembersOwner = (props) => {
 
   const handleKick = (member) => {
     console.log(member.name + " has been kicked");
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "put",
+      url: `http://localhost:5000/groups/kick_member/${group_id}/${member.name}/${get_bearer(localStorage)}`,
+    })
+      .then((res) => {
+        setErrors(
+          `You have kicked ${member}`
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    console.log(member);
   };
 
   const goToBanList = () => {
