@@ -17,7 +17,15 @@ const styles = (theme) => ({
   logout: {
     color: theme.palette.secondary.contrastText,
   },
-
+  backgroundImg: {
+    position: "absolute",
+    width: "100%",
+    left: "0%",
+    top: "0%",
+    height: "100%",
+    objectFit: "cover",
+    zIndex: "-1",
+  },
   /* Main Page styling */
 
   body: {
@@ -26,7 +34,7 @@ const styles = (theme) => ({
   },
 
   playlistContainer: {
-    paddingTop: "80px",
+    marginTop: "-20px",
   },
 });
 

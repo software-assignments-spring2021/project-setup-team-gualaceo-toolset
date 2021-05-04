@@ -105,12 +105,17 @@ const Home = (props) => {
                 url: `https://api.spotify.com/v1/playlists/${playlist.generated_playlist_id}`,
               })
                 .then((res) => {
+                  console.log(res.data);
                   setMyGroups((myGroups) => [
                     ...myGroups,
                     {
                       name: res.data.name,
                       owner: playlist.owners.includes(nameRes.data.id),
                       id: playlist._id,
+                      image:
+                        res.data.images.length !== 0
+                          ? res.data.images[1].url
+                          : null,
                     },
                   ]);
                 })
@@ -421,11 +426,15 @@ const Group = (props) => {
       >
         <Box className={classes.groupBox}>
           <Box>
-            <Avatar className={classes.avatar} variant="rounded" />
+            <Avatar
+              className={classes.avatar}
+              src={group.image}
+              variant="rounded"
+            />
           </Box>
           <Box>
             <Typography style={{ marginLeft: "15px", marginTop: "10px" }}>
-              {group.name}
+              <center>{group.name}</center>
             </Typography>
           </Box>
           <Box className={classes.playlistInfo}>
