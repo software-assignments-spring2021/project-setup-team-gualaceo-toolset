@@ -5,68 +5,75 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import withStyles from "@material-ui/core/styles/withStyles";
 import IconButton from "@material-ui/core/IconButton";
-import { Typography, Card, Divider } from "@material-ui/core";
+import { Typography, Card, Divider, Avatar } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 
 import styles from "../styles/playlistComponentStyles.js";
-import {get_bearer, set_authentication} from "../components/authentication"
-import axios from "axios"
+import { get_bearer, set_authentication } from "../components/authentication";
+import axios from "axios";
 
 require("dotenv").config();
 let back_end_uri = process.env.REACT_APP_BACK_END_URI
 
 const pool_has_playlist = (pool, playlist_id) => {
-  for (let i = 0; i < pool.length; i++)
-  {
-    if (pool[i].playlist_id === playlist_id) //playlist was added by the current user to the pool already
-    {
+  for (let i = 0; i < pool.length; i++) {
+    if (pool[i].playlist_id === playlist_id) {
+      //playlist was added by the current user to the pool already
       return true;
     }
   }
   return false;
-}
+};
 
-const pressButton = (event, added, setAdded, playlist, group_id, buttonEnabled, setButtonEnabled) => {
-  if (!buttonEnabled)
-  {
-    return
+const pressButton = (
+  event,
+  added,
+  setAdded,
+  playlist,
+  group_id,
+  buttonEnabled,
+  setButtonEnabled
+) => {
+  if (!buttonEnabled) {
+    return;
   }
-  setButtonEnabled(false)
+  setButtonEnabled(false);
   event.stopPropagation(); //Prevents dropdown from opening when button is pressed
-  const playlist_id = playlist.id
-  if (!added)
-  { 
-    axios(
-      {
-        method: "put",
-        url: `${back_end_uri}/groups/add_to_pool/${group_id}/${playlist_id}/${get_bearer(localStorage)}`,
-      }
-    )
-      .then(res => {
+  const playlist_id = playlist.id;
+  if (!added) {
+    axios({
+      method: "put",
+      url: `${back_end_uri}/groups/add_to_pool/${group_id}/${playlist_id}/${get_bearer(
+        localStorage
+      )}`,
+    })
+      .then((res) => {
         setAdded(true);
-        setButtonEnabled(true)
+        setButtonEnabled(true);
       })
-      .catch(err => {
-        console.log(err)
-        console.log("Error encountered adding the playlist to the group")
-        setButtonEnabled(true)
-      })
+      .catch((err) => {
+        console.log(err);
+        console.log("Error encountered adding the playlist to the group");
+        setButtonEnabled(true);
+      });
   } else {
     //should actually remove the group
     axios({
       method: "delete",
-      url: `${back_end_uri}/groups/remove_from_pool/${group_id}/${playlist_id}/${get_bearer(localStorage)}`
+      url: `${back_end_uri}/groups/remove_from_pool/${group_id}/${playlist_id}/${get_bearer(
+        localStorage
+      )}`,
     })
-      .then(res => {
+      .then((res) => {
         setAdded(false);
-        setButtonEnabled(true)
+        setButtonEnabled(true);
       })
-      .catch(err => {
-        console.log(err)
-        console.log("Error encountered removing the playlist from the group")
-        setButtonEnabled(true)
-      })
+      .catch((err) => {
+        console.log(err);
+        console.log("Error encountered removing the playlist from the group");
+        setButtonEnabled(true);
+      });
   }
   //In a later sprint (2 or 3), we should also actually add the playlist to the pool
 };
@@ -74,12 +81,12 @@ const pressButton = (event, added, setAdded, playlist, group_id, buttonEnabled, 
 const Playlist = (props) => {
   
   const playlist = props.playlist;
-  const group_id = props.group_id
-  const pool = props.pool
+  const group_id = props.group_id;
+  const pool = props.pool;
   const { classes } = props;
-  let addedAtLoad = pool_has_playlist(pool, playlist.id)
+  let addedAtLoad = pool_has_playlist(pool, playlist.id);
   const [added, setAdded] = useState(addedAtLoad); //keeps track of whether the playlist has been added to the pool or not.
-  const [buttonEnabled, setButtonEnabled] = useState(true)
+  const [buttonEnabled, setButtonEnabled] = useState(true);
   let buttonIcon;
 
   if (!added) {
@@ -88,10 +95,10 @@ const Playlist = (props) => {
   } else {
     buttonIcon = <RemoveIcon color="secondary" />;
   }
-    set_authentication(localStorage, axios)
-    let tracks = playlist.tracks
+  set_authentication(localStorage, axios);
+  let tracks = playlist.tracks;
 
-    /*
+  /*
     console.log("href = " , playlist.tracks)
     axios(playlist.tracks.href)
         .then((response) => {
@@ -103,20 +110,20 @@ const Playlist = (props) => {
             return
         })
     */
-  
+
   return (
     <Card className={classes.cardSquareEdges}>
       <div className={classes.summaryContainer}>
         <div className={classes.imageContainer}>
           {/*This should be the playlist image pulled from Spotify*/}
-          {playlist.images[0] &&
-            <img
-            className={classes.playlistImage}
-            src={playlist.images[0].url}
-            alt="playlist"
+          {playlist.images[0] && (
+            <Avatar
+              variant="rounded"
+              className={classes.playlistImage}
+              src={playlist.images[0].url}
+              alt="playlist"
             />
-          }
-          
+          )}
         </div>
         <div className={classes.playlistNameContainer}>{playlist.name}</div>
         <div className={classes.buttonContainer}>
@@ -124,7 +131,17 @@ const Playlist = (props) => {
             className={classes.button}
             color="primary"
             onFocus={(event) => event.stopPropagation()}
-            onClick={(event) => pressButton(event, added, setAdded, playlist, group_id, buttonEnabled, setButtonEnabled)}
+            onClick={(event) =>
+              pressButton(
+                event,
+                added,
+                setAdded,
+                playlist,
+                group_id,
+                buttonEnabled,
+                setButtonEnabled
+              )
+            }
           >
             {buttonIcon}
           </IconButton>
@@ -141,7 +158,6 @@ const Playlist = (props) => {
         </AccordionDetails>
       } */}
     </Card>
-      
   );
 };
 
