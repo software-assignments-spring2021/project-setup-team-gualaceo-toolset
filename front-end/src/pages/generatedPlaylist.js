@@ -164,7 +164,7 @@ const Playlist = (props) => {
                     artist: song.artist,
                     id: song.id,
                     title: song.title,
-                    image: response.data.album.images[1].url,
+                    image: response.data.album.images[0].url,
                   },
                 ]);
               })

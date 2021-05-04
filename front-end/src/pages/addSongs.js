@@ -12,9 +12,10 @@ import SearchBar from "material-ui-search-bar";
 import backgroundWhite from "../media/background_white.png";
 
 import Loading from "../components/loading";
+import Error from "../components/error";
+import Logout from "../components/logout";
 
 import styles from "../styles/addSongsStyles";
-import Logout from "../components/logout";
 
 import axios from "axios";
 import {
@@ -31,6 +32,7 @@ const AddSongs = (props) => {
   let group_id = state.id;
   let playlist_id = state.generated_playlist_id;
   const { classes } = props;
+  const [errors, setErrors] = useState("");
   const [uiLoading, setuiLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -84,7 +86,7 @@ const AddSongs = (props) => {
             artist: artists,
             title: track.name,
             id: track.id,
-            image: track.album.images[1].url,
+            image: track.album.images[0].url,
           });
         });
         setSearchResults(editedRes);
@@ -104,6 +106,16 @@ const AddSongs = (props) => {
     }
     set_authentication(localStorage, axios);
     console.log(location.state);
+    axios({
+      method: "post",
+      url: `https://api.spotify.com/v1/playlists/${location.state.generated_playlist_id}/tracks?uris=spotify%3Atrack%3A${searchResult.id}`,
+    })
+      .then((res) => {
+        setErrors(
+          `${searchResult.title} has been added to ${location.state.name}.`
+        );
+      })
+      .catch((err) => console.log(err));
     // console.log(uneditedSearchResults);
     // console.log(uneditedSearchResults[0].id);
     // console.log(searchResult.id);
@@ -185,6 +197,12 @@ const AddSongs = (props) => {
             </div>
           </Toolbar>
         </AppBar>
+        <Error
+          error={errors}
+          setError={setErrors}
+          severity="success"
+          style={errors ? { display: "block" } : { display: "none" }}
+        />
         <div className={classes.searchBarContainer}>
           <SearchBar
             value={searchTerm}

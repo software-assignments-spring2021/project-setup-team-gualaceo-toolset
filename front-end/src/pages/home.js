@@ -114,7 +114,7 @@ const Home = (props) => {
                       id: playlist._id,
                       image:
                         res.data.images.length !== 0
-                          ? res.data.images[1].url
+                          ? res.data.images[0].url
                           : null,
                     },
                   ]);
