@@ -74,7 +74,7 @@ const BannedMembers = (props) => {
   });
 
   const handleUnban = (member) => {
-    console.log(`You have unbanned user: ${member}`);
+    console.log(`You have unbanned user: ${member.name}`);
     if (is_expired(localStorage)) {
       return history.push("/");
     }
@@ -84,7 +84,7 @@ const BannedMembers = (props) => {
       url: `http://localhost:5000/groups/unban/${group_id}/${member.name}/${get_bearer(localStorage)}`,
     })
       .then((res) => {
-          console.log(`You have banned ${member}`)
+          console.log(`You have unbanned ${member.name}`)
       })
       .catch((err) => {
         console.log(err);

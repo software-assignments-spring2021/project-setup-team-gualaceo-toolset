@@ -27,7 +27,6 @@ const MembersOwner = (props) => {
   const [errors, setErrors] = useState("");
 
   const handleBan = (member) => {
-    console.log(member.name + " is banned");
     if (is_expired(localStorage)) {
       return history.push("/");
     }
@@ -37,8 +36,8 @@ const MembersOwner = (props) => {
       url: `http://localhost:5000/groups/add_to_ban/${group_id}/${member.name}/${get_bearer(localStorage)}`,
     })
       .then((res) => {
-        setErrors(
-          `You have banned ${member}`
+        console.log(
+          `You have banned ${member.name}`
         );
       })
       .catch((err) => {
@@ -49,7 +48,6 @@ const MembersOwner = (props) => {
   };
 
   const handleKick = (member) => {
-    console.log(member.name + " has been kicked");
     if (is_expired(localStorage)) {
       return history.push("/");
     }
@@ -59,8 +57,8 @@ const MembersOwner = (props) => {
       url: `http://localhost:5000/groups/kick_member/${group_id}/${member.name}/${get_bearer(localStorage)}`,
     })
       .then((res) => {
-        setErrors(
-          `You have kicked ${member}`
+        console.log(
+          `You have kicked ${member.name}`
         );
       })
       .catch((err) => {
