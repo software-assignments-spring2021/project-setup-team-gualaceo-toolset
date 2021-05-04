@@ -93,7 +93,7 @@ const MembersOwner = (props) => {
         console.log("Error encountered in membersOwner.js");
         console.log(err);
       });
-  }, [history, group_id]);
+  });
 
   if (uiLoading === true) {
     return <Loading />;

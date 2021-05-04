@@ -71,7 +71,7 @@ const BannedMembers = (props) => {
       console.log("Error encountered in bannedMembers.js")
       console.log(err)
     })
-  }, []);
+  });
 
   const handleUnban = (member) => {
     console.log(`You have unbanned user: ${member}`);
@@ -89,6 +89,20 @@ const BannedMembers = (props) => {
       .catch((err) => {
         console.log(err);
       });
+
+      //test adding banned member back
+    axios({
+        method: "put",
+        url: `http://localhost:5000/groups/add_members/${group_id}/${member.name}`,
+      })
+        .then((res) => {
+          console.log("successfully added user back")
+
+        })
+        .catch((err) =>{
+          console.log("failed to add user back")
+
+        })
 
     console.log(member);
   };
