@@ -26,10 +26,10 @@ import _ from "lodash";
 
 const AddSongs = (props) => {
   let history = useHistory();
-  let location = useLocation()
-  let state = location.state
-  let group_id = state.id
-  let playlist_id = state.generated_playlist_id
+  let location = useLocation();
+  let state = location.state;
+  let group_id = state.id;
+  let playlist_id = state.generated_playlist_id;
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,9 +52,9 @@ const AddSongs = (props) => {
   const handleGoBack = () => {
     history.push({
       pathname: "/generatedPlaylist/owner",
-      state:state
+      state: state,
     });
-  }
+  };
 
   const handleSearchTermChange = (term) => {
     let editedRes = [];
@@ -80,7 +80,12 @@ const AddSongs = (props) => {
               ? (artists = track.artists[i].name)
               : (artists = artists + ", " + track.artists[i].name);
           }
-          editedRes.push({ artist: artists, title: track.name, id: track.id });
+          editedRes.push({
+            artist: artists,
+            title: track.name,
+            id: track.id,
+            image: track.album.images[1].url,
+          });
         });
         setSearchResults(editedRes);
         setUneditedSearchResults(res.data.tracks.items);
@@ -94,6 +99,11 @@ const AddSongs = (props) => {
   // let numruns = 0;
   const handleAdd = (searchResult) => {
     console.log(searchResult);
+    if (is_expired(localStorage)) {
+      return history.push("/"); //should this just be history.push("/")?
+    }
+    set_authentication(localStorage, axios);
+    console.log(location.state);
     // console.log(uneditedSearchResults);
     // console.log(uneditedSearchResults[0].id);
     // console.log(searchResult.id);
@@ -131,9 +141,8 @@ const AddSongs = (props) => {
   };
 
   useEffect(() => {
-    if (is_expired(localStorage))
-    {
-        return history.push("/"); 
+    if (is_expired(localStorage)) {
+      return history.push("/");
     }
 
     setuiLoading(false);
@@ -172,10 +181,7 @@ const AddSongs = (props) => {
               Logout
             </Button>
             <div style={{ position: "absolute" }}>
-              <Logout
-                open={openConfirmLogout}
-                setOpen={setOpenConfirmLogout}
-              />
+              <Logout open={openConfirmLogout} setOpen={setOpenConfirmLogout} />
             </div>
           </Toolbar>
         </AppBar>
@@ -196,6 +202,7 @@ const AddSongs = (props) => {
                         <Avatar
                           className={classes.albumCover}
                           variant="rounded"
+                          src={searchResult.image}
                         />
                       </Box>
                       <Box>
