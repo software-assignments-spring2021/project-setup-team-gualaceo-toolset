@@ -9,7 +9,7 @@ import { Typography, Card, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import Loading from "../components/loading";
 import styles from "../styles/bannedMembersStyles";
-import {get_bearer, is_expired} from "../components/authentication.js"
+import {get_bearer, is_expired,set_authentication} from "../components/authentication.js"
 import Logout from "../components/logout";
 import axios from "axios"
 
@@ -73,8 +73,24 @@ const BannedMembers = (props) => {
     })
   }, []);
 
-  const handleUnban = (username) => {
-    console.log(`You have unbanned user: ${username}`);
+  const handleUnban = (member) => {
+    console.log(`You have unbanned user: ${member}`);
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "put",
+      url: `http://localhost:5000/groups/unban/${group_id}/${member.name}/${get_bearer(localStorage)}`,
+    })
+      .then((res) => {
+          console.log(`You have banned ${member}`)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    console.log(member);
   };
 
   if (uiLoading === true) {
@@ -129,7 +145,7 @@ const BannedMembers = (props) => {
                         color="primary"
                         size="small"
                         variant="contained"
-                        onClick={() => handleUnban(member.username)}
+                        onClick={() => handleUnban(member)}
                       >
                         <Typography color="secondary">Unban</Typography>
                       </Button>
