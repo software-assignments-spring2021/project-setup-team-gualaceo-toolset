@@ -3,21 +3,6 @@ const styles = (theme) => ({
     padding: theme.spacing(2),
     backgroundSize: "contain",
   },
-  accordion: {
-    marginTop: "10px",
-    boxShadow: "0 8px 18px -12px rgba(0,0,0,0.3)",
-    borderRadius: "10px",
-    top: "10%",
-    border: "0px solid rgba(0, 0, 0, .125)",
-  },
-  avatar: {
-    height: 60,
-    width: 60,
-    flexShrink: 0,
-    flexGrow: 0,
-    zIndex: 3,
-    borderRadius: "8px",
-  },
   back: { color: theme.palette.secondary.main },
   backgroundImg: {
     position: "absolute",
@@ -36,6 +21,19 @@ const styles = (theme) => ({
     },
     top: "10%",
   },
+  cardContent: {
+    margin: "10px",
+    // marginLeft: "20px",
+    textAlign: "right",
+    // marginRight: "20px",
+    display: "flex",
+  },
+  removeButton: {
+    margin: "10px",
+
+    textAlign: "right",
+    display: "flex",
+  },
   heading: {
     // marginRight: "auto",
     // marginLeft: "-20px",
@@ -47,27 +45,12 @@ const styles = (theme) => ({
     display: "flex",
     justifyContent: "space-between",
   },
-  playlistInfo: {
+  search: { width: "100%", marginTop: "10px", marginBottom: "10px" },
+
+  addMyMusicButtonContainer: {
     display: "flex",
-    width: "30%",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    textAlign: "right",
-  },
-  groupBox: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-  owner: {
-    color: theme.palette.secondary.main,
-  },
-  generateRequested: {
-    fontSize: "10px",
-    color: theme.palette.primary.main,
-  },
-  spacer: {
-    width: "60px",
+    justifyContent: "center",
+    paddingBottom: "10px",
   },
 });
-
 export default styles;

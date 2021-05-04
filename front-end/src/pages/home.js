@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, CssBaseline, AppBar, Toolbar } from "@material-ui/core";
-import Avatar from "@material-ui/core/avatar";
+import Avatar from "@material-ui/core/Avatar";
 import Accordion from "@material-ui/core/Accordion";
 import TextField from "@material-ui/core/TextField";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
@@ -38,39 +38,6 @@ const Home = (props) => {
   const [errors, setErrors] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [myGroups, setMyGroups] = useState([]);
-
-  let groups = [
-    {
-      name: "Work Buddies",
-      owner: true,
-      generationRequested: true,
-    },
-    {
-      name: "Alexa's Party",
-      owner: false,
-      generationRequested: true,
-    },
-    {
-      name: "Gaming Friends",
-      owner: true,
-      generationRequested: false,
-    },
-    {
-      name: "Grandma's House",
-      owner: false,
-      generationRequested: false,
-    },
-    {
-      name: "Grandpa's House",
-      owner: false,
-      generationRequested: false,
-    },
-    {
-      name: "Josh's Party",
-      owner: false,
-      generationRequested: false,
-    },
-  ];
 
   const getParamValues = (url) => {
     return url
@@ -131,24 +98,32 @@ const Home = (props) => {
           url: `http://localhost:5000/groups/me/${nameRes.data.id}`,
         })
           .then((response) => {
-            response.data.forEach((playlist) => { //in this context "playlist" refers to a group.
+            response.data.forEach((playlist) => {
+              //in this context "playlist" refers to a group.
               axios({
                 method: "get",
                 url: `https://api.spotify.com/v1/playlists/${playlist.generated_playlist_id}`,
               })
                 .then((res) => {
+                  console.log(res.data);
                   setMyGroups((myGroups) => [
                     ...myGroups,
                     {
                       name: res.data.name,
                       owner: playlist.owners.includes(nameRes.data.id),
-                      id: playlist._id
+                      id: playlist._id,
+                      image:
+                        res.data.images.length !== 0
+                          ? res.data.images[1].url
+                          : null,
                     },
                   ]);
                 })
                 .catch((err) => console.log(err));
             });
             console.log(response.data);
+          })
+          .then((res) => {
             setuiLoading(false);
           })
           .catch((err) => {
@@ -207,7 +182,7 @@ const Home = (props) => {
                 console.log({ name: res.data.name, id: groupName });
                 history.push({
                   pathname: "/groupMenu",
-                  state: { name: res.data.name, id: groupName },
+                  state: { name: res.data.name, id: groupName, userid: userid },
                 });
               })
               .catch((err) => {
@@ -226,7 +201,7 @@ const Home = (props) => {
       //Follow the playlist
       axios({
         method: "put",
-        url: `https://api.spotify.com/v1/playlists/${currGroup.id}/followers`,
+        url: `https://api.spotify.com/v1/playlists/${currGroup.generated_playlist_id}/followers`,
         data: {
           public: true,
         },
@@ -236,58 +211,6 @@ const Home = (props) => {
         })
         .catch((err) => console.log(err));
     }
-    /* 
-
-    if (groupName) {
-      console.log(groupName);
-      // return history.push("/groupMenuOwner");
-      if (is_expired(localStorage)) {
-        return history.push("/");
-      }
-      set_authentication(localStorage, axios);
-      // Create the playlist
-      axios({
-        method: "post",
-        url: `https://api.spotify.com/v1/users/${userid}/group`,
-        data: {
-          name: groupName,
-          description: "This playlist was generated using Synthesize.",
-          public: true,
-        },
-      })
-        .then((res) => {
-          console.log(res);
-          // Add the playlist to the DB
-          axios({
-            method: "post",
-            url: `http://localhost:5000/group/add`,
-            data: { owners: userid, members: userid, href: res.data.href },
-          })
-            .then((res) => {
-              console.log(res);
-            })
-            .catch((err) => console.log(err));
-          //Follow the playlist
-          axios({
-            method: "put",
-            url: `https://api.spotify.com/v1/playlists/${res.data.id}/followers`,
-            data: {
-              public: true,
-            },
-          })
-            .then((res) => {
-              console.log(res);
-              history.push("/groupMenuOwner");
-            })
-            .catch((err) => console.log(err));
-        })
-        .catch((err) => console.log(err));
-    }
-    // if (isValidID) {
-    history.push("/groupMenu");
-
-    // }
- */
   };
 
   const handleCreate = (event) => {
@@ -324,7 +247,7 @@ const Home = (props) => {
             },
           })
             .then((localRes) => {
-              console.log("localRes =" , localRes);
+              console.log("localRes =", localRes);
               axios({
                 method: "put",
                 url: `https://api.spotify.com/v1/playlists/${response.data.id}/followers`,
@@ -336,7 +259,11 @@ const Home = (props) => {
                   console.log(res);
                   history.push({
                     pathname: "/groupMenuOwner",
-                    state: { name: groupName, id: localRes.data._id },
+                    state: {
+                      name: groupName,
+                      id: localRes.data._id,
+                      userid: userid,
+                    },
                   });
                   // history.push("/groupMenuOwner");
                 })
@@ -353,7 +280,7 @@ const Home = (props) => {
   const handleVisit = (pageLink, name, group_id) => {
     history.push({
       pathname: pageLink,
-      state: { name: name, id: group_id},
+      state: { name: name, id: group_id, userid: userid },
     });
   };
 
@@ -499,11 +426,15 @@ const Group = (props) => {
       >
         <Box className={classes.groupBox}>
           <Box>
-            <Avatar className={classes.avatar} variant="rounded" />
+            <Avatar
+              className={classes.avatar}
+              src={group.image}
+              variant="rounded"
+            />
           </Box>
           <Box>
             <Typography style={{ marginLeft: "15px", marginTop: "10px" }}>
-              {group.name}
+              <center>{group.name}</center>
             </Typography>
           </Box>
           <Box className={classes.playlistInfo}>

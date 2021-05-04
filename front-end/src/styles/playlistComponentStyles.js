@@ -10,10 +10,10 @@ const styles = (theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
-  cardSquareEdges :{
+  cardSquareEdges: {
     display: "flex",
     justifyContent: "center",
-    borderRadius: "0px",
+    // borderRadius: "0px",
   },
   imageContainer: {
     display: "flex",
