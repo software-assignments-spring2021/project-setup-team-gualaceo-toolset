@@ -74,7 +74,6 @@ const BannedMembers = (props) => {
   });
 
   const handleUnban = (member) => {
-    console.log(`You have unbanned user: ${member.name}`);
     if (is_expired(localStorage)) {
       return history.push("/");
     }
@@ -89,8 +88,7 @@ const BannedMembers = (props) => {
       .catch((err) => {
         console.log(err);
       });
-
-      //test adding banned member back
+    /*  an option to immediately add unbanned user back into group
     axios({
         method: "put",
         url: `http://localhost:5000/groups/add_members/${group_id}/${member.name}`,
@@ -103,6 +101,7 @@ const BannedMembers = (props) => {
           console.log("failed to add user back")
 
         })
+    */
 
     console.log(member);
   };
