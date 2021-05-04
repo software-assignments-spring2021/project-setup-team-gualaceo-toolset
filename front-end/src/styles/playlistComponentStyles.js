@@ -13,6 +13,7 @@ const styles = (theme) => ({
   cardSquareEdges: {
     display: "flex",
     justifyContent: "center",
+    marginBottom: "10px",
     // borderRadius: "0px",
   },
   imageContainer: {
@@ -52,6 +53,7 @@ const styles = (theme) => ({
     height: "120px",
     alignItems: "center",
     alignSelf: "center",
+    margin: "-10px",
     justifyContent: "space-between",
   },
   tracklistContainer: {

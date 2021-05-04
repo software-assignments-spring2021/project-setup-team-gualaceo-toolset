@@ -179,7 +179,10 @@ const ViewMusicOwner = (props) => {
               />
             </div>
             {playlists.map((playlist, i) => (
-              <div key={i} style={{ display: "flex", width: "100%" }}>
+              <div
+                key={i}
+                style={{ marginBottom: "10px", display: "flex", width: "100%" }}
+              >
                 <a
                   style={{ textDecoration: "none", display: "flex" }}
                   rel="noopener noreferrer"

@@ -186,6 +186,7 @@ const MusicController = (props) => {
                   <Avatar
                     className={classes.collapsedAlbumCover}
                     variant="square"
+                    src={currentSong.image}
                   />
                 </Box>
                 <Box>
@@ -236,6 +237,7 @@ const MusicController = (props) => {
                 <Avatar
                   className={classes.expandedAlbumCover}
                   variant="rounded"
+                  src={currentSong.image}
                 />
               </center>
               <div className={classes.expandedDetails}>
