@@ -11,8 +11,9 @@ import Loading from "../components/loading";
 import styles from "../styles/membersStyles";
 import axios from "axios";
 import members from "./members";
-import { get_bearer, is_expired } from "../components/authentication.js";
+import { get_bearer, is_expired, set_authentication } from "../components/authentication.js";
 import Logout from "../components/logout";
+
 
 const MembersOwner = (props) => {
   let history = useHistory();
@@ -23,9 +24,28 @@ const MembersOwner = (props) => {
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [memberlist, setMemberlist] = useState(null);
+  const [errors, setErrors] = useState("");
 
   const handleBan = (member) => {
     console.log(member.name + " is banned");
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "put",
+      url: `http://localhost:5000/groups/add_to_ban/${group_id}/${member.name}/${get_bearer(localStorage)}`,
+    })
+      .then((res) => {
+        setErrors(
+          `You have banned ${member}`
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    console.log(member);
   };
 
   const handleKick = (member) => {

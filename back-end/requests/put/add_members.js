@@ -3,6 +3,7 @@ let Group = require("../../models/groups.model");
 const add_member = async (req, res, next) => {
   const group_id = req.params.group_id;
   const user_id = req.params.user_id;
+  console.log(group_id)
 
   let members;
   let banned_members;
@@ -19,6 +20,7 @@ const add_member = async (req, res, next) => {
   if (error) {
     return next(error);
   }
+  
   if (members.includes(user_id)) {
     //check if in group already
     const msg = "User already in the group";
