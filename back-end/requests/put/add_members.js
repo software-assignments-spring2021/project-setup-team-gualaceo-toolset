@@ -2,8 +2,9 @@ let Group = require("../../models/groups.model");
 
 const add_member = async (req, res, next) => {
   const group_id = req.params.group_id;
-  const user_id = req.params.user_id;
+  const user_id=req.user_id
   console.log(group_id)
+  console.log(user_id)
 
   let members;
   let banned_members;
