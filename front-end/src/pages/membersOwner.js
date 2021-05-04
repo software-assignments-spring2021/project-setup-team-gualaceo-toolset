@@ -11,8 +11,9 @@ import Loading from "../components/loading";
 import styles from "../styles/membersStyles";
 import axios from "axios";
 import members from "./members";
-import { get_bearer, is_expired } from "../components/authentication.js";
+import { get_bearer, is_expired, set_authentication } from "../components/authentication.js";
 import Logout from "../components/logout";
+
 
 const MembersOwner = (props) => {
   let history = useHistory();
@@ -23,13 +24,53 @@ const MembersOwner = (props) => {
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [memberlist, setMemberlist] = useState(null);
+  const [errors, setErrors] = useState("");
+  const [refreshCount, setRefreshCount] = useState(0); //there's no actual need to keep track of the number of refreshes,
+                                                       //but we just add this to the depencies array so we can refresh the page
+                                                       //whenever a user is successfully kicked or banned.
 
   const handleBan = (member) => {
-    console.log(member.name + " is banned");
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "put",
+      url: `http://localhost:5000/groups/add_to_ban/${group_id}/${member.name}/${get_bearer(localStorage)}`,
+    })
+      .then((res) => {
+        console.log(
+          `You have banned ${member.name}`
+        );
+        setRefreshCount(refreshCount + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    console.log(member);
   };
 
   const handleKick = (member) => {
-    console.log(member.name + " has been kicked");
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "put",
+      url: `http://localhost:5000/groups/kick_member/${group_id}/${member.name}/${get_bearer(localStorage)}`,
+    })
+      .then((res) => {
+        console.log(
+          `You have kicked ${member.name}`
+        );
+        setRefreshCount(refreshCount + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    console.log(member);
   };
 
   const goToBanList = () => {
@@ -73,7 +114,7 @@ const MembersOwner = (props) => {
         console.log("Error encountered in membersOwner.js");
         console.log(err);
       });
-  }, [history, group_id]);
+  }, [refreshCount]);
 
   if (uiLoading === true) {
     return <Loading />;

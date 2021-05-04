@@ -21,12 +21,14 @@ const add_member = async (req, res, next) => {
   if (error) {
     return next(error);
   }
+  
   if (members.includes(user_id)) {
     //check if in group already
     const msg = "User already in the group";
     console.log(msg);
     return next(new Error(msg));
   }
+
   if (banned_members.includes(user_id)) {
     //check if banned
     const msg = "User is banned from the group";
