@@ -25,6 +25,7 @@ const MembersOwner = (props) => {
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [memberlist, setMemberlist] = useState(null);
   const [errors, setErrors] = useState("");
+  const [refreshCount, setRefreshCount] = useState(0);
 
   const handleBan = (member) => {
     if (is_expired(localStorage)) {
@@ -39,6 +40,7 @@ const MembersOwner = (props) => {
         console.log(
           `You have banned ${member.name}`
         );
+        setRefreshCount(refreshCount + 1);
       })
       .catch((err) => {
         console.log(err);
@@ -60,6 +62,7 @@ const MembersOwner = (props) => {
         console.log(
           `You have kicked ${member.name}`
         );
+        setRefreshCount(refreshCount + 1);
       })
       .catch((err) => {
         console.log(err);
@@ -109,7 +112,7 @@ const MembersOwner = (props) => {
         console.log("Error encountered in membersOwner.js");
         console.log(err);
       });
-  });
+  }, [refreshCount]);
 
   if (uiLoading === true) {
     return <Loading />;
