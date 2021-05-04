@@ -35,7 +35,6 @@ connection.once("open", () => {
   console.log("MongoDB connection established");
 });
 
-
 //Testing with a localhost database
 /*
 const url = 'mongodb://127.0.0.1:27017/local-test'
