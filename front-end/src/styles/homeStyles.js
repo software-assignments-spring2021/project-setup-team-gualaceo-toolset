@@ -11,8 +11,8 @@ const styles = (theme) => ({
     border: "0px solid rgba(0, 0, 0, .125)",
   },
   avatar: {
-    height: 50,
-    width: 40,
+    height: 60,
+    width: 60,
     flexShrink: 0,
     flexGrow: 0,
     zIndex: 3,
