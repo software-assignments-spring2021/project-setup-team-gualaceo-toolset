@@ -273,7 +273,7 @@ const Landing = (props) => {
                           <Divider style={{ margin: "2%" }}></Divider>
                           <Typography>
                             Login in with your Spotify account. No need to make
-                            a account. Be able to listen in-app and export
+                            an account. Be able to listen in-app and export
                             playlist back into your Spotify.
                           </Typography>
                         </CardContent>

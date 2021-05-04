@@ -209,6 +209,7 @@ const Playlist = (props) => {
           data: {
             uris: [`spotify:track:${song.id}`],
             position_ms: 0,
+            // context_uri: `spotify:playlist:${location.state.generated_playlist_id}`,
           },
         })
           .then((res) => {
