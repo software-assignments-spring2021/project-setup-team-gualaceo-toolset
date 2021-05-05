@@ -22,10 +22,11 @@ const styles = (theme) => ({
     top: "10%",
   },
   cardContent: {
-    margin: "10px",
+    margin: "4px",
     // marginLeft: "20px",
-    textAlign: "right",
+    // textAlign: "right",
     // marginRight: "20px",
+    justifyContent: "space-between",
     display: "flex",
   },
   removeButton: {

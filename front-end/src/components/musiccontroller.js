@@ -144,7 +144,7 @@ const MusicController = (props) => {
   const handleNext = () => {};
 
   useEffect(() => {
-    console.log(isPlaying);
+    console.log(props.id);
 
     setInterval(() => {
       // setCurrentTime((currentTime) => currentTime + 1);
@@ -237,9 +237,16 @@ const MusicController = (props) => {
                   <ExpandMoreIcon className={classes.collapse} />
                 </IconButton>
                 <DialogTitle>
-                  <Typography className={classes.playlistTitle}>
-                    {props.playlistTitle}
-                  </Typography>
+                  <a
+                    style={{ textDecoration: "none", display: "flex" }}
+                    rel="noopener noreferrer"
+                    href={`https://open.spotify.com/playlist/${props.id}`}
+                    target="_blank"
+                  >
+                    <Typography className={classes.playlistTitle}>
+                      {props.playlistTitle}
+                    </Typography>
+                  </a>
                 </DialogTitle>
                 <div></div>
                 <div></div>
