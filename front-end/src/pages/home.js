@@ -43,39 +43,6 @@ const Home = (props) => {
   let back_end_uri;
   back_end_uri = process.env.REACT_APP_BACK_END_URI;
 
-  let groups = [
-    {
-      name: "Work Buddies",
-      owner: true,
-      generationRequested: true,
-    },
-    {
-      name: "Alexa's Party",
-      owner: false,
-      generationRequested: true,
-    },
-    {
-      name: "Gaming Friends",
-      owner: true,
-      generationRequested: false,
-    },
-    {
-      name: "Grandma's House",
-      owner: false,
-      generationRequested: false,
-    },
-    {
-      name: "Grandpa's House",
-      owner: false,
-      generationRequested: false,
-    },
-    {
-      name: "Josh's Party",
-      owner: false,
-      generationRequested: false,
-    },
-  ];
-
   const getParamValues = (url) => {
     return url
       .slice(1)
