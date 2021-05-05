@@ -21,7 +21,7 @@ import {
 } from "../components/authentication.js";
 
 require("dotenv").config();
-const back_end_uri = process.env.REACT_APP_BACK_END_URI
+const back_end_uri = process.env.REACT_APP_BACK_END_URI;
 
 const GroupMenuOwner = (props) => {
   let location = useLocation();
@@ -54,6 +54,10 @@ const GroupMenuOwner = (props) => {
     });
   };
   const handleViewPlaylist = async () => {
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
     let passed = await axios(
       `${back_end_uri}/groups/playlist_id/${group_id}/${get_bearer(
         localStorage
@@ -77,6 +81,7 @@ const GroupMenuOwner = (props) => {
     });
   };
   const handleGeneratePlaylist = () => {
+    // setuiLoading(true);
     axios({
       method: "post",
       url: `${back_end_uri}/generate_playlist/"new_playlist"/${group_id}/${get_bearer(
@@ -85,8 +90,13 @@ const GroupMenuOwner = (props) => {
     })
       .then((res) => {
         setPlaylistGenerated(true);
+        // setuiLoading(false);
       })
       .catch((err) => {
+        setCopied(
+          "This error has occurred either because there are no songs in one or more of the playlists or because one or more of the playlists are not public. Please modify the playlist settings in Spotify."
+        );
+        // setuiLoading(false);
         console.log("Error: could not generate playlist");
       });
   };
@@ -239,7 +249,11 @@ const GroupMenuOwner = (props) => {
               </div>
             </Toolbar>
           </AppBar>
-          <Error error={copied} setError={setCopied} severity="success" />
+          <Error
+            error={copied}
+            setError={setCopied}
+            severity={copied.includes("error") ? "error" : "success"}
+          />
           <Card fullWidth className={classes.flexCard}>
             <CardContent style={{ marginBottom: "-10px" }}>
               <div>Group Name:</div>

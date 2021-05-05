@@ -24,7 +24,7 @@ import {
 } from "../components/authentication";
 
 require("dotenv").config();
-const back_end_uri = process.env.REACT_APP_BACK_END_URI
+const back_end_uri = process.env.REACT_APP_BACK_END_URI;
 
 const Playlist = (props) => {
   let history = useHistory();
@@ -191,7 +191,7 @@ const Playlist = (props) => {
                     artist: song.artist,
                     id: song.id,
                     title: song.title,
-                    image: response.data.album.images[1].url,
+                    image: response.data.album.images[0].url,
                   },
                 ]);
               })
@@ -236,6 +236,7 @@ const Playlist = (props) => {
           data: {
             uris: [`spotify:track:${song.id}`],
             position_ms: 0,
+            // context_uri: `spotify:playlist:${location.state.generated_playlist_id}`,
           },
         })
           .then((res) => {
@@ -274,9 +275,16 @@ const Playlist = (props) => {
                 onClick={handleGoBack}
                 startIcon={<ArrowBackIosIcon className={classes.back} />}
               ></Button>
-              <Typography variant="h5" className={classes.heading}>
-                {location.state.name}
-              </Typography>
+              <a
+                style={{ textDecoration: "none", display: "flex" }}
+                rel="noopener noreferrer"
+                href={`https://open.spotify.com/playlist/${location.state.generated_playlist_id}`}
+                target="_blank"
+              >
+                <Typography variant="h5" className={classes.heading}>
+                  {location.state.name}
+                </Typography>
+              </a>
               {!isGuest && (
                 <Button
                   color="inherit"
@@ -390,6 +398,8 @@ const Playlist = (props) => {
               setCurrentSong={setCurrentSong}
               isPlaying={isPlaying}
               setIsPlaying={setIsPlaying}
+              playlistTitle={location.state.name}
+              id={location.state.generated_playlist_id}
             />
           </div>
         </div>
