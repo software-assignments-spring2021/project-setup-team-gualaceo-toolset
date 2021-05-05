@@ -13,6 +13,9 @@ import styles from "../styles/playlistComponentStyles.js";
 import { get_bearer, set_authentication } from "../components/authentication";
 import axios from "axios";
 
+require("dotenv").config();
+let back_end_uri = process.env.REACT_APP_BACK_END_URI
+
 const pool_has_playlist = (pool, playlist_id) => {
   for (let i = 0; i < pool.length; i++) {
     if (pool[i].playlist_id === playlist_id) {
@@ -41,7 +44,7 @@ const pressButton = (
   if (!added) {
     axios({
       method: "put",
-      url: `http://localhost:5000/groups/add_to_pool/${group_id}/${playlist_id}/${get_bearer(
+      url: `${back_end_uri}/groups/add_to_pool/${group_id}/${playlist_id}/${get_bearer(
         localStorage
       )}`,
     })
@@ -58,7 +61,7 @@ const pressButton = (
     //should actually remove the group
     axios({
       method: "delete",
-      url: `http://localhost:5000/groups/remove_from_pool/${group_id}/${playlist_id}/${get_bearer(
+      url: `${back_end_uri}/groups/remove_from_pool/${group_id}/${playlist_id}/${get_bearer(
         localStorage
       )}`,
     })
@@ -76,6 +79,7 @@ const pressButton = (
 };
 
 const Playlist = (props) => {
+  
   const playlist = props.playlist;
   const group_id = props.group_id;
   const pool = props.pool;

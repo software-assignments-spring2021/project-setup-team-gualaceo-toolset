@@ -20,6 +20,9 @@ import {
   is_expired,
 } from "../components/authentication.js";
 
+require("dotenv").config();
+const back_end_uri = process.env.REACT_APP_BACK_END_URI;
+
 const GroupMenuOwner = (props) => {
   let location = useLocation();
   let state = location.state;
@@ -35,7 +38,9 @@ const GroupMenuOwner = (props) => {
   const [groupName, setGroupName] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [playlistGenerated, setPlaylistGenerated] = useState(false);
+  const [generateButtonEnabled, setGenerateButtonEnabled] = useState(false)
   const [copied, setCopied] = useState("");
+  let firstRound = true;
 
   const handleViewAllMusic = () => {
     //console.log("You've clicked on view all music");
@@ -51,8 +56,12 @@ const GroupMenuOwner = (props) => {
     });
   };
   const handleViewPlaylist = async () => {
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
     let passed = await axios(
-      `http://localhost:5000/groups/playlist_id/${group_id}/${get_bearer(
+      `${back_end_uri}/groups/playlist_id/${group_id}/${get_bearer(
         localStorage
       )}`
     )
@@ -74,17 +83,28 @@ const GroupMenuOwner = (props) => {
     });
   };
   const handleGeneratePlaylist = () => {
+    // setuiLoading(true);
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    setGenerateButtonEnabled(false)
     axios({
       method: "post",
-      url: `http://localhost:5000/generate_playlist/"new_playlist"/${group_id}/${get_bearer(
+      url: `${back_end_uri}/generate_playlist/"new_playlist"/${group_id}/${get_bearer(
         localStorage
       )}`,
     })
       .then((res) => {
         setPlaylistGenerated(true);
+        // setuiLoading(false);
       })
       .catch((err) => {
+        setCopied(
+          "This error has occurred either because there are no songs in one or more of the playlists or because one or more of the playlists are not public. Please modify the playlist settings in Spotify."
+        );
+        // setuiLoading(false);
         console.log("Error: could not generate playlist");
+        setGenerateButtonEnabled(true)
       });
   };
 
@@ -101,7 +121,7 @@ const GroupMenuOwner = (props) => {
     console.log(location.state);
     axios({
       method: "get",
-      url: `http://localhost:5000/groups/playlist_id/${group_id}/${get_bearer(
+      url: `${back_end_uri}/groups/playlist_id/${group_id}/${get_bearer(
         localStorage
       )}`,
     })
@@ -115,24 +135,11 @@ const GroupMenuOwner = (props) => {
         })
           .then((res) => {
             setGroupName(name);
+            state.name = name
           })
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
-  };
-
-  const handleTestNotification = () => {
-    let notifMessage =
-      "A user within the group " +
-      groupName +
-      " has requested that you generate/regenerate the playlist for that group";
-    addNotification({
-      title: "User requested new playlist generation",
-      subtitle: "New playlist request",
-      message: notifMessage,
-      theme: "darkblue",
-      native: true,
-    });
   };
 
   useEffect(() => {
@@ -142,29 +149,35 @@ const GroupMenuOwner = (props) => {
     // get group id
     setGroupID(location.state.id);
     setGroupName(location.state.name);
-    setuiLoading(false);
 
-    axios(
-      `http://localhost:5000/groups/playlist_is_generated/${group_id}/${get_bearer(
-        localStorage
-      )}`
-    )
-      .then((res) => {
-        console.log("playlist_is_generated=", res.data.playlist_is_generated);
-        setPlaylistGenerated(res.data.playlist_is_generated);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (firstRound)
+    {
+      axios(
+        `${back_end_uri}/groups/playlist_is_generated/${group_id}/${get_bearer(
+          localStorage
+        )}`
+      )
+        .then((res) => {
+          setPlaylistGenerated(res.data.playlist_is_generated);
+          setGenerateButtonEnabled(true)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      setuiLoading(false);
+      firstRound = false
+    }
   }, [
     history,
     playlistGenerated,
+    generateButtonEnabled,
     location.state.id,
     location.state,
     params.playlistGenerated,
     group_id,
   ]);
 
+  console.log("updating innards")
   if (playlistGenerated) {
     // Determines whether to show the user "view generated playlist" or "generate playlist"
     playlistCard = (
@@ -177,11 +190,18 @@ const GroupMenuOwner = (props) => {
       </Card>
     );
   } else {
+    let curClassName = classes.grayCards
+    let curOnClick = null
+    if (generateButtonEnabled)
+    {
+      curClassName = classes.cards
+      curOnClick = handleGeneratePlaylist
+    }
     playlistCard = (
       <Card
         fullWidth
-        className={classes.cards}
-        onClick={handleGeneratePlaylist}
+        className={curClassName}
+        onClick={curOnClick}
       >
         <CardContent style={{ marginBottom: "-10px" }}>
           <Typography className={classes.cardText}>
@@ -195,6 +215,7 @@ const GroupMenuOwner = (props) => {
   if (uiLoading === true) {
     return <Loading />;
   } else {
+    console.log("updating outtards")
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -237,7 +258,11 @@ const GroupMenuOwner = (props) => {
               </div>
             </Toolbar>
           </AppBar>
-          <Error error={copied} setError={setCopied} severity="success" />
+          <Error
+            error={copied}
+            setError={setCopied}
+            severity={copied.includes("error") ? "error" : "success"}
+          />
           <Card fullWidth className={classes.flexCard}>
             <CardContent style={{ marginBottom: "-10px" }}>
               <div>Group Name:</div>
@@ -276,19 +301,6 @@ const GroupMenuOwner = (props) => {
             </CardContent>
           </Card>
           {playlistCard}
-          <Card
-            fullWidth
-            className={classes.cards}
-            onClick={handleTestNotification}
-          >
-            <CardContent style={{ marginBottom: "-10px" }}>
-              <Typography className={classes.cardText}>
-                <center>
-                  Test Notifications (not intended for final product)
-                </center>
-              </Typography>
-            </CardContent>
-          </Card>
         </div>
       </Container>
     );

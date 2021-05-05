@@ -7,6 +7,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
 
 import backgroundWhite from "../media/background_white.png";
 
@@ -23,6 +24,9 @@ import {
 } from "../components/authentication.js";
 
 import styles from "../styles/viewMusicStyles";
+
+require("dotenv").config();
+const back_end_uri = process.env.REACT_APP_BACK_END_URI;
 // import Logout from "../components/logout";
 
 const ViewMusicOwner = (props) => {
@@ -43,7 +47,7 @@ const ViewMusicOwner = (props) => {
     set_authentication(localStorage, axios);
     axios({
       method: "get",
-      url: `http://localhost:5000/groups/get_pool/${state.id}/${get_bearer(
+      url: `${back_end_uri}/groups/get_pool/${state.id}/${get_bearer(
         localStorage
       )}`,
     })
@@ -93,9 +97,9 @@ const ViewMusicOwner = (props) => {
     set_authentication(localStorage, axios);
     axios({
       method: "delete",
-      url: `http://localhost:5000/groups/remove_from_pool/${
-        location.state.id
-      }/${playlist.id}/${get_bearer(localStorage)}`,
+      url: `${back_end_uri}/groups/remove_from_pool/${location.state.id}/${
+        playlist.id
+      }/${get_bearer(localStorage)}`,
     })
       .then((res) => {
         setErrors(
@@ -179,7 +183,38 @@ const ViewMusicOwner = (props) => {
               />
             </div>
             {playlists.map((playlist, i) => (
-              <div key={i} style={{ display: "flex", width: "100%" }}>
+              <Card key={i} fullWidth className={classes.cards}>
+                <CardContent className={classes.cardContent}>
+                  <a
+                    style={{ textDecoration: "none", display: "flex" }}
+                    rel="noopener noreferrer"
+                    href={`https://open.spotify.com/playlist/${playlist.id}`}
+                    target="_blank"
+                    // onClick={() => handleSpotifyOpen(playlist.id)}
+                  >
+                    <Box>
+                      <Typography className={classes.cardText}>
+                        {playlist.name}
+                      </Typography>
+                    </Box>
+                  </a>
+
+                  <Button
+                    color="primary"
+                    size="small"
+                    variant="contained"
+                    onClick={() => handleRemove(playlist)}
+                  >
+                    <Typography color="secondary">Remove</Typography>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+            {/* {playlists.map((playlist, i) => (
+              <div
+                key={i}
+                style={{ marginBottom: "10px", display: "flex", width: "100%" }}
+              >
                 <a
                   style={{ textDecoration: "none", display: "flex" }}
                   rel="noopener noreferrer"
@@ -211,7 +246,7 @@ const ViewMusicOwner = (props) => {
                   </div>
                 </Card>
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       </Container>

@@ -12,9 +12,10 @@ import SearchBar from "material-ui-search-bar";
 import backgroundWhite from "../media/background_white.png";
 
 import Loading from "../components/loading";
+import Error from "../components/error";
+import Logout from "../components/logout";
 
 import styles from "../styles/addSongsStyles";
-import Logout from "../components/logout";
 
 import axios from "axios";
 import {
@@ -26,11 +27,12 @@ import _ from "lodash";
 
 const AddSongs = (props) => {
   let history = useHistory();
-  let location = useLocation()
-  let state = location.state
-  let group_id = state.id
-  let playlist_id = state.generated_playlist_id
+  let location = useLocation();
+  let state = location.state;
+  let group_id = state.id;
+  let playlist_id = state.generated_playlist_id;
   const { classes } = props;
+  const [errors, setErrors] = useState("");
   const [uiLoading, setuiLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -52,9 +54,9 @@ const AddSongs = (props) => {
   const handleGoBack = () => {
     history.push({
       pathname: "/generatedPlaylist/owner",
-      state:state
+      state: state,
     });
-  }
+  };
 
   const handleSearchTermChange = (term) => {
     let editedRes = [];
@@ -80,7 +82,12 @@ const AddSongs = (props) => {
               ? (artists = track.artists[i].name)
               : (artists = artists + ", " + track.artists[i].name);
           }
-          editedRes.push({ artist: artists, title: track.name, id: track.id });
+          editedRes.push({
+            artist: artists,
+            title: track.name,
+            id: track.id,
+            image: track.album.images[0].url,
+          });
         });
         setSearchResults(editedRes);
         setUneditedSearchResults(res.data.tracks.items);
@@ -94,6 +101,21 @@ const AddSongs = (props) => {
   // let numruns = 0;
   const handleAdd = (searchResult) => {
     console.log(searchResult);
+    if (is_expired(localStorage)) {
+      return history.push("/"); //should this just be history.push("/")?
+    }
+    set_authentication(localStorage, axios);
+    console.log(location.state);
+    axios({
+      method: "post",
+      url: `https://api.spotify.com/v1/playlists/${location.state.generated_playlist_id}/tracks?uris=spotify%3Atrack%3A${searchResult.id}`,
+    })
+      .then((res) => {
+        setErrors(
+          `${searchResult.title} has been added to ${location.state.name}.`
+        );
+      })
+      .catch((err) => console.log(err));
     // console.log(uneditedSearchResults);
     // console.log(uneditedSearchResults[0].id);
     // console.log(searchResult.id);
@@ -111,7 +133,7 @@ const AddSongs = (props) => {
     // }
     // axios({
     //   method: "get",
-    //   url: `http://localhost:5000/playlists/`,
+    //   url: `${back_end_uri}/playlists/`,
     // })
     //   .then((res) => {
     //     setSongs(res.data[0].songs);
@@ -131,9 +153,8 @@ const AddSongs = (props) => {
   };
 
   useEffect(() => {
-    if (is_expired(localStorage))
-    {
-        return history.push("/"); 
+    if (is_expired(localStorage)) {
+      return history.push("/");
     }
 
     setuiLoading(false);
@@ -172,13 +193,16 @@ const AddSongs = (props) => {
               Logout
             </Button>
             <div style={{ position: "absolute" }}>
-              <Logout
-                open={openConfirmLogout}
-                setOpen={setOpenConfirmLogout}
-              />
+              <Logout open={openConfirmLogout} setOpen={setOpenConfirmLogout} />
             </div>
           </Toolbar>
         </AppBar>
+        <Error
+          error={errors}
+          setError={setErrors}
+          severity="success"
+          style={errors ? { display: "block" } : { display: "none" }}
+        />
         <div className={classes.searchBarContainer}>
           <SearchBar
             value={searchTerm}
@@ -196,6 +220,7 @@ const AddSongs = (props) => {
                         <Avatar
                           className={classes.albumCover}
                           variant="rounded"
+                          src={searchResult.image}
                         />
                       </Box>
                       <Box>

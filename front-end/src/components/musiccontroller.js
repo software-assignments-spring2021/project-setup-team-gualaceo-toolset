@@ -67,21 +67,24 @@ const MusicController = (props) => {
   const { classes } = props;
 
   const handleSliderChange = (event, newValue) => {
-    // if (is_expired(localStorage)) {
-    //   return history.push("/"); //should this just be history.push("/")?
-    // }
-    // set_authentication(localStorage, axios);
-    // axios({
-    //   method: "get",
-    //   url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
-    // })
-    //   .then((res) => {
-    //     console.log(res);
-    //     setCurrentTime(newValue);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    if (is_expired(localStorage)) {
+      return history.push("/"); //should this just be history.push("/")?
+    }
+    set_authentication(localStorage, axios);
+    console.log(newValue);
+    axios({
+      method: "put",
+      url: `https://api.spotify.com/v1/me/player/seek?position_ms=${
+        newValue * 1000
+      }`,
+    })
+      .then((res) => {
+        console.log(res);
+        setCurrentTime(newValue);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const formatTime = (secs) => {
@@ -117,6 +120,7 @@ const MusicController = (props) => {
               props.currentSong == currentSong
                 ? null
                 : [`spotify:track:${currentSong.id}`],
+            // context_uri: `spotify:playlist:${currentSong.id}`
           },
         })
           .then((res) => {
@@ -140,33 +144,42 @@ const MusicController = (props) => {
   const handleNext = () => {};
 
   useEffect(() => {
-    if (isPlaying) {
-      // setInterval(() => {
-      console.log("hi");
-      if (is_expired(localStorage)) {
-        return history.push("/"); //should this just be history.push("/")?
-      }
-      set_authentication(localStorage, axios);
-      axios({
-        method: "get",
-        url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
-      })
-        .then((res) => {
-          console.log(res);
-          if (res.data.item.duration_ms !== 0) {
-            console.log(res.data.item.duration_ms);
-            setDuration(res.data.item.duration_ms / 1000);
-            setCurrentTime(res.data.progress_ms / 1000);
-            console.log(duration);
-            console.log(currentTime);
-          }
+    console.log(props.id);
+
+    setInterval(() => {
+      // setCurrentTime((currentTime) => currentTime + 1);
+      if (isPlaying) {
+        if (is_expired(localStorage)) {
+          return history.push("/"); //should this just be history.push("/")?
+        }
+        set_authentication(localStorage, axios);
+        axios({
+          method: "get",
+          url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
         })
-        .catch((err) => {
-          console.log(err);
-        });
-      // }, 1000);
-    }
+          .then((res) => {
+            console.log(res);
+            if (res.data.item.duration_ms !== 0) {
+              // console.log(res.data.item.duration_ms);
+              setDuration(res.data.item.duration_ms / 1000);
+              setCurrentTime(res.data.progress_ms / 1000);
+              // console.log(duration);
+              // console.log(currentTime);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    }, 1000);
   }, [props.currentSong]);
+
+  // if (isPlaying) {
+  //   // setInterval(() => {
+  //   // setCurrentTime((currentTime) => currentTime + 1);
+  //   console.log("hello");
+  //   // }, 1000);
+  // }
 
   if (expanded === false) {
     if (currentSong) {
@@ -186,6 +199,7 @@ const MusicController = (props) => {
                   <Avatar
                     className={classes.collapsedAlbumCover}
                     variant="square"
+                    src={currentSong.image}
                   />
                 </Box>
                 <Box>
@@ -223,9 +237,16 @@ const MusicController = (props) => {
                   <ExpandMoreIcon className={classes.collapse} />
                 </IconButton>
                 <DialogTitle>
-                  <Typography className={classes.playlistTitle}>
-                    {"Playlist Title"}
-                  </Typography>
+                  <a
+                    style={{ textDecoration: "none", display: "flex" }}
+                    rel="noopener noreferrer"
+                    href={`https://open.spotify.com/playlist/${props.id}`}
+                    target="_blank"
+                  >
+                    <Typography className={classes.playlistTitle}>
+                      {props.playlistTitle}
+                    </Typography>
+                  </a>
                 </DialogTitle>
                 <div></div>
                 <div></div>
@@ -236,6 +257,7 @@ const MusicController = (props) => {
                 <Avatar
                   className={classes.expandedAlbumCover}
                   variant="rounded"
+                  src={currentSong.image}
                 />
               </center>
               <div className={classes.expandedDetails}>

@@ -1,8 +1,7 @@
 let Group = require("../../models/groups.model");
 
-const add_to_ban = async (req, res,next) => {
+const unset_regeneration_request = async (req, res,next) => {
   const group_id = req.params.group_id
-  const user_id = req.params.user_id
   const own_id = req.user_id
 
   let members
@@ -12,7 +11,7 @@ const add_to_ban = async (req, res,next) => {
     .then(response => {
       members = response.members
       banned_members = response.banned_members
-      owners = response.owners
+      owners=response.owners
     })
     .catch(err => {
       const msg = "Cannot find the group" 
@@ -25,42 +24,37 @@ const add_to_ban = async (req, res,next) => {
       return next(error)
   }
 
-  if (!owners.includes(own_id))  //not an owner
+  if (!members.includes(own_id))  //not a member
   {
-    const msg = "You are not an owner, cannot perform this action"
+    const msg = "You are not an member, cannot unset request"
     console.log(msg)
     return next(new Error(msg))
   }
 
-  if (banned_members.includes(user_id))  //check if banned already
+  if (banned_members.includes(own_id))  //check if banned
   {
-    const msg = "User is already banned"
+    const msg = "You are banned, cannot unset request"
     console.log(msg)
     return next(new Error(msg))
   }
-  if (owners.includes(user_id))  //group owner cannot be banned
+  if (!owners.includes(own_id))  //check if is owner
   {
-    const msg = "User is group owner, cannot be banned"
+    const msg = "You are not an owner, cannot unset request"
     console.log(msg)
     return next(new Error(msg))
   }
 
-  //add user to the banned list
+  //request regeneration
   await Group.updateOne({_id:group_id},
   {
-    $push:{banned_members:user_id}
+    $set:{regeneration_requested: false}
   },
   {safe: true, upsert: true}
   )
 
-  if(members.includes(user_id))  //if the member is in the group, remove it
-  {
-    await Group.updateOne({_id:group_id},
-    { $pullAll: {members: [user_id] }})
-  }
 
   res.send("Finished operation")
 }
 module.exports = {
-  add_to_ban: add_to_ban
+  unset_regeneration_request:unset_regeneration_request
 }

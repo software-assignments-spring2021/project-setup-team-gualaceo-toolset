@@ -9,7 +9,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+// import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Typography, Card, CardContent, Divider } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import _ from "lodash";
@@ -38,6 +38,43 @@ const Home = (props) => {
   const [errors, setErrors] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [myGroups, setMyGroups] = useState([]);
+
+  require("dotenv").config();
+  let back_end_uri;
+  back_end_uri = process.env.REACT_APP_BACK_END_URI;
+
+  let groups = [
+    {
+      name: "Work Buddies",
+      owner: true,
+      generationRequested: true,
+    },
+    {
+      name: "Alexa's Party",
+      owner: false,
+      generationRequested: true,
+    },
+    {
+      name: "Gaming Friends",
+      owner: true,
+      generationRequested: false,
+    },
+    {
+      name: "Grandma's House",
+      owner: false,
+      generationRequested: false,
+    },
+    {
+      name: "Grandpa's House",
+      owner: false,
+      generationRequested: false,
+    },
+    {
+      name: "Josh's Party",
+      owner: false,
+      generationRequested: false,
+    },
+  ];
 
   const getParamValues = (url) => {
     return url
@@ -95,7 +132,7 @@ const Home = (props) => {
         setUserID(nameRes.data.id);
         axios({
           method: "get",
-          url: `http://localhost:5000/groups/me/${nameRes.data.id}`,
+          url: `${back_end_uri}/groups/me/${nameRes.data.id}`,
         })
           .then((response) => {
             response.data.forEach((playlist) => {
@@ -114,8 +151,9 @@ const Home = (props) => {
                       id: playlist._id,
                       image:
                         res.data.images.length !== 0
-                          ? res.data.images[1].url
+                          ? res.data.images[0].url
                           : null,
+                      generationRequested: playlist.regeneration_requested,
                     },
                   ]);
                 })
@@ -139,8 +177,6 @@ const Home = (props) => {
       });
   }, []);
 
-  // Not finished... groupName is set to the id of the database record
-  // not the id of the spotify playlist
   const handleJoin = async (event) => {
     event.preventDefault();
     let currGroup = "";
@@ -153,7 +189,7 @@ const Home = (props) => {
       // console.log(groupName);
       await axios({
         method: "get",
-        url: `http://localhost:5000/groups/id/${groupName}`,
+        url: `${back_end_uri}/groups/id/${groupName}`,
       })
         .then((res) => {
           currGroup = res.data[0];
@@ -169,7 +205,9 @@ const Home = (props) => {
     if (groupName) {
       axios({
         method: "put",
-        url: `http://localhost:5000/groups/add_members/${groupName}/${userid}`,
+        url: `${back_end_uri}/groups/add_members/${groupName}/${get_bearer(
+          localStorage
+        )}`,
       })
         .then((res) => {
           console.log(res);
@@ -237,7 +275,7 @@ const Home = (props) => {
           // Add the playlist to the DB
           axios({
             method: "post",
-            url: `http://localhost:5000/groups/add`,
+            url: `${back_end_uri}/groups/add`,
             data: {
               owners: userid,
               members: userid,

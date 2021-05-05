@@ -25,6 +25,11 @@ const groupsSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  regeneration_requested: {
+    type: Boolean,
+    default: false
+  },
+
 });
 
 const groupsModel = mongoose.model("Groups", groupsSchema);

@@ -9,9 +9,12 @@ import { Typography, Card, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import Loading from "../components/loading";
 import styles from "../styles/bannedMembersStyles";
-import {get_bearer, is_expired} from "../components/authentication.js"
+import {get_bearer, is_expired,set_authentication} from "../components/authentication.js"
 import Logout from "../components/logout";
 import axios from "axios"
+
+require("dotenv").config();
+const back_end_uri = process.env.REACT_APP_BACK_END_URI
 
 const BannedMembers = (props) => {
   let history = useHistory();
@@ -22,6 +25,10 @@ const BannedMembers = (props) => {
   const [uiLoading, setuiLoading] = useState(true);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [bannedMembers, setBannedMembers] = useState(null)
+  const [refreshCount, setRefreshCount] = useState(0);  //there's no actual need to keep track of the number of refreshes,
+                                                        //but we just add this to the depencies array so we can refresh the page
+                                                        //whenever a user is successfully kicked or banned.
+
 
 
   // const BannedMembers = [
@@ -55,7 +62,7 @@ const BannedMembers = (props) => {
     {
         return history.push("/"); 
     } 
-    axios(`http://localhost:5000/groups/get_banned_members/${group_id}/${get_bearer(localStorage)}`)
+    axios(`${back_end_uri}/groups/get_banned_members/${group_id}/${get_bearer(localStorage)}`)
     .then(res => {
       console.log("res=",res)
       let newBannedMembers = []
@@ -71,10 +78,40 @@ const BannedMembers = (props) => {
       console.log("Error encountered in bannedMembers.js")
       console.log(err)
     })
-  }, []);
+  }, [refreshCount]);
 
-  const handleUnban = (username) => {
-    console.log(`You have unbanned user: ${username}`);
+  const handleUnban = (member) => {
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "put",
+      url: `${back_end_uri}/groups/unban/${group_id}/${member.name}/${get_bearer(localStorage)}`,
+    })
+      .then((res) => {
+          console.log(`You have unbanned ${member.name}`)
+          setRefreshCount(refreshCount + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    /*  an option to immediately add unbanned user back into group
+    axios({
+        method: "put",
+        url: `${back_end_uri}/groups/add_members/${group_id}/${member.name}`,
+      })
+        .then((res) => {
+          console.log("successfully added user back")
+
+        })
+        .catch((err) =>{
+          console.log("failed to add user back")
+
+        })
+    */
+
+    console.log(member);
   };
 
   if (uiLoading === true) {
@@ -129,7 +166,7 @@ const BannedMembers = (props) => {
                         color="primary"
                         size="small"
                         variant="contained"
-                        onClick={() => handleUnban(member.username)}
+                        onClick={() => handleUnban(member)}
                       >
                         <Typography color="secondary">Unban</Typography>
                       </Button>
