@@ -18,6 +18,9 @@ import Loading from "../components/loading";
 import Error from "../components/error";
 import styles from "../styles/groupmenuStyles.js";
 
+require("dotenv").config();
+const back_end_uri = process.env.REACT_APP_BACK_END_URI
+
 const GroupMenu = (props) => {
   let history = useHistory();
   let location = useLocation();
@@ -66,8 +69,8 @@ const GroupMenu = (props) => {
       return;
     }
 
-    return history.push({
-      pathname: "/generatedPlaylist/member",
+    history.push({
+      pathname: "/generatedPlaylist",
       state: state,
     });
   };
@@ -78,7 +81,6 @@ const GroupMenu = (props) => {
   };
 
 
-  let back_end_uri="localhost:5000"
   const handleGenerateRequest = () => {
     console.log("playlist generate request made");
     //When we implement the backend, this should send a notification

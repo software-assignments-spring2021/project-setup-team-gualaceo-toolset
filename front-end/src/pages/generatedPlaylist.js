@@ -43,7 +43,6 @@ const Playlist = (props) => {
   const [currentSong, setCurrentSong] = useState("");
   const [members, setMembers] = useState([]);
   let [isOwner, setIsOwner] = useState(params.userStatus === "owner"); //params.userStatus is whatever comes after /generatedPlaylist/ in the url
-  let [isMember, setIsMember] = useState(params.userStatus === "member");
   let [isGuest, setIsGuest] = useState(params.userStatus === "guest");
   const [songs, setSongs] = useState([]);
   const [playlistAvatar, setPlaylistAvatar] = useState("");
@@ -64,7 +63,7 @@ const Playlist = (props) => {
         state: state,
       });
     } 
-    else if(isMember){
+    else{
       history.push({
         pathname: "/groupMenu/generated",
         state: state,
@@ -321,6 +320,17 @@ const Playlist = (props) => {
                   onClick={handleAddMusic}
                 >
                   Add music
+                </Button>
+              </div>
+            )}
+            {!isOwner && (
+              <div className={classes.buttonContainer}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleRequestRegeneration}
+                >
+                  Request Regeneration
                 </Button>
               </div>
             )}
