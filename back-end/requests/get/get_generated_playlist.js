@@ -28,11 +28,13 @@ const get_generated_playlist = async (req, res, next) => {
         return next(error)
     }
 
+    /*
     if (!playlist_is_generated)
     {
         const msg = "Error: playlist is yet to be generated"
         return next(new Error(msg))
     }
+    */
 
     if (!members.includes(user_id))
     {

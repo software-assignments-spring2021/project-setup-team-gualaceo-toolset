@@ -167,8 +167,8 @@ const GroupMenuOwner = (props) => {
     params.playlistGenerated,
     group_id,
   ]);
-
-  if (playlistGenerated) {
+  //playlistGenerated
+  if (true) {
     // Determines whether to show the user "view generated playlist" or "generate playlist"
     playlistCard = (
       <Card fullWidth className={classes.cards} onClick={handleViewPlaylist}>
