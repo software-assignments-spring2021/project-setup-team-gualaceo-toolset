@@ -157,8 +157,7 @@ const GroupMenu = (props) => {
             onClick={handleGenerateRequest}
           >
             <center>
-              Request Playlist generation (append '/generated' to url to
-              simulate owner generating new playlist)
+              Request Playlist generation
             </center>
           </Typography>
         </CardContent>
