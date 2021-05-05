@@ -39,6 +39,7 @@ const ViewMusicOwner = (props) => {
   const [initPlaylists, setInitPlaylists] = useState([]);
   const [errors, setErrors] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
+  const [refreshCount, setRefreshCount] = useState(0)
 
   useEffect(() => {
     if (is_expired(localStorage)) {
@@ -81,7 +82,7 @@ const ViewMusicOwner = (props) => {
       .catch((err) => {
         console.log(err);
       });
-  }, [playlists]);
+  }, []);
 
   const goBack = () => {
     history.push({
