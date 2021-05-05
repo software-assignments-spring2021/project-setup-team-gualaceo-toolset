@@ -4,14 +4,13 @@ let Group = require("../models/groups.model");
 const get_playlist = async (group_id) => {
     
     //check that playlist_href is valid
-    let generated_playlist_id
+    let playlist_id
     let error
     let passed = await Group.findOne({_id:group_id})
     .then((response) => 
     {
         console.log("Playlist ID looking")
         playlist_id = response.generated_playlist_id
-        //console.log(tracks)
         return true
     })
     .catch((err) => {
@@ -26,8 +25,7 @@ const get_playlist = async (group_id) => {
     {
       return error
     }
-    
-    return generated_playlist_id;
+    return playlist_id;
 }
 
 module.exports = {

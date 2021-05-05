@@ -37,17 +37,23 @@ const generate_playlist = async (req, res, next) => {
             console.log(err)
             return new Error(msg)
         })
-    
+
     if (error)
     {
         return next(error)
     }
-
+    console.log(generated_playlist_id)
     if (!owners.includes(user_id))
     {
         const msg = "Error: User is not an owner, can not generate playlist"
         console.log(msg)
         return next(new Error(msg))
+    }
+
+    if(generated_playlist_id)
+    {
+        console.log("in")
+        await remove_songs_in_playlist(user_id, bearer, generated_playlist_id)
     }
 
     let total_songs = 50 //songs that will be added to the playlist, should not exceed 100
@@ -615,7 +621,76 @@ const add_songs_to_playlist = async (uris, user_id, bearer, generated_playlist_i
             JSON_RESPONSE=response.data
         })
         .catch((err) => {
-            const msg = "Something went wrong in the add_tracks endpoint"
+            const msg = "Something went wrong in the add_tracks axios"
+            console.log(msg)
+            console.log(uris)
+            console.error(err)
+            error = new Error(msg)
+    })
+
+    if (error)
+    {
+        return error
+    }
+
+    return JSON_RESPONSE
+}
+
+const remove_songs_in_playlist = async (user_id, bearer, generated_playlist_id) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${bearer}`
+    }
+
+    let GET_URL = `https://api.spotify.com/v1/playlists/${generated_playlist_id}/tracks`;
+    let JSON_RESPONSE
+    let cur_songs_uris = []
+    let items
+    let error
+    await axios({
+        method: "get",
+        url: GET_URL,
+        headers: headers,
+      })
+        .then((response) => {
+            console.log("Successfully got tracks from playlist")
+            items=response.data.items
+        })
+        .catch((err) => {
+            const msg = "Something went wrong in the get_tracks axios function"
+            console.log(msg)
+            console.error(err)
+            error = new Error(msg)
+    })
+
+    if (error)
+    {
+        return error
+    }
+
+    let tracks = []
+    items.forEach(item => {
+        let track_id = item.track.id
+        tracks.push({"uri": `spotify:track:${track_id}`})
+    })
+
+    let json_object = {"tracks": tracks}
+
+    console.log("cur_songs_uris= ", cur_songs_uris)
+
+    let DEL_URL = `https://api.spotify.com/v1/playlists/${generated_playlist_id}/tracks`;
+    await axios({
+        method: "delete",
+        url: DEL_URL,
+        data: {tracks},
+        headers: headers,
+      })
+        .then((response) => {
+            console.log("Successfully removed all tracks from playlist")
+            JSON_RESPONSE=response.data
+        })
+        .catch((err) => {
+            const msg = "Something went wrong in the playlist clearing"
             console.log(msg)
             console.error(err)
             error = new Error(msg)
