@@ -293,101 +293,107 @@ const Home = (props) => {
     return <Loading />;
   } else {
     return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.root}>
-          <div style={{ width: "200px", height: "100px" }}>
-            {/* Background */}
-            <img
+      <div className={classes.body}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.root}>
+            <div style={{ width: "200px", height: "100px" }}>
+              {/* Background */}
+              {/* <img
               alt="complex"
               src={backgroundWhite}
               className={classes.backgroundImg}
-            />
-          </div>
-          <AppBar>
-            <Toolbar className={classes.toolbar}>
-              <div className={classes.spacer}></div>
-              <Typography variant="h5" className={classes.heading}>
-                Your Groups
-              </Typography>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  setOpenConfirmLogout(!openConfirmLogout);
-                }}
-                className={classes.logout}
-              >
-                Logout
-              </Button>
-              <div style={{ position: "absolute" }}>
-                <Logout
-                  open={openConfirmLogout}
-                  setOpen={setOpenConfirmLogout}
-                />
-              </div>
-            </Toolbar>
-          </AppBar>
-          {/* <div style={{ position: "absolute" }}> */}
-          <Error error={errors} setError={setErrors} severity="error" />
-          {/* </div> */}
-          <div style={{ marginTop: "-30px" }}>
-            <Accordion square={true} className={classes.accordion}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>
-                  <div style={{ margin: "7px" }}>Create Group</div>
+            /> */}
+            </div>
+            <AppBar>
+              <Toolbar className={classes.toolbar}>
+                <div className={classes.spacer}></div>
+                <Typography variant="h5" className={classes.heading}>
+                  Your Groups
                 </Typography>
-              </AccordionSummary>
-              <Divider></Divider>
-              <form onSubmit={handleCreate}>
-                <AccordionDetails style={{ marginTop: "10px" }}>
-                  <Typography>Enter Group Name:</Typography>
-                  <TextField
-                    style={{ width: "90%" }}
-                    label="Group Name"
-                    variant="outlined"
-                    onChange={(e) => setGroupName(e.target.value)}
-                    value={groupName}
+                <Button
+                  color="inherit"
+                  onClick={() => {
+                    setOpenConfirmLogout(!openConfirmLogout);
+                  }}
+                  className={classes.logout}
+                >
+                  Logout
+                </Button>
+                <div style={{ position: "absolute" }}>
+                  <Logout
+                    open={openConfirmLogout}
+                    setOpen={setOpenConfirmLogout}
                   />
-                </AccordionDetails>
-                <AccordionDetails style={{ marginTop: "-10px" }}>
-                  <Button variant="outlined" fullWidth type="submit">
-                    Create
-                  </Button>
-                </AccordionDetails>
-              </form>
-            </Accordion>
-            <Accordion square={true} className={classes.accordion}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>
-                  <div style={{ margin: "7px" }}>Join Group</div>
-                </Typography>
-              </AccordionSummary>
-              <Divider></Divider>
-              <form onSubmit={handleJoin}>
-                <AccordionDetails style={{ marginTop: "10px" }}>
-                  <Typography>Enter Group ID:</Typography>
-                  <TextField
-                    style={{ width: "90%" }}
-                    label="Group ID"
-                    variant="outlined"
-                    onChange={(e) => setGroupName(e.target.value)}
-                    value={groupName}
-                  />
-                </AccordionDetails>
-                <AccordionDetails style={{ marginTop: "-10px" }}>
-                  <Button variant="outlined" fullWidth type="submit">
-                    Join
-                  </Button>
-                </AccordionDetails>
-              </form>
-            </Accordion>
+                </div>
+              </Toolbar>
+            </AppBar>
+            {/* <div style={{ position: "absolute" }}> */}
+            <Error error={errors} setError={setErrors} severity="error" />
+            {/* </div> */}
+            <div style={{ marginTop: "-30px" }}>
+              <Accordion square={true} className={classes.accordion}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>
+                    <div style={{ margin: "7px" }}>Create Group</div>
+                  </Typography>
+                </AccordionSummary>
+                <Divider></Divider>
+                <form onSubmit={handleCreate}>
+                  <AccordionDetails style={{ marginTop: "10px" }}>
+                    <Typography>Enter Group Name:</Typography>
+                    <TextField
+                      style={{ width: "90%" }}
+                      label="Group Name"
+                      variant="outlined"
+                      onChange={(e) => setGroupName(e.target.value)}
+                      value={groupName}
+                    />
+                  </AccordionDetails>
+                  <AccordionDetails style={{ marginTop: "-10px" }}>
+                    <Button variant="outlined" fullWidth type="submit">
+                      Create
+                    </Button>
+                  </AccordionDetails>
+                </form>
+              </Accordion>
+              <Accordion square={true} className={classes.accordion}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>
+                    <div style={{ margin: "7px" }}>Join Group</div>
+                  </Typography>
+                </AccordionSummary>
+                <Divider></Divider>
+                <form onSubmit={handleJoin}>
+                  <AccordionDetails style={{ marginTop: "10px" }}>
+                    <Typography>Enter Group ID:</Typography>
+                    <TextField
+                      style={{ width: "90%" }}
+                      label="Group ID"
+                      variant="outlined"
+                      onChange={(e) => setGroupName(e.target.value)}
+                      value={groupName}
+                    />
+                  </AccordionDetails>
+                  <AccordionDetails style={{ marginTop: "-10px" }}>
+                    <Button variant="outlined" fullWidth type="submit">
+                      Join
+                    </Button>
+                  </AccordionDetails>
+                </form>
+              </Accordion>
+            </div>
+            <br />
+            {myGroups.map((group) => (
+              <Group
+                group={group}
+                classes={classes}
+                handleVisit={handleVisit}
+              />
+            ))}
           </div>
-          <br />
-          {myGroups.map((group) => (
-            <Group group={group} classes={classes} handleVisit={handleVisit} />
-          ))}
-        </div>
-      </Container>
+        </Container>
+      </div>
     );
   }
 };
