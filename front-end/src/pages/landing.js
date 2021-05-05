@@ -150,14 +150,12 @@ const Landing = (props) => {
                 <br />
                 <Button
                   fullWidth
-                  onClick={handleGuestRedirect}
+                  // onClick={handleGuestRedirect}
                   className={classes.login}
                 >
-                  {guestRedirect ? (
-                    <Redirect to="/guest" />
-                  ) : (
-                    "Continue as guest"
-                  )}
+                  {
+                    guestRedirect ? <Redirect to="/guest" /> : null //    "Continue as guest"
+                  }
                 </Button>
               </div>
             </div>
