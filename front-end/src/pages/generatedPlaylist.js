@@ -9,6 +9,7 @@ import { Typography, CardContent } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 
 import backgroundWhite from "../media/background_white.png";
+import Error from "../components/error";
 
 import Loading from "../components/loading";
 import Logout from "../components/logout";
@@ -44,12 +45,13 @@ const Playlist = (props) => {
   const [members, setMembers] = useState([]);
   let [isOwner, setIsOwner] = useState(params.userStatus === "owner"); //params.userStatus is whatever comes after /generatedPlaylist/ in the url
   let [isGuest, setIsGuest] = useState(params.userStatus === "guest");
+  const [refreshCount, setRefreshCount] = useState(0)
   const [songs, setSongs] = useState([]);
   const [playlistAvatar, setPlaylistAvatar] = useState("");
   const previousSongsRef = useRef(songs);
+  const [copied, setCopied] = useState("");
 
   const handleAddMusic = () => {
-    console.log("add songs");
     history.push({
       pathname: "/addSongs",
       state: state,
@@ -71,6 +73,60 @@ const Playlist = (props) => {
     }
   };
 
+  const refreshPage = () => {
+    setSongs([])
+    axios({
+      method: "get",
+      url: `${back_end_uri}/groups/get_generated_playlist/${group_id}/${get_bearer(
+        localStorage
+      )}`,
+    })
+      .then((res) => {
+        axios({
+          method: "get",
+          url: `https://api.spotify.com/v1/playlists/${location.state.generated_playlist_id}`,
+        })
+          .then((response) => {
+            setPlaylistAvatar(response.data.images[0].url);
+          })
+          .catch((err) => console.log(err));
+        axios(
+          `${back_end_uri}/groups/get_members_and_owners/${group_id}/${get_bearer(
+            localStorage
+          )}`
+        )
+          .then((res) => {
+            console.log(res);
+            setMembers(res.data.members);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        res.data.songs.forEach((song) => {
+          axios({
+            method: "get",
+            url: `https://api.spotify.com/v1/tracks/${song.id}`,
+          })
+            .then((response) => {
+              setSongs((songs) => [
+                ...songs,
+                {
+                  artist: song.artist,
+                  id: song.id,
+                  title: song.title,
+                  image: response.data.album.images[0].url,
+                },
+              ]);
+            })
+            .catch((err) => console.log(err));
+        });
+      })
+      .then((res) => {
+        setuiLoading(false);
+      })
+      .catch((err) => console.log(err));
+  }
+
   const handleRequestRegeneration = () => {
     if (is_expired(localStorage)) {
       return history.push("/");
@@ -90,6 +146,29 @@ const Playlist = (props) => {
       });
 
   };
+
+  const handleRegeneratePlaylist = () => {
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    axios({
+      method: "post",
+      url: `${back_end_uri}/generate_playlist/"new_playlist"/${group_id}/${get_bearer(
+        localStorage
+      )}`,
+    })
+      .then((res) => {
+        refreshPage()
+        // setuiLoading(false);
+      })
+      .catch((err) => {
+        setCopied(
+          "This error has occurred either because there are no songs in one or more of the playlists or because one or more of the playlists are not public. Please modify the playlist settings in Spotify."
+        );
+        // setuiLoading(false);
+        console.log("Error: could not generate playlist");
+      });
+  }
 
 
 
@@ -319,16 +398,32 @@ const Playlist = (props) => {
               </Typography>
             </center>
           </div>
+          <Error
+            error={copied}
+            setError={setCopied}
+            severity={copied.includes("error") ? "error" : "success"}
+          />
           <div className={classes.songContainer}>
             {isOwner && (
-              <div className={classes.buttonContainer}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleAddMusic}
-                >
-                  Add music
-                </Button>
+              <div>
+                <div className={classes.buttonContainer}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddMusic}
+                  >
+                    Add music
+                  </Button>
+                </div>
+                <div className={classes.buttonContainer}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleRegeneratePlaylist}
+                  >
+                    Regenerate playlist
+                  </Button>
+                </div>
               </div>
             )}
             {!isOwner && (

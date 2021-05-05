@@ -82,6 +82,10 @@ const GroupMenuOwner = (props) => {
   };
   const handleGeneratePlaylist = () => {
     // setuiLoading(true);
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    
     axios({
       method: "post",
       url: `${back_end_uri}/generate_playlist/"new_playlist"/${group_id}/${get_bearer(
