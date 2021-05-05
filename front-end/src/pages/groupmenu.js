@@ -60,6 +60,23 @@ const GroupMenu = (props) => {
     console.log("playlist generate request made");
     //When we implement the backend, this should send a notification
     //to the owner of the group.
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "put",
+      url: `${back_end_uri}/groups/request_regeneration/${groupID}/${get_bearer(localStorage)}`,
+    })
+      .then((res) => {
+        console.log(
+          `You have requested for group ${groupID} to be regenerated`
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
   };
 
   const handleTestNotification = () => {

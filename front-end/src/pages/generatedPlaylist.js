@@ -43,6 +43,7 @@ const Playlist = (props) => {
   const [currentSong, setCurrentSong] = useState("");
   const [members, setMembers] = useState([]);
   let [isOwner, setIsOwner] = useState(params.userStatus === "owner"); //params.userStatus is whatever comes after /generatedPlaylist/ in the url
+  let [isMember, setIsMember] = useState(params.userStatus === "member");
   let [isGuest, setIsGuest] = useState(params.userStatus === "guest");
   const [songs, setSongs] = useState([]);
   const [playlistAvatar, setPlaylistAvatar] = useState("");
@@ -62,13 +63,37 @@ const Playlist = (props) => {
         pathname: "/groupMenuOwner/generated",
         state: state,
       });
-    } else {
+    } 
+    else if(isMember){
       history.push({
         pathname: "/groupMenu/generated",
         state: state,
       });
     }
   };
+
+  const handleRequestRegeneration = () => {
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "put",
+      url: `${back_end_uri}/groups/request_regeneration/${group_id}/${get_bearer(localStorage)}`,
+    })
+      .then((res) => {
+        console.log(
+          `You have requested for group ${group_id} to be regenerated`
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+  };
+
+
+
 
   const handleRemoveSong = async (delIndex, event) => {
     event.stopPropagation(); //Prevents song from opening when remove button is pressed
