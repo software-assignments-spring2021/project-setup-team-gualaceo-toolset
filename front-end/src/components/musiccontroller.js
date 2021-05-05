@@ -92,8 +92,11 @@ const MusicController = (props) => {
     let seconds = Math.ceil(secs - minutes * 60);
 
     if (seconds < 10) seconds = `0${seconds}`;
-
-    return `${minutes}:${seconds}`;
+    let retval = `${minutes}:${seconds}`;
+    if (retval.includes(":60")) {
+      retval = `${minutes + 1}:00`;
+    }
+    return retval;
   };
 
   const handlePrevious = () => {};
@@ -145,6 +148,7 @@ const MusicController = (props) => {
 
   useEffect(() => {
     console.log(props.id);
+    const source = axios.CancelToken.source();
 
     setInterval(() => {
       // setCurrentTime((currentTime) => currentTime + 1);
@@ -155,6 +159,7 @@ const MusicController = (props) => {
         set_authentication(localStorage, axios);
         axios({
           method: "get",
+          cancelToken: source.token,
           url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
         })
           .then((res) => {
@@ -167,11 +172,19 @@ const MusicController = (props) => {
               // console.log(currentTime);
             }
           })
-          .catch((err) => {
-            console.log(err);
+          .catch((error) => {
+            if (axios.isCancel(error)) {
+            } else {
+              throw error;
+            }
+            console.log(error);
           });
       }
     }, 1000);
+
+    return () => {
+      source.cancel();
+    };
   }, [props.currentSong]);
 
   // if (isPlaying) {
