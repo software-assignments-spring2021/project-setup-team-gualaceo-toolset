@@ -1,4 +1,13 @@
+import backgroundWhite from "../media/background_white.png";
+
 const styles = (theme) => ({
+  body: {
+    backgroundSize: "100%",
+    background: `url(${backgroundWhite})`,
+    backgroundRepeat: "repeat",
+    minHeight: "100vh",
+    height: "100%",
+  },
   root: {
     padding: theme.spacing(2),
     backgroundSize: "contain",

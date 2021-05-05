@@ -38,7 +38,7 @@ const GroupMenuOwner = (props) => {
   const [groupName, setGroupName] = useState("");
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [playlistGenerated, setPlaylistGenerated] = useState(false);
-  const [generateButtonEnabled, setGenerateButtonEnabled] = useState(false)
+  const [generateButtonEnabled, setGenerateButtonEnabled] = useState(false);
   const [copied, setCopied] = useState("");
   let firstRound = true;
 
@@ -87,7 +87,7 @@ const GroupMenuOwner = (props) => {
     if (is_expired(localStorage)) {
       return history.push("/");
     }
-    setGenerateButtonEnabled(false)
+    setGenerateButtonEnabled(false);
     axios({
       method: "post",
       url: `${back_end_uri}/generate_playlist/"new_playlist"/${group_id}/${get_bearer(
@@ -104,7 +104,7 @@ const GroupMenuOwner = (props) => {
         );
         // setuiLoading(false);
         console.log("Error: could not generate playlist");
-        setGenerateButtonEnabled(true)
+        setGenerateButtonEnabled(true);
       });
   };
 
@@ -135,7 +135,7 @@ const GroupMenuOwner = (props) => {
         })
           .then((res) => {
             setGroupName(name);
-            state.name = name
+            state.name = name;
           })
           .catch((err) => console.log(err));
       })
@@ -150,8 +150,7 @@ const GroupMenuOwner = (props) => {
     setGroupID(location.state.id);
     setGroupName(location.state.name);
 
-    if (firstRound)
-    {
+    if (firstRound) {
       axios(
         `${back_end_uri}/groups/playlist_is_generated/${group_id}/${get_bearer(
           localStorage
@@ -159,13 +158,13 @@ const GroupMenuOwner = (props) => {
       )
         .then((res) => {
           setPlaylistGenerated(res.data.playlist_is_generated);
-          setGenerateButtonEnabled(true)
+          setGenerateButtonEnabled(true);
         })
         .catch((err) => {
           console.log(err);
         });
       setuiLoading(false);
-      firstRound = false
+      firstRound = false;
     }
   }, [
     history,
@@ -177,7 +176,7 @@ const GroupMenuOwner = (props) => {
     group_id,
   ]);
 
-  console.log("updating innards")
+  console.log("updating innards");
   if (playlistGenerated) {
     // Determines whether to show the user "view generated playlist" or "generate playlist"
     playlistCard = (
@@ -190,19 +189,14 @@ const GroupMenuOwner = (props) => {
       </Card>
     );
   } else {
-    let curClassName = classes.grayCards
-    let curOnClick = null
-    if (generateButtonEnabled)
-    {
-      curClassName = classes.cards
-      curOnClick = handleGeneratePlaylist
+    let curClassName = classes.grayCards;
+    let curOnClick = null;
+    if (generateButtonEnabled) {
+      curClassName = classes.cards;
+      curOnClick = handleGeneratePlaylist;
     }
     playlistCard = (
-      <Card
-        fullWidth
-        className={curClassName}
-        onClick={curOnClick}
-      >
+      <Card fullWidth className={curClassName} onClick={curOnClick}>
         <CardContent style={{ marginBottom: "-10px" }}>
           <Typography className={classes.cardText}>
             <center>Generate Playlist</center>
@@ -215,7 +209,7 @@ const GroupMenuOwner = (props) => {
   if (uiLoading === true) {
     return <Loading />;
   } else {
-    console.log("updating outtards")
+    console.log("updating outtards");
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -236,7 +230,7 @@ const GroupMenuOwner = (props) => {
               ></Button>
               <Typography
                 variant="caption"
-                onClick={handleCopyID}
+                // onClick={handleCopyID}
                 className={classes.heading}
               >
                 <center>Group ID: {groupID}</center>
