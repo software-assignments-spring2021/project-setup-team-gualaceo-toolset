@@ -18,6 +18,9 @@ import Loading from "../components/loading";
 import Error from "../components/error";
 import styles from "../styles/groupmenuStyles.js";
 
+require("dotenv").config();
+const back_end_uri = process.env.REACT_APP_BACK_END_URI
+
 const GroupMenu = (props) => {
   let history = useHistory();
   let location = useLocation();
@@ -47,8 +50,29 @@ const GroupMenu = (props) => {
       state: state,
     });
   };
-  const handleViewPlaylist = () => {
-    history.push("/generatedPlaylist");
+  const handleViewPlaylist = async () => {
+    //history.push("/generatedPlaylist/member");
+    let passed = await axios(
+      `${back_end_uri}/groups/playlist_id/${groupID}/${get_bearer(
+        localStorage
+      )}`
+    )
+      .then((res) => {
+        state.generated_playlist_id = res.data.generated_playlist_id;
+        return true;
+      })
+      .catch((err) => {
+        console.log(err);
+        return false;
+      });
+    if (!passed) {
+      return;
+    }
+
+    history.push({
+      pathname: "/generatedPlaylist",
+      state: state,
+    });
   };
 
   const handleCopyID = () => {
@@ -56,10 +80,28 @@ const GroupMenu = (props) => {
     setCopied("Copied Group ID!");
   };
 
+
   const handleGenerateRequest = () => {
     console.log("playlist generate request made");
     //When we implement the backend, this should send a notification
     //to the owner of the group.
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "put",
+      url: `${back_end_uri}/groups/request_regeneration/${groupID}/${get_bearer(localStorage)}`,
+    })
+      .then((res) => {
+        console.log(
+          `You have requested for group ${groupID} to be regenerated`
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
   };
 
   const handleTestNotification = () => {
@@ -94,7 +136,7 @@ const GroupMenu = (props) => {
     set_authentication(localStorage, axios);
     //console.log(`Bearer = ${get_bearer(localStorage)}`)
   }, []);
-
+  //
   if (playlistGenerated) {
     // Determines whether to show the user "view generated playlist" or "generate playlist"
     playlistCard = (

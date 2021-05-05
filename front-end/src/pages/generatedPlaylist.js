@@ -62,13 +62,37 @@ const Playlist = (props) => {
         pathname: "/groupMenuOwner/generated",
         state: state,
       });
-    } else {
+    } 
+    else{
       history.push({
         pathname: "/groupMenu/generated",
         state: state,
       });
     }
   };
+
+  const handleRequestRegeneration = () => {
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
+    axios({
+      method: "put",
+      url: `${back_end_uri}/groups/request_regeneration/${group_id}/${get_bearer(localStorage)}`,
+    })
+      .then((res) => {
+        console.log(
+          `You have requested for group ${group_id} to be regenerated`
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+  };
+
+
+
 
   const handleRemoveSong = async (delIndex, event) => {
     event.stopPropagation(); //Prevents song from opening when remove button is pressed
@@ -296,6 +320,17 @@ const Playlist = (props) => {
                   onClick={handleAddMusic}
                 >
                   Add music
+                </Button>
+              </div>
+            )}
+            {!isOwner && (
+              <div className={classes.buttonContainer}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleRequestRegeneration}
+                >
+                  Request Regeneration
                 </Button>
               </div>
             )}
