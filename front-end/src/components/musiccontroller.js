@@ -141,33 +141,42 @@ const MusicController = (props) => {
   const handleNext = () => {};
 
   useEffect(() => {
+    console.log(isPlaying);
     if (isPlaying) {
-      // setInterval(() => {
-      console.log("hi");
-      if (is_expired(localStorage)) {
-        return history.push("/"); //should this just be history.push("/")?
-      }
-      set_authentication(localStorage, axios);
-      axios({
-        method: "get",
-        url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
-      })
-        .then((res) => {
-          console.log(res);
-          if (res.data.item.duration_ms !== 0) {
-            console.log(res.data.item.duration_ms);
-            setDuration(res.data.item.duration_ms / 1000);
-            setCurrentTime(res.data.progress_ms / 1000);
-            console.log(duration);
-            console.log(currentTime);
-          }
+      setInterval(() => {
+        // setCurrentTime((currentTime) => currentTime + 1);
+
+        if (is_expired(localStorage)) {
+          return history.push("/"); //should this just be history.push("/")?
+        }
+        set_authentication(localStorage, axios);
+        axios({
+          method: "get",
+          url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
         })
-        .catch((err) => {
-          console.log(err);
-        });
-      // }, 1000);
+          .then((res) => {
+            console.log(res);
+            if (res.data.item.duration_ms !== 0) {
+              // console.log(res.data.item.duration_ms);
+              setDuration(res.data.item.duration_ms / 1000);
+              setCurrentTime(res.data.progress_ms / 1000);
+              // console.log(duration);
+              // console.log(currentTime);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 1000);
     }
   }, [props.currentSong]);
+
+  // if (isPlaying) {
+  //   // setInterval(() => {
+  //   // setCurrentTime((currentTime) => currentTime + 1);
+  //   console.log("hello");
+  //   // }, 1000);
+  // }
 
   if (expanded === false) {
     if (currentSong) {
@@ -226,7 +235,7 @@ const MusicController = (props) => {
                 </IconButton>
                 <DialogTitle>
                   <Typography className={classes.playlistTitle}>
-                    {"Playlist Title"}
+                    {props.playlistTitle}
                   </Typography>
                 </DialogTitle>
                 <div></div>

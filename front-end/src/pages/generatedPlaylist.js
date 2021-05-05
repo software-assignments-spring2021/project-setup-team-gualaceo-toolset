@@ -24,7 +24,7 @@ import {
 } from "../components/authentication";
 
 require("dotenv").config();
-const back_end_uri = process.env.REACT_APP_BACK_END_URI
+const back_end_uri = process.env.REACT_APP_BACK_END_URI;
 
 const Playlist = (props) => {
   let history = useHistory();
@@ -356,6 +356,7 @@ const Playlist = (props) => {
               setCurrentSong={setCurrentSong}
               isPlaying={isPlaying}
               setIsPlaying={setIsPlaying}
+              playlistTitle={location.state.name}
             />
           </div>
         </div>
