@@ -37,6 +37,7 @@ connection.once("open", () => {
   console.log("MongoDB connection established");
 });
 
+
 /*Testing with a localhost database
 const url = 'mongodb://127.0.0.1:27017/local-test'
 mongoose.connect(url, { useNewUrlParser: true,useUnifiedTopology: true })
@@ -46,8 +47,8 @@ connection.once('open', _ => {
 })
 connection.on('error', err => {
   console.error('connection error:', err)
-})
-*/
+})*/
+
 
 
 const groupsRouter = require("./routes/groups");
@@ -69,15 +70,15 @@ app.use((req, res, next) => {
 
 //Get and set user info if required (middleware)
 app.use("/user_playlists/:bearer/:include_tracks", user_id.get_user_id) // sets res.user_id to the user_id (if the bearer token is valid)
-app.use("/follow_playlist/:bearer/:playlist_id", user_id.get_user_id)
+app.use("/follow_playlist/:bearer/:group_id", user_id.get_user_id)
 app.use("/remove_tracks/:bearer/:playlist_id/:track_id", user_id.get_user_id)
-app.use("/create_playlist/:bearer/", user_id.get_user_id)
+app.use("/create_playlist/:group_id/:bearer/", user_id.get_user_id)
 app.use("/generate_playlist/:playlist_name/:group_id/:bearer/", user_id.get_user_id)
 
 //endpoints to be used
 
 
-app.post("/create_playlist/:bearer/", create_playlist.create_playlist);
+app.post("/create_playlist/:group_id/:bearer/", create_playlist.create_playlist);
 app.post("/add_tracks/:bearer/:playlist_id", add_tracks.add_tracks);
 app.post("/generate_playlist/:playlist_name/:group_id/:bearer/", generate_playlist.generate_playlist)
 app.get(
@@ -93,7 +94,7 @@ app.delete(
   remove_tracks.remove_tracks
 );
 app.put(
-  "/follow_playlist/:bearer/:playlist_id",
+  "/follow_playlist/:bearer/:group_id",
   follow_playlist.follow_playlist
 );
 

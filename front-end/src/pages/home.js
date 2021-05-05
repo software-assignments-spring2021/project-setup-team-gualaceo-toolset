@@ -207,7 +207,7 @@ const Home = (props) => {
     if (groupName) {
       axios({
         method: "put",
-        url: `${back_end_uri}/groups/add_members/${groupName}/${userid}`,
+        url: `${back_end_uri}/groups/add_members/${groupName}/${get_bearer(localStorage)}`,
       })
         .then((res) => {
           console.log(res);

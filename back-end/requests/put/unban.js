@@ -4,6 +4,7 @@ const unban = async (req, res,next) => {
   const group_id = req.params.group_id
   const user_id = req.params.user_id
   const own_id = req.user_id
+  //console.log(user_id)
 
   let members
   let banned_members
