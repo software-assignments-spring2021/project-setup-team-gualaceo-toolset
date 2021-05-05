@@ -20,6 +20,9 @@ import {
   is_expired,
 } from "../components/authentication.js";
 
+require("dotenv").config();
+const back_end_uri = process.env.REACT_APP_BACK_END_URI
+
 const GroupMenuOwner = (props) => {
   let location = useLocation();
   let state = location.state;
@@ -52,7 +55,7 @@ const GroupMenuOwner = (props) => {
   };
   const handleViewPlaylist = async () => {
     let passed = await axios(
-      `http://localhost:5000/groups/playlist_id/${group_id}/${get_bearer(
+      `${back_end_uri}/groups/playlist_id/${group_id}/${get_bearer(
         localStorage
       )}`
     )
@@ -77,7 +80,7 @@ const GroupMenuOwner = (props) => {
     // setuiLoading(true);
     axios({
       method: "post",
-      url: `http://localhost:5000/generate_playlist/"new_playlist"/${group_id}/${get_bearer(
+      url: `${back_end_uri}/generate_playlist/"new_playlist"/${group_id}/${get_bearer(
         localStorage
       )}`,
     })
@@ -107,7 +110,7 @@ const GroupMenuOwner = (props) => {
     console.log(location.state);
     axios({
       method: "get",
-      url: `http://localhost:5000/groups/playlist_id/${group_id}/${get_bearer(
+      url: `${back_end_uri}/groups/playlist_id/${group_id}/${get_bearer(
         localStorage
       )}`,
     })
@@ -151,7 +154,7 @@ const GroupMenuOwner = (props) => {
     setuiLoading(false);
 
     axios(
-      `http://localhost:5000/groups/playlist_is_generated/${group_id}/${get_bearer(
+      `${back_end_uri}/groups/playlist_is_generated/${group_id}/${get_bearer(
         localStorage
       )}`
     )

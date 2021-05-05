@@ -14,6 +14,9 @@ import styles from "../styles/membersStyles.js";
 import { get_bearer, is_expired } from "../components/authentication.js";
 
 const Members = (props) => {
+  require("dotenv").config();
+  let back_end_uri 
+  back_end_uri = process.env.REACT_APP_BACK_END_URI
   let history = useHistory();
   const { classes } = props;
   const [uiLoading, setuiLoading] = useState(true);
@@ -36,7 +39,7 @@ const Members = (props) => {
     }
 
     axios(
-      `http://localhost:5000/groups/get_members_and_owners/${group_id}/${get_bearer(
+      `${back_end_uri}/groups/get_members_and_owners/${group_id}/${get_bearer(
         localStorage
       )}`
     )

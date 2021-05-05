@@ -13,6 +13,9 @@ import {get_bearer, is_expired,set_authentication} from "../components/authentic
 import Logout from "../components/logout";
 import axios from "axios"
 
+require("dotenv").config();
+const back_end_uri = process.env.REACT_APP_BACK_END_URI
+
 const BannedMembers = (props) => {
   let history = useHistory();
   let location = useLocation()
@@ -59,7 +62,7 @@ const BannedMembers = (props) => {
     {
         return history.push("/"); 
     } 
-    axios(`http://localhost:5000/groups/get_banned_members/${group_id}/${get_bearer(localStorage)}`)
+    axios(`${back_end_uri}/groups/get_banned_members/${group_id}/${get_bearer(localStorage)}`)
     .then(res => {
       console.log("res=",res)
       let newBannedMembers = []
@@ -84,7 +87,7 @@ const BannedMembers = (props) => {
     set_authentication(localStorage, axios);
     axios({
       method: "put",
-      url: `http://localhost:5000/groups/unban/${group_id}/${member.name}/${get_bearer(localStorage)}`,
+      url: `${back_end_uri}/groups/unban/${group_id}/${member.name}/${get_bearer(localStorage)}`,
     })
       .then((res) => {
           console.log(`You have unbanned ${member.name}`)
@@ -96,7 +99,7 @@ const BannedMembers = (props) => {
     /*  an option to immediately add unbanned user back into group
     axios({
         method: "put",
-        url: `http://localhost:5000/groups/add_members/${group_id}/${member.name}`,
+        url: `${back_end_uri}/groups/add_members/${group_id}/${member.name}`,
       })
         .then((res) => {
           console.log("successfully added user back")

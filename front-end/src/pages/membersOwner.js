@@ -16,6 +16,8 @@ import Logout from "../components/logout";
 
 
 const MembersOwner = (props) => {
+  let back_end_uri 
+  back_end_uri = process.env.REACT_APP_BACK_END_URI
   let history = useHistory();
   let location = useLocation();
   let state = location.state;
@@ -36,7 +38,7 @@ const MembersOwner = (props) => {
     set_authentication(localStorage, axios);
     axios({
       method: "put",
-      url: `http://localhost:5000/groups/add_to_ban/${group_id}/${member.name}/${get_bearer(localStorage)}`,
+      url: `${back_end_uri}/groups/add_to_ban/${group_id}/${member.name}/${get_bearer(localStorage)}`,
     })
       .then((res) => {
         console.log(
@@ -58,7 +60,7 @@ const MembersOwner = (props) => {
     set_authentication(localStorage, axios);
     axios({
       method: "put",
-      url: `http://localhost:5000/groups/kick_member/${group_id}/${member.name}/${get_bearer(localStorage)}`,
+      url: `${back_end_uri}/groups/kick_member/${group_id}/${member.name}/${get_bearer(localStorage)}`,
     })
       .then((res) => {
         console.log(
@@ -93,7 +95,7 @@ const MembersOwner = (props) => {
     }
 
     axios(
-      `http://localhost:5000/groups/get_members_and_owners/${group_id}/${get_bearer(
+      `${back_end_uri}/groups/get_members_and_owners/${group_id}/${get_bearer(
         localStorage
       )}`
     )

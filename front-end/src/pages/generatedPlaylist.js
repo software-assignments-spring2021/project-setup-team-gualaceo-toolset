@@ -23,6 +23,9 @@ import {
   get_bearer,
 } from "../components/authentication";
 
+require("dotenv").config();
+const back_end_uri = process.env.REACT_APP_BACK_END_URI
+
 const Playlist = (props) => {
   let history = useHistory();
   let location = useLocation();
@@ -127,7 +130,7 @@ const Playlist = (props) => {
     if (!isGuest && previousSongsRef.current === songs) {
       axios({
         method: "get",
-        url: `http://localhost:5000/groups/get_generated_playlist/${group_id}/${get_bearer(
+        url: `${back_end_uri}/groups/get_generated_playlist/${group_id}/${get_bearer(
           localStorage
         )}`,
       })
@@ -141,7 +144,7 @@ const Playlist = (props) => {
             })
             .catch((err) => console.log(err));
           axios(
-            `http://localhost:5000/groups/get_members_and_owners/${group_id}/${get_bearer(
+            `${back_end_uri}/groups/get_members_and_owners/${group_id}/${get_bearer(
               localStorage
             )}`
           )

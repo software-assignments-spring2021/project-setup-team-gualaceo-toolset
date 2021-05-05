@@ -25,6 +25,9 @@ import axios from "axios";
 
 import styles from "../styles/viewMusicStyles";
 
+require("dotenv").config();
+const back_end_uri = process.env.REACT_APP_BACK_END_URI
+
 const ViewMusic = (props) => {
   let history = useHistory();
   let location = useLocation();
@@ -43,7 +46,7 @@ const ViewMusic = (props) => {
     set_authentication(localStorage, axios);
     axios({
       method: "get",
-      url: `http://localhost:5000/groups/get_pool/${state.id}/${get_bearer(
+      url: `${back_end_uri}/groups/get_pool/${state.id}/${get_bearer(
         localStorage
       )}`,
     })
@@ -116,7 +119,7 @@ const ViewMusic = (props) => {
     set_authentication(localStorage, axios);
     axios({
       method: "delete",
-      url: `http://localhost:5000/groups/remove_from_pool/${
+      url: `${back_end_uri}/groups/remove_from_pool/${
         location.state.id
       }/${playlist.id}/${get_bearer(localStorage)}`,
     })
