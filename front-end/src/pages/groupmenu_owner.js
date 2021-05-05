@@ -40,7 +40,7 @@ const GroupMenuOwner = (props) => {
   const [playlistGenerated, setPlaylistGenerated] = useState(false);
   const [generateButtonEnabled, setGenerateButtonEnabled] = useState(false)
   const [copied, setCopied] = useState("");
-  const [firstRound, setFirstRound] = useState(true)
+  let firstRound = true;
 
   const handleViewAllMusic = () => {
     //console.log("You've clicked on view all music");
@@ -135,24 +135,11 @@ const GroupMenuOwner = (props) => {
         })
           .then((res) => {
             setGroupName(name);
+            state.name = name
           })
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
-  };
-
-  const handleTestNotification = () => {
-    let notifMessage =
-      "A user within the group " +
-      groupName +
-      " has requested that you generate/regenerate the playlist for that group";
-    addNotification({
-      title: "User requested new playlist generation",
-      subtitle: "New playlist request",
-      message: notifMessage,
-      theme: "darkblue",
-      native: true,
-    });
   };
 
   useEffect(() => {
@@ -178,7 +165,7 @@ const GroupMenuOwner = (props) => {
           console.log(err);
         });
       setuiLoading(false);
-      setFirstRound(false);
+      firstRound = false
     }
   }, [
     history,
@@ -314,19 +301,6 @@ const GroupMenuOwner = (props) => {
             </CardContent>
           </Card>
           {playlistCard}
-          <Card
-            fullWidth
-            className={classes.cards}
-            onClick={handleTestNotification}
-          >
-            <CardContent style={{ marginBottom: "-10px" }}>
-              <Typography className={classes.cardText}>
-                <center>
-                  Test Notifications (not intended for final product)
-                </center>
-              </Typography>
-            </CardContent>
-          </Card>
         </div>
       </Container>
     );
