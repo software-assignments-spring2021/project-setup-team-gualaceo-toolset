@@ -21,7 +21,7 @@ import {
 } from "../components/authentication.js";
 
 require("dotenv").config();
-const back_end_uri = process.env.REACT_APP_BACK_END_URI
+const back_end_uri = process.env.REACT_APP_BACK_END_URI;
 
 const GroupMenuOwner = (props) => {
   let location = useLocation();
@@ -54,6 +54,10 @@ const GroupMenuOwner = (props) => {
     });
   };
   const handleViewPlaylist = async () => {
+    if (is_expired(localStorage)) {
+      return history.push("/");
+    }
+    set_authentication(localStorage, axios);
     let passed = await axios(
       `${back_end_uri}/groups/playlist_id/${group_id}/${get_bearer(
         localStorage

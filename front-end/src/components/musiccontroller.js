@@ -67,21 +67,24 @@ const MusicController = (props) => {
   const { classes } = props;
 
   const handleSliderChange = (event, newValue) => {
-    // if (is_expired(localStorage)) {
-    //   return history.push("/"); //should this just be history.push("/")?
-    // }
-    // set_authentication(localStorage, axios);
-    // axios({
-    //   method: "get",
-    //   url: `https://api.spotify.com/v1/me/player/currently-playing?market=ES`,
-    // })
-    //   .then((res) => {
-    //     console.log(res);
-    //     setCurrentTime(newValue);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    if (is_expired(localStorage)) {
+      return history.push("/"); //should this just be history.push("/")?
+    }
+    set_authentication(localStorage, axios);
+    console.log(newValue);
+    axios({
+      method: "put",
+      url: `https://api.spotify.com/v1/me/player/seek?position_ms=${
+        newValue * 1000
+      }`,
+    })
+      .then((res) => {
+        console.log(res);
+        setCurrentTime(newValue);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const formatTime = (secs) => {
@@ -142,10 +145,10 @@ const MusicController = (props) => {
 
   useEffect(() => {
     console.log(isPlaying);
-    if (isPlaying) {
-      setInterval(() => {
-        // setCurrentTime((currentTime) => currentTime + 1);
 
+    setInterval(() => {
+      // setCurrentTime((currentTime) => currentTime + 1);
+      if (isPlaying) {
         if (is_expired(localStorage)) {
           return history.push("/"); //should this just be history.push("/")?
         }
@@ -167,8 +170,8 @@ const MusicController = (props) => {
           .catch((err) => {
             console.log(err);
           });
-      }, 1000);
-    }
+      }
+    }, 1000);
   }, [props.currentSong]);
 
   // if (isPlaying) {

@@ -34,7 +34,7 @@ const Landing = (props) => {
     REACT_APP_CLIENT_ID,
     REACT_APP_AUTHORIZE_URL,
     REACT_APP_REDIRECT_URL,
-    REACT_APP_BACK_END_URI
+    REACT_APP_BACK_END_URI,
   } = process.env;
 
   const spotifyApi = new SpotifyWebApi();
@@ -323,16 +323,16 @@ const Landing = (props) => {
                   marginLeft: "4%",
                 }}
               >
-                <Link
+                {/* <Link
                   to="About"
                   onClick={() => console.log("This will redirect to about")}
                 >
                   <Typography className={classes.footerLinks}>
                     Another Link
                   </Typography>
-                </Link>
+                </Link> */}
               </div>
-              <div
+              {/* <div
                 style={{ display: "flex", margin: "4%", marginBottom: "10%" }}
               >
                 <Link
@@ -343,7 +343,7 @@ const Landing = (props) => {
                     Yet Another Footer Link
                   </Typography>
                 </Link>
-              </div>
+              </div> */}
             </div>
           </AppBar>
         </div>
