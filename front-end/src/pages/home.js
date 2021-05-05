@@ -40,8 +40,8 @@ const Home = (props) => {
   const [myGroups, setMyGroups] = useState([]);
 
   require("dotenv").config();
-  let back_end_uri 
-  back_end_uri = process.env.REACT_APP_BACK_END_URI
+  let back_end_uri;
+  back_end_uri = process.env.REACT_APP_BACK_END_URI;
 
   let groups = [
     {
@@ -88,7 +88,6 @@ const Home = (props) => {
   };
 
   useEffect(() => {
-    
     const { setExpiryTime, history, location } = props;
     try {
       if (_.isEmpty(location.hash)) {
@@ -154,6 +153,7 @@ const Home = (props) => {
                         res.data.images.length !== 0
                           ? res.data.images[0].url
                           : null,
+                      generationRequested: playlist.regeneration_requested,
                     },
                   ]);
                 })
@@ -177,8 +177,6 @@ const Home = (props) => {
       });
   }, []);
 
-  // Not finished... groupName is set to the id of the database record
-  // not the id of the spotify playlist
   const handleJoin = async (event) => {
     event.preventDefault();
     let currGroup = "";
@@ -207,7 +205,9 @@ const Home = (props) => {
     if (groupName) {
       axios({
         method: "put",
-        url: `${back_end_uri}/groups/add_members/${groupName}/${get_bearer(localStorage)}`,
+        url: `${back_end_uri}/groups/add_members/${groupName}/${get_bearer(
+          localStorage
+        )}`,
       })
         .then((res) => {
           console.log(res);
