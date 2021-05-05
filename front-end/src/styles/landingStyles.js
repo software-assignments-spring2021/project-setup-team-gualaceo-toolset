@@ -1,6 +1,14 @@
 //  This is the styles for material ui elements
+import backgroundLight from "../media/background_light.png";
 const styles = (theme) => ({
   // backgroundColor: theme.palette.background.paper,
+  body: {
+    backgroundSize: "100%",
+    background: `url(${backgroundLight})`,
+    backgroundRepeat: "repeat",
+    minHeight: "100vh",
+    height: "100%",
+  },
   root: {
     padding: theme.spacing(4),
     borderRadius: "8px",
