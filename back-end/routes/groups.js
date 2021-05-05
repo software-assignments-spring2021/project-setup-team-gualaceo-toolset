@@ -10,6 +10,7 @@ const kick_member = require("../requests/put/kick_member");
 const unban = require("../requests/put/unban");
 const get_generated_playlist = require("../requests/get/get_generated_playlist")
 const get_banned_members = require("../requests/get/get_banned_members");
+const request_regeneration = require("../requests/put/request_regeneration");
 let get_pool = require("../requests/get/get_pool")
 
 router.route("/").get((req, res) => {
@@ -71,8 +72,9 @@ router.use("/add_members/:group_id/:bearer", user_id.get_user_id);
 router.use("/add_to_ban/:group_id/:user_id/:bearer", user_id.get_user_id);
 router.use("/kick_member/:group_id/:user_id/:bearer", user_id.get_user_id)
 router.use("/unban/:group_id/:user_id/:bearer", user_id.get_user_id)
+router.use("/request_regeneration/:group_id/:bearer", user_id.get_user_id)
 
-
+router.put("/request_regeneration/:group_id/:bearer", request_regeneration.request_regeneration)
 router.put("/add_members/:group_id/:bearer", add_members.add_members)
 router.put("/add_to_ban/:group_id/:user_id/:bearer", add_to_ban.add_to_ban)
 router.put("/kick_member/:group_id/:user_id/:bearer", kick_member.kick_member)
