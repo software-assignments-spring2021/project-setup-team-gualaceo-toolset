@@ -284,14 +284,20 @@ const MusicController = (props) => {
                 </center>
                 <center>
                   <Toolbar className={classes.controls}>
-                    <IconButton color="secondary" onClick={handlePrevious}>
-                      <SkipPreviousIcon />
+                    <IconButton
+                      color="secondary"
+                      // onClick={handlePrevious}
+                    >
+                      {/* <SkipPreviousIcon /> */}
                     </IconButton>
                     <IconButton color="secondary" onClick={handlePlay}>
                       {!isPlaying ? <PlayArrowIcon /> : <PauseIcon />}
                     </IconButton>
-                    <IconButton color="secondary" onClick={handleNext}>
-                      <SkipNextIcon />
+                    <IconButton
+                      color="secondary"
+                      //onClick={handleNext}
+                    >
+                      {/* <SkipNextIcon /> */}
                     </IconButton>
                   </Toolbar>
                 </center>

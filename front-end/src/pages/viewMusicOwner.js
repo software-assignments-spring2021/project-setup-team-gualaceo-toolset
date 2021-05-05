@@ -172,7 +172,7 @@ const ViewMusicOwner = (props) => {
             </Button>
           </div>
           <div>
-            <div>
+            {/* <div>
               <TextField
                 className={classes.search}
                 label="Search"
@@ -181,7 +181,7 @@ const ViewMusicOwner = (props) => {
                 // onChange={handleSearchTermChange}
                 // onKeyDown={handleKeyDown}
               />
-            </div>
+            </div> */}
             {playlists.map((playlist, i) => (
               <Card key={i} fullWidth className={classes.cards}>
                 <CardContent className={classes.cardContent}>

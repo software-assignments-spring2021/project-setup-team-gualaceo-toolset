@@ -148,15 +148,6 @@ const Landing = (props) => {
                   </div>
                 </Button>
                 <br />
-                <Button
-                  fullWidth
-                  // onClick={handleGuestRedirect}
-                  className={classes.login}
-                >
-                  {
-                    guestRedirect ? <Redirect to="/guest" /> : null //    "Continue as guest"
-                  }
-                </Button>
               </div>
             </div>
 
@@ -272,7 +263,7 @@ const Landing = (props) => {
                           <Divider style={{ margin: "2%" }}></Divider>
                           <Typography>
                             Login in with your Spotify account. No need to make
-                            an account. Be able to listen in-app and export
+                            a account. Be able to listen in-app and export
                             playlist back into your Spotify.
                           </Typography>
                         </CardContent>
@@ -321,16 +312,16 @@ const Landing = (props) => {
                   marginLeft: "4%",
                 }}
               >
-                {/* <Link
+                <Link
                   to="About"
                   onClick={() => console.log("This will redirect to about")}
                 >
                   <Typography className={classes.footerLinks}>
                     Another Link
                   </Typography>
-                </Link> */}
+                </Link>
               </div>
-              {/* <div
+              <div
                 style={{ display: "flex", margin: "4%", marginBottom: "10%" }}
               >
                 <Link
@@ -341,7 +332,7 @@ const Landing = (props) => {
                     Yet Another Footer Link
                   </Typography>
                 </Link>
-              </div> */}
+              </div>
             </div>
           </AppBar>
         </div>

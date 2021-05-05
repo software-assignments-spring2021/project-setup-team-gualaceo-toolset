@@ -123,19 +123,32 @@ const GroupMenu = (props) => {
     if (is_expired(localStorage)) {
       return history.push("/");
     }
+    set_authentication(localStorage, axios);
     // get group id
     setGroupID(location.state.id);
     setGroupName(location.state.name);
     setuiLoading(false);
-    if (params.playlistGenerated === "generated") {
-      //If the route '/groupMenuOwner/generated' is accessed
-      setPlaylistGenerated(true);
-    }
-
+    axios(
+      `${back_end_uri}/groups/playlist_is_generated/${groupID}/${get_bearer(
+        localStorage
+      )}`
+    )
+      .then((res) => {
+        console.log("playlist_is_generated=", res.data.playlist_is_generated);
+        setPlaylistGenerated(res.data.playlist_is_generated);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     //set access token if available in local storage
-    set_authentication(localStorage, axios);
+
     //console.log(`Bearer = ${get_bearer(localStorage)}`)
-  }, []);
+  }, [history,
+    playlistGenerated,
+    location.state.id,
+    location.state,
+    params.playlistGenerated,
+    groupID,]);
   //
   if (playlistGenerated) {
     // Determines whether to show the user "view generated playlist" or "generate playlist"
@@ -157,8 +170,7 @@ const GroupMenu = (props) => {
             onClick={handleGenerateRequest}
           >
             <center>
-              Request Playlist generation (append '/generated' to url to
-              simulate owner generating new playlist)
+              Request Playlist generation
             </center>
           </Typography>
         </CardContent>
