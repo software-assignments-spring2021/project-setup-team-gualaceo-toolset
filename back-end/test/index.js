@@ -13,6 +13,7 @@ const run_add_to_pool_tests = require("./add_to_pool.js").run_add_to_pool_tests
 const set_authentication = require("../requests/other/authentication").set_authentication
 
 require("dotenv").config();
+let back_end_uri = process.env.BACK_END_URI
 
 const bearer = process.env.npm_config_bearer
 if (!bearer)
