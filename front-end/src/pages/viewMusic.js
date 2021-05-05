@@ -191,7 +191,7 @@ const ViewMusic = (props) => {
                 />
               </div>
             </Toolbar>
-          </AppBar>{" "}
+          </AppBar>
           <Error error={errors} setError={setErrors} severity="info" />
           <div className={classes.addMyMusicButtonContainer}>
             <Button
@@ -202,7 +202,7 @@ const ViewMusic = (props) => {
               Add My Music
             </Button>
           </div>
-          <div>
+          {/* <div>
             <TextField
               className={classes.search}
               label="Search"
@@ -211,7 +211,7 @@ const ViewMusic = (props) => {
               onChange={handleSearchTermChange}
               // onKeyDown={handleKeyDown}
             />
-          </div>
+          </div> */}
           {playlists.map((playlist, i) => (
             <Card key={i} fullWidth className={classes.cards}>
               <CardContent className={classes.cardContent}>
