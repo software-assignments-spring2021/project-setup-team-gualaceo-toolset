@@ -1,13 +1,13 @@
 const axios = require("axios")
-//const set_authentication = require("../other/authentication.js").set_authentication
+const set_authentication = require("../other/authentication.js").set_authentication
 
 const add_tracks = async (req, res, next) => {   
 
-    /*if (!set_authentication(bearer, axios))
+    if (!set_authentication(bearer, axios))
     {
         console.log("Error: could not run get_user_id due to bad authentication")
         return;
-    }*/
+    }
 
     //put bearer token here
     let bearer=req.params.bearer;
@@ -72,6 +72,11 @@ const add_tracks = async (req, res, next) => {
     if (error)
     {
         return next(error)
+    }
+    let posted = await post_playlist(bearer,group_id,JSON_repsonse.id);
+    if(!posted)
+    {
+        console.log("error posting playlist ID to database")
     }
     return res.send(JSON_response)
 

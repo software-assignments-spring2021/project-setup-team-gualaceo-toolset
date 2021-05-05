@@ -8,15 +8,13 @@ const set_authentication = require("../other/authentication.js").set_authenticat
 
 const create_playlist = async (req, res, next) => {   
 
-    /*if (!set_authentication(bearer, axios))
+    if (!set_authentication(bearer, axios))
     {
         console.log("Error: could not run get_user_id due to bad authentication")
         return;
-    }*/
+    }
 
-    //put spotify user id here
     const user_id = req.user_id //this is set by previous middleware in routing
-    //put bearer token here
     const bearer= req.params.bearer;
     const token='Bearer '+ bearer;
     const group_id = req.params.group_id
