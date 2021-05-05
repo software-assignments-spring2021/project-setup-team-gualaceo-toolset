@@ -82,7 +82,7 @@ const ViewMusic = (props) => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [playlists]);
   let searchResults = playlists;
 
   const handleSearchTermChange = (event) => {
@@ -128,6 +128,10 @@ const ViewMusic = (props) => {
         setErrors(
           `You have removed ${playlist.name} from the pool, but the songs from this list will not be removed until the playlist is regenerated.`
         );
+        let filtered_playlist = playlists.filter(cur_playlist => {
+          return cur_playlist.id !== playlist.id
+        })
+        setPlaylists(filtered_playlist)
       })
       .catch((err) => {
         console.log(err);
