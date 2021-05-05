@@ -19,7 +19,7 @@ import Error from "../components/error";
 import styles from "../styles/groupmenuStyles.js";
 
 require("dotenv").config();
-const back_end_uri = process.env.REACT_APP_BACK_END_URI
+const back_end_uri = process.env.REACT_APP_BACK_END_URI;
 
 const GroupMenu = (props) => {
   let history = useHistory();
@@ -80,7 +80,6 @@ const GroupMenu = (props) => {
     setCopied("Copied Group ID!");
   };
 
-
   const handleGenerateRequest = () => {
     console.log("playlist generate request made");
     //When we implement the backend, this should send a notification
@@ -91,7 +90,9 @@ const GroupMenu = (props) => {
     set_authentication(localStorage, axios);
     axios({
       method: "put",
-      url: `${back_end_uri}/groups/request_regeneration/${groupID}/${get_bearer(localStorage)}`,
+      url: `${back_end_uri}/groups/request_regeneration/${groupID}/${get_bearer(
+        localStorage
+      )}`,
     })
       .then((res) => {
         console.log(
@@ -101,7 +102,6 @@ const GroupMenu = (props) => {
       .catch((err) => {
         console.log(err);
       });
-
   };
 
   const handleTestNotification = () => {
@@ -143,12 +143,14 @@ const GroupMenu = (props) => {
     //set access token if available in local storage
 
     //console.log(`Bearer = ${get_bearer(localStorage)}`)
-  }, [history,
+  }, [
+    history,
     playlistGenerated,
     location.state.id,
     location.state,
     params.playlistGenerated,
-    groupID,]);
+    groupID,
+  ]);
   //
   if (playlistGenerated) {
     // Determines whether to show the user "view generated playlist" or "generate playlist"
@@ -169,9 +171,7 @@ const GroupMenu = (props) => {
             className={classes.cardText}
             onClick={handleGenerateRequest}
           >
-            <center>
-              Request Playlist generation
-            </center>
+            <center>Request Playlist generation</center>
           </Typography>
         </CardContent>
       </Card>
@@ -201,7 +201,7 @@ const GroupMenu = (props) => {
               ></Button>
               <Typography
                 variant="caption"
-                onClick={handleCopyID}
+                // onClick={handleCopyID}
                 className={classes.heading}
               >
                 <center>Group ID: {groupID}</center>
