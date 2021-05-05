@@ -12,6 +12,8 @@ const set_authentication = require("../requests/other/authentication").set_authe
 const sample_playlist_id = "3PLPVWNT4CMjqSLpoRThxf" //note, as this is hardcoded, if the playlist is deleted this test will fail! I don't plan on deleting it, but I ever do accidentally, please change the playlist id here
 const other_user_sample_playlist_one = "26HeHZSvi7Q9BmRhxJxwt9"
 const other_user_sample_playlist_two = "76bxZcSKj8D5lFnc2BgtWd"
+require("dotenv").config();
+
 let user_id = ""
 const run_add_to_pool_tests = async bearer => {
  //Testing for add_to_pool endpoint

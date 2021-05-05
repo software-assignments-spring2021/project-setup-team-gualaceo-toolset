@@ -126,3 +126,7 @@ typings/
 ## Jekyll artifacts
 **/.jekyll-cache
 **/_site/
+
+## pm2
+
+ecosystem.config.js
