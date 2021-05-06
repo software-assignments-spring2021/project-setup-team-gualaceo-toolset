@@ -22,32 +22,6 @@ You can find our Prototype [here](https://invis.io/ZN10EONYFAJE), our WireFrame 
 
 The proposal initially specified a recommendation service similar to what Spotify and Apple Music already do, that is, recommend music for an individual person. We liked the idea, but thought it was a bit to unoriginal. However, it did contain an idea about recommending music for a group, rather than an individual, and us members decided this to be the most interesting, unique aspect, and thus we chose to focus on it.
 
-#### How to Contribute
+#### How to Contribute + Building and Testing Instructions
 
-You can find out more information on the developers' roles and how to contribute [here](./CONTRIBUTING.md)
-
-#### Instructions for Building and Testing
-
-#### Front-end
-
-In order to run the front end code, do the following:
-(Must have Node.js installed)
-
-- Download the code from GitHub
-- In the _project-setup-team-gualaceo-toolset_ directory, run _cd front-end_
-- Run _npm install_
-- After, run _npm start_
-- localhost will open in your default browser. Open DevTools
-- In the top left corner of DevTools, click on _Toggle Device Toolbar_ and choose the device you'd like to view the project on (I use the Pixel 2 view).
-
-#### Back-end
-
-To build the back-end code:
-
-- run _cd back-end_ from the root directory
-- run _npm install_
-
-To run the back-end:
-
-- Run _nodemon server_, or, if that doesn't work, _npm run devStart_.
-- Press Ctrl+C to stop the server.
+You can find out more information on the developers' roles and how to contribute, as well as how to build and test the project [here](./CONTRIBUTING.md)
