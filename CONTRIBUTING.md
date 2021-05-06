@@ -9,7 +9,7 @@
 - Enter the front-end directory (`cd front-end`)
 - run `npm install`
 - run `npm start`
-- Initialize a new shell
+- Initialize a new shell and navgigate to the main directory
 - Enter the back-end directory (`cd back-end`)
 - run `npm install`
 - run `npm start`
