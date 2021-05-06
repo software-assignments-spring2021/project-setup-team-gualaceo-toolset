@@ -6,9 +6,11 @@
 
 - Clone the repository 
 - Enter the front-end directory (`cd front-end`)
+- run `npm install`
 - run `npm start`
 - Initialize a new shell
 - Enter the back-end directory (`cd back-end`)
+- run `npm install`
 - run `npm start`
 - You should now be able to access our site at http://localhost:3000 (Note: It is recommended you use responsive design mode in your browser, as the site is designed for mobile devices)
 - You can also send requests to the back-end at http://localhost:5000
