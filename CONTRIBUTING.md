@@ -19,8 +19,8 @@ If you'd like to run our built in chai integration tests, do the following while
 - Acquire a bearer token from Spotify
     - Visit this page https://developer.spotify.com/console/get-search-item/
     - Scroll down to where it says OAuth token
-    - Click the corresponding button (Get token)
-    - Click request token on the popup that shows up
+    - Click the corresponding button on the right (Get token)
+    - Click "request token" on the popup that shows up
     - Copy the text which now exists in the textbox under Oauth token (Make sure to select all before copying)
 - Enter the back-end directory in a new shell
 - run `npm run test --bearer=<your bearer token>`
