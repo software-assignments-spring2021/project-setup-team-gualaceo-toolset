@@ -4,7 +4,7 @@
 
 #### Building
 
-- Clone the repository (`git clone https://github.com/agile-dev-assignments/project-setup-team-gualaceo-toolset.git)
+- Clone the repository (`git clone https://github.com/agile-dev-assignments/project-setup-team-gualaceo-toolset.git`)
 - Enter the main directory (`cd project-setup-team-gualaceo-toolset`)
 - Enter the front-end directory (`cd front-end`)
 - run `npm install`
