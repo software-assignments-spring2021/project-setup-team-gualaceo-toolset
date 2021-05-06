@@ -25,11 +25,9 @@ If you'd like to run our built in chai integration tests, do the following while
 - Enter the back-end directory in a new shell
 - run `npm run test --bearer=<your bearer token>`
 
-### Project Setup
+### Assisting Technologies
 
 - Regarding our technologies, we will be using VS Code along with the extension Live Share to collaborate on this project.
-
-- This information will be provided in the [README.md](./README.md)
 
 ### Project's Values and Team Norms
 
