@@ -6,6 +6,7 @@
 
 - Clone the repository (`git clone https://github.com/agile-dev-assignments/project-setup-team-gualaceo-toolset.git`)
 - Enter the main directory (`cd project-setup-team-gualaceo-toolset`)
+- Move the provided .env files (ask a project member for these) into their corresponding folders (/back-end/.env and /front-end/.env) 
 - Enter the front-end directory (`cd front-end`)
 - run `npm install`
 - run `npm start`
