@@ -4,7 +4,7 @@
 
 #### Building
 
-Important Note: your IP address must be whitelisted on mongoDB before you can build on your machine. You can ask Dennis to take care of this.
+Important Note: your IP address must be whitelisted on mongoDB before you can run the server on your machine. You can ask Dennis to take care of this.
 - Clone the repository (`git clone https://github.com/agile-dev-assignments/project-setup-team-gualaceo-toolset.git`)
 - Enter the main directory (`cd project-setup-team-gualaceo-toolset`)
 - Move the provided .env files (ask a project member for these) into their corresponding folders (/back-end/.env and /front-end/.env) 
