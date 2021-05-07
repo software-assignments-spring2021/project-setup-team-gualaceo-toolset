@@ -27,6 +27,7 @@ describe("Check user info", async () => {
   before(async () => {
     //connect to MongoDB
     const uri = process.env.ATLAS_URI;
+    console.log("uri = ", uri)
     await mongoose.connect(uri, {
       keepAlive: true,
       useNewUrlParser: true,
@@ -89,6 +90,5 @@ describe("Check user info", async () => {
         console.log("Error: could not delete group created for these tests");
         console.log(err);
       });
-
   });
 })
