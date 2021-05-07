@@ -23,7 +23,7 @@ let user_id = "rbx2co"
 //run_add_to_pool_tests(bearer)
 
 //Testing for add_to_pool endpoint
-describe("Check user info", async () => {
+/*describe("Check user info", async () => {
   before(async () => {
     //connect to MongoDB
     const uri = process.env.ATLAS_URI;
@@ -92,4 +92,4 @@ describe("Check user info", async () => {
         done()
       });
   });
-})
+})*/
