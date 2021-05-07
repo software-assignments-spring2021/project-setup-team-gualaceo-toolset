@@ -1,0 +1,32 @@
+{
+  "name": "root-package",
+  "version": "1.0.0",
+  "description": "root package to be used for travis-ci build+tests",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "react-push-notification": "^1.3.0",
+    "body-parser": "^1.19.0",
+    "chai": "*",
+    "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mocha": "*",
+    "mongoose": "^5.12.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha ./back-end/test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agile-dev-assignments/project-setup-team-gualaceo-toolset.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/agile-dev-assignments/project-setup-team-gualaceo-toolset/issues"
+  },
+  "homepage": "https://github.com/agile-dev-assignments/project-setup-team-gualaceo-toolset#readme"
+}
