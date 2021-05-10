@@ -2,7 +2,7 @@
   "name": "back-end",
   "version": "1.0.0",
   "description": "Synthesize back-end",
-  "main": "nodemon server.js",
+  "main": "node server.js",
   "scripts": {
     "test": "mocha",
     "devStart": "nodemon server.js"
