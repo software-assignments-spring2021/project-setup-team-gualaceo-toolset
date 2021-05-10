@@ -16,6 +16,13 @@ const bodyParser = require("body-parser");
 
 require("dotenv").config();
 
+const port = 5000 || process.env.PORT; //port to listen to for requests
+const build_test = false || process.env.BUILD_TEST == "true"
+
+const server = app.listen(port, () => {
+  console.log(`Server running on port: ${port}`);
+});
+
 app.use(cors());
 app.use(express.json());
 
@@ -23,13 +30,15 @@ app.use(express.urlencoded({ extended: true }));
 
 
 const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, {
-  keepAlive: true,
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true,
-});
-
+if (!build_test)
+{
+  mongoose.connect(uri, {
+    keepAlive: true,
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+  });
+}
 let front_end_uri = process.env.FRONT_END_URI
 
 const connection = mongoose.connection;
@@ -106,6 +115,13 @@ app.use((error, req, res, next) => {
   console.log(error.message);
   return res.send(error.message);
 });
-
+//exit if we are just testing build success
+if (build_test) {
+  setTimeout(() => {
+    console.log("Build test successful, exiting")
+    server.close()
+    process.exit(0)
+  }, 2000)
+}
 //export the express app to make it available to other modules
 module.exports = app;

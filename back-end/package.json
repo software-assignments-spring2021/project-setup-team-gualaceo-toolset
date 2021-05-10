@@ -2,10 +2,11 @@
   "name": "back-end",
   "version": "1.0.0",
   "description": "Synthesize back-end",
-  "main": "node server.js",
+  "main": "node app.js",
   "scripts": {
     "test": "mocha",
-    "devStart": "nodemon server.js"
+    "devStart": "nodemon app.js",
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
