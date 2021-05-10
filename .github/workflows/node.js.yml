@@ -21,12 +21,15 @@ jobs:
       REACT_APP_AUTHORIZE_URL: https://accounts.spotify.com/authorize,
       REACT_APP_REDIRECT_URL: http://localhost:3000/home,
       REACT_APP_BACK_END_URI: http://localhost:5000
+      CI: false
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
+    - working-directory: ./front-end
+      run: npm ci
     - working-directory: ./front-end
       run: npm install
     - working-directory: ./front-end
@@ -40,7 +43,7 @@ jobs:
         node-version: [14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     env: 
-      ATLAS_URI: mongodb+srv://rb4194:HkbLXdSMNJ9Az6i6@synthesize.n6mmz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority,
+      BUILD_TEST: true
       FRONT_END_URI: http://localhost:3000,
       BACK_END_URI: http://localhost:5000
     steps:
