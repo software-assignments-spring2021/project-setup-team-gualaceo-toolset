@@ -17,7 +17,7 @@ jobs:
         node-version: [14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     env: 
-      REACT_APP_CLIENT_ID: 95d62e39e2a948b99b2b378d11a6e8c0,
+      REACT_APP_CLIENT_ID: can_not_provide,
       REACT_APP_AUTHORIZE_URL: https://accounts.spotify.com/authorize,
       REACT_APP_REDIRECT_URL: http://localhost:3000/home,
       REACT_APP_BACK_END_URI: http://localhost:5000
@@ -34,8 +34,6 @@ jobs:
       run: npm install
     - working-directory: ./front-end
       run: npm run build --if-present
-    - working-directory: ./front-end
-      run: npm run serve-build
   back-end:
     runs-on: ubuntu-latest
     strategy:
