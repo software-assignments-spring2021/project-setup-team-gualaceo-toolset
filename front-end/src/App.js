@@ -19,7 +19,6 @@ import viewMusic from "./pages/viewMusic";
 import viewMusicOwner from "./pages/viewMusicOwner";
 
 const App = () => {
-  ohno
   return (
     <Router>
       <div>
