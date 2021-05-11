@@ -50,11 +50,6 @@ const run_unit_tests = async () => [
         assert.isTrue(arraysEqual(result[artist_occurrences], testing_data.occurrences_data_5[artist_occurrences]))
       })
     })
-    describe('testing', async () =>{
-      it('impossible', async () => {
-        assert.isTrue(false)
-      })
-    })
   })
 ]
 
