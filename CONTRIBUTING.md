@@ -17,6 +17,7 @@ Important Note: your IP address must be whitelisted on mongoDB before you can ru
 - run `npm start`
 - You should now be able to access our site at http://localhost:3000 (Note: It is recommended you use responsive design mode in your browser, as the site is designed for mobile devices)
 - You can also send requests to the back-end at http://localhost:5000
+- Note: In order to use the playback feature, you must have a Spotify Premium account, and you must have Spotify running in the background. When you click on a song in the generated playlist, it should begin playing. If you are having difficulties, try playing any song on your Spotify client, as this will update your device information on Spotify's API. Then our feature should work.
 
 #### Testing
 
