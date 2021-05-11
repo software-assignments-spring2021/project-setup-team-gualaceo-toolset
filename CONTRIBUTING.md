@@ -2,7 +2,7 @@
 
 ### Instructions for Building and Testing
 
-#### Building
+#### Building / Running
 
 Important Note: your IP address must be whitelisted on mongoDB before you can run the server on your machine. You can ask Dennis to take care of this.
 - Clone the repository (`git clone https://github.com/agile-dev-assignments/project-setup-team-gualaceo-toolset.git`)
@@ -19,6 +19,10 @@ Important Note: your IP address must be whitelisted on mongoDB before you can ru
 - You can also send requests to the back-end at http://localhost:5000
 
 #### Testing
+
+Our repository contains both unit tests and integration tests.
+
+If you'd like to run our unit tests, you can run `npm run test` within the back-end directory.
 
 If you'd like to run our built in chai integration tests, do the following while the back-end is running
 - Acquire a bearer token from Spotify
