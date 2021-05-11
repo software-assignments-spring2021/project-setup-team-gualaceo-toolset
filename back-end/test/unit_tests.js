@@ -22,6 +22,19 @@ const run_unit_tests = async () => [
         assert.strictEqual(3, uris.length)
       })
     })
+    describe('get_user_arrays', async () => {
+      it('gets correct arrays', async () => {
+        let result = generate_playlist.get_user_arrays(testing_data.playlists_data_3)
+        assert.isNotFalse(result["brianlabarbera"])
+        assert.isNotFalse(result["rbx2co"])
+        assert.isTrue(arraysEqual(result["brianlabarbera"], testing_data.user_songs_data_3["brianlabarbera"]))
+        assert.isTrue(arraysEqual(result["rbx2co"], testing_data.user_songs_data_3["rbx2co"]))
+      })
+      it ('gets empty object if no playlists are provided', async () => {
+        let result = generate_playlist.get_user_arrays([])
+        assert.isEmpty(result)
+      })
+    })
   })
 ]
 
