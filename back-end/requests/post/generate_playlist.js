@@ -726,5 +726,6 @@ const shuffleArray = (array) => {
   }
 
 module.exports = {
-    generate_playlist: generate_playlist
+    generate_playlist: generate_playlist,
+    add_common_songs: add_common_songs
 }

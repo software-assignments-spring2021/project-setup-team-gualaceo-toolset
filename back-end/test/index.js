@@ -10,6 +10,7 @@ const is_valid_playlist = require("../helper_methods/is_valid_playlist")
   .is_valid_playlist;
 const mongoose = require("mongoose");
 const run_add_to_pool_tests = require("./add_to_pool.js").run_add_to_pool_tests
+const run_unit_tests = require("./unit_tests.js").run_unit_tests
 const set_authentication = require("../requests/other/authentication").set_authentication
 
 require("dotenv").config();
@@ -18,7 +19,8 @@ let back_end_uri = process.env.BACK_END_URI
 const bearer = process.env.npm_config_bearer
 if (!bearer)
 {
-  console.log("No bearer specified (specify using --bearer=<bearer_token>). Aborting.")
+  console.log("No bearer specified. Will run no authentication required unit tests.")
+  run_unit_tests()
   return
 }
 
