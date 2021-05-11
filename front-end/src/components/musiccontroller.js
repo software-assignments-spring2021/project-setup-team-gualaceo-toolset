@@ -251,7 +251,7 @@ const MusicController = (props) => {
                 </IconButton>
                 <DialogTitle>
                   <a
-                    style={{ textDecoration: "none", display: "flex" }}
+                    style={{ textDecoration: "none", right: "30px"}}
                     rel="noopener noreferrer"
                     href={`https://open.spotify.com/playlist/${props.id}`}
                     target="_blank"
@@ -261,8 +261,6 @@ const MusicController = (props) => {
                     </Typography>
                   </a>
                 </DialogTitle>
-                <div></div>
-                <div></div>
               </Toolbar>
             </AppBar>
             <DialogContent className={classes.main}>

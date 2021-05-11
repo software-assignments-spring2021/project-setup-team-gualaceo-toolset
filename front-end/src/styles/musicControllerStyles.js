@@ -60,8 +60,10 @@ const styles = (theme) => ({
   playlistTitle: {
     color: theme.palette.secondary.main,
     fontSize: "15px",
+    textAlign: "right",
   },
   toolbar: {
+    display: "flex",
     justifyContent: "space-between",
   },
   slider: { marginTop: "10px" },
