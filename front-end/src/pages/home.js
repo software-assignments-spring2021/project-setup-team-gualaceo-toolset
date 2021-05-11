@@ -297,6 +297,7 @@ const Home = (props) => {
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.root}>
+            <Error error={errors} setError={setErrors} severity="error" />
             <div style={{ width: "200px", height: "100px" }}>
               {/* Background */}
               {/* <img
@@ -329,7 +330,6 @@ const Home = (props) => {
               </Toolbar>
             </AppBar>
             {/* <div style={{ position: "absolute" }}> */}
-            <Error error={errors} setError={setErrors} severity="error" />
             {/* </div> */}
             <div style={{ marginTop: "-30px" }}>
               <Accordion square={true} className={classes.accordion}>

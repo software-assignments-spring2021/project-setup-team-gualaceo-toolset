@@ -17,15 +17,21 @@ const Error = (props) => {
   };
 
   return (
-    <div className={classes.root}>
+    <div>
       <div
         style={
           error
             ? {
                 display: "block",
-                top: "700px",
+                width: "25%",
+                position: "fixed",
+                left: "37.5%",
+                right: "37.5%",
+                top: "100px",
+                zIndex: "100",
               }
-            : { display: "none" }
+            : { display: "none",
+              position: "static" }
         }
       >
         <Collapse in={error}>
