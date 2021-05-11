@@ -197,7 +197,7 @@ const MusicController = (props) => {
   if (expanded === false) {
     if (currentSong) {
       return (
-        <div style={{ position: "fixed", bottom: 0, width: "100%" }}>
+        <div style={{ position: "fixed", left: "0", bottom: "0", width: "100%" }}>
           <CssBaseline />
           <CollapsedSlider
             value={currentTime}
@@ -205,9 +205,9 @@ const MusicController = (props) => {
             onChange={handleSliderChange}
             color="secondary"
           />
-          <Container disableGutters={true} className={classes.collapsedRoot}>
+          <div disableGutters={true} className={classes.collapsedRoot}>
             <div>
-              <Box display="flex" flexDirection="row">
+              <Box display="flex" flexDirection="row" style={{borderStyle: "solid", width: "100%"}}>
                 <Box>
                   <Avatar
                     className={classes.collapsedAlbumCover}
@@ -233,7 +233,7 @@ const MusicController = (props) => {
                 </Box>
               </Box>
             </div>
-          </Container>
+          </div>
         </div>
       );
     } else {
@@ -251,7 +251,7 @@ const MusicController = (props) => {
                 </IconButton>
                 <DialogTitle>
                   <a
-                    style={{ textDecoration: "none", display: "flex" }}
+                    style={{ textDecoration: "none", right: "30px"}}
                     rel="noopener noreferrer"
                     href={`https://open.spotify.com/playlist/${props.id}`}
                     target="_blank"
@@ -261,8 +261,6 @@ const MusicController = (props) => {
                     </Typography>
                   </a>
                 </DialogTitle>
-                <div></div>
-                <div></div>
               </Toolbar>
             </AppBar>
             <DialogContent className={classes.main}>

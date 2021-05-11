@@ -4,6 +4,7 @@ const styles = (theme) => ({
   },
   collapsedRoot: {
     backgroundColor: theme.palette.primary.main,
+    width: "100%",
   },
   collapsedAlbumCover: {
     height: 53,
@@ -34,6 +35,7 @@ const styles = (theme) => ({
   },
   expandedRoot: {
     margin: "10px",
+    left: "0",
   },
   expandedAlbumCover: {
     marginLeft: "-5px",
@@ -58,8 +60,10 @@ const styles = (theme) => ({
   playlistTitle: {
     color: theme.palette.secondary.main,
     fontSize: "15px",
+    textAlign: "right",
   },
   toolbar: {
+    display: "flex",
     justifyContent: "space-between",
   },
   slider: { marginTop: "10px" },

@@ -100,7 +100,7 @@ const GroupMenuOwner = (props) => {
       })
       .catch((err) => {
         setCopied(
-          "This error has occurred either because there are no songs in one or more of the playlists or because one or more of the playlists are not public. Please modify the playlist settings in Spotify."
+          "This error has occurred either because there are no songs in any of the playlists within the pool, or because one or more of the playlists are not public. Please modify the playlist settings in Spotify, or add songs to the playlists in the pool."
         );
         // setuiLoading(false);
         console.log("Error: could not generate playlist");
