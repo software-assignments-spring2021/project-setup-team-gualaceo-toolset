@@ -9,23 +9,25 @@ const is_in_group = require("../helper_methods/is_in_group.js").is_in_group;
 const is_valid_playlist = require("../helper_methods/is_valid_playlist")
   .is_valid_playlist;
 const mongoose = require("mongoose");
-const run_add_to_pool_tests = require("./add_to_pool.js").run_add_to_pool_tests
-const run_unit_tests = require("./unit_tests.js").run_unit_tests
-const set_authentication = require("../requests/other/authentication").set_authentication
+const run_add_to_pool_tests = require("./add_to_pool.js").run_add_to_pool_tests;
+const run_unit_tests = require("./unit_tests.js").run_unit_tests;
+const set_authentication = require("../requests/other/authentication")
+  .set_authentication;
 
 require("dotenv").config();
-let back_end_uri = process.env.BACK_END_URI
+let back_end_uri = process.env.BACK_END_URI;
 
-const bearer = process.env.npm_config_bearer
-if (!bearer)
-{
-  console.log("No bearer specified. Will run no authentication required unit tests.")
-  run_unit_tests()
-  return
+const bearer = process.env.npm_config_bearer;
+if (!bearer) {
+  console.log(
+    "No bearer specified. Will run no authentication required unit tests."
+  );
+  run_unit_tests();
+  return;
 }
 
 //Run the add to pool and remove from pool tests
-run_add_to_pool_tests(bearer)
+run_add_to_pool_tests(bearer);
 
 //create a group for testing purposes
 let group_id;
@@ -43,29 +45,37 @@ describe("Check user info", async () => {
     });
 
     //create a test group
-    const members = ["rbx2co", "jonoto", "123milkman"]
-    const banned_members = ["jonoto"]
-    const owners = ["rbx2co"]
-    const playlist_id = ""
-    const pool = []
-    const group = new Group({banned_members: banned_members, members: members, owners: owners, generated_playlist_id: playlist_id, pool: pool}) //this MUST correspond to the order specified in the schema
-    let passed = await group.save()
-      .then(res => {
-        console.log("test group saved successfully!")
-        group_id = group._id
-        return true
+    const members = ["rbx2co", "jonoto", "123milkman"];
+    const banned_members = ["jonoto"];
+    const owners = ["rbx2co"];
+    const playlist_id = "";
+    const pool = [];
+    const group = new Group({
+      banned_members: banned_members,
+      members: members,
+      owners: owners,
+      generated_playlist_id: playlist_id,
+      pool: pool,
+    }); //this MUST correspond to the order specified in the schema
+    let passed = await group
+      .save()
+      .then((res) => {
+        console.log("test group saved successfully!");
+        group_id = group._id;
+        return true;
       })
-      .catch(err => {
-        console.log(err)
-        console.log("error encountered saving test group, this may cause test failures")
-        return false
-      })
+      .catch((err) => {
+        console.log(err);
+        console.log(
+          "error encountered saving test group, this may cause test failures"
+        );
+        return false;
+      });
 
-      if (!passed)
-      {
-        return
-      }
-  })
+    if (!passed) {
+      return;
+    }
+  });
 
   describe("see information about yourself", async () => {
     it("can show your groups", async () => {
@@ -142,6 +152,4 @@ describe("Check user info", async () => {
   });
 });
 
-describe('post_playlist, get_playlist helper methods', async () => {
-  
-})
+describe("post_playlist, get_playlist helper methods", async () => {});
