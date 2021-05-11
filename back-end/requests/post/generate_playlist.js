@@ -223,7 +223,6 @@ const empty_user_arrays = (user_arrays) => { //returns true if no songs are in a
 
 const get_occurrences = (user_arrays) => { //gets an object of the format {song_occurrences: [], artist_occurrences: []}
     
-    
     song_occurrences = {}
     artist_occurrences = {}
     
@@ -730,4 +729,5 @@ module.exports = {
     add_common_songs: add_common_songs, 
     get_user_arrays: get_user_arrays,
     empty_user_arrays: empty_user_arrays,
+    get_occurrences: get_occurrences,
 }

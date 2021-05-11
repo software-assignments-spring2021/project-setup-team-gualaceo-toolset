@@ -114,7 +114,77 @@ const user_songs_data_3 = {
 
 const empty_user_arrays_data_4 = {
     rbx2co: [],
-    birdboy: [],
+    riconboy: [],
+}
+
+const user_songs_data_5 = {
+    "rbx2co": [
+        {
+            track: {
+                id: "track 1",
+                artists: [
+                    {
+                        id: "artist 1"
+                    },
+                    {
+                        id: "artist 2"
+                    }
+                ]
+            }
+        },
+        {
+            track: {
+                id: "track 2",
+                artists: [
+                    {
+                        id: "artist 3"
+                    },
+                ]
+            }
+        },
+        {
+            track: {
+                id: "track 7",
+                artists: [
+                    {
+                        id: "tyler"
+                    },
+
+                ]
+            }
+        }
+    ],
+    "benbugatti": [
+        {
+            track: {
+                id: "track 1",
+                artists: [
+                    {
+                        id: "artist 1"
+                    },
+                    {
+                        id: "artist 2"
+                    }
+                ]
+            }
+        },
+        {
+            track: {
+                id: "track 7",
+                artists: [
+                    {
+                        id: "tyler"
+                    },
+
+                ]
+            }
+        }
+    ]
+}
+
+const occurrences_data_5 = {
+    song_occurrences: [ [ 'track 1', 2 ], [ 'track 7', 2 ] ],
+    artist_occurrences: [ [ 'artist 1', 2 ], [ 'artist 2', 2 ], [ 'tyler', 2 ] ]     
 }
 
 module.exports = {
@@ -123,4 +193,7 @@ module.exports = {
     expected_uris_data_1: expected_uris_data_1,
     playlists_data_3: playlists_data_3,
     user_songs_data_3: user_songs_data_3,
+    empty_user_arrays_data_4: empty_user_arrays_data_4,
+    user_songs_data_5: user_songs_data_5,
+    occurrences_data_5: occurrences_data_5,
 }

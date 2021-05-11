@@ -35,6 +35,21 @@ const run_unit_tests = async () => [
         assert.isEmpty(result)
       })
     })
+    describe('empty_user_arrays', async () => {
+      it('returns true if user arrays are empty', async () => {
+        assert.isTrue(generate_playlist.empty_user_arrays(testing_data.empty_user_arrays_data_4))
+      })
+      it('returns false if user arrays have content', async () => {
+        assert.isFalse(generate_playlist.empty_user_arrays(testing_data.user_songs_data_3))
+      })
+    })
+    describe('get_occurrences', async () => {
+      it ('gets correct occurrences', async () =>{
+        let result = generate_playlist.get_occurrences(testing_data.user_songs_data_5)
+        assert.isTrue(arraysEqual(result[song_occurrences], testing_data.occurrences_data_5[song_occurrences]))
+        assert.isTrue(arraysEqual(result[artist_occurrences], testing_data.occurrences_data_5[artist_occurrences]))
+      })
+    })
   })
 ]
 
