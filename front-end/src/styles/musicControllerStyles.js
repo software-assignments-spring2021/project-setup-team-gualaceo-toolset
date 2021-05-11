@@ -4,6 +4,7 @@ const styles = (theme) => ({
   },
   collapsedRoot: {
     backgroundColor: theme.palette.primary.main,
+    width: "100%",
   },
   collapsedAlbumCover: {
     height: 53,
@@ -34,6 +35,7 @@ const styles = (theme) => ({
   },
   expandedRoot: {
     margin: "10px",
+    left: "0",
   },
   expandedAlbumCover: {
     marginLeft: "-5px",
