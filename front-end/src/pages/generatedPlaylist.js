@@ -375,6 +375,7 @@ const Playlist = (props) => {
                   Logout
                 </Button>
               )}
+            
               <div style={{ position: "absolute" }}>
                 <Logout
                   open={openConfirmLogout}
@@ -437,6 +438,19 @@ const Playlist = (props) => {
                 </Button>
               </div>
             )}
+            <div className={classes.buttonContainer}>
+              <a style={{ textDecoration: "none", display: "flex" }}
+                rel="noopener noreferrer"
+                href={`https://open.spotify.com/playlist/${location.state.generated_playlist_id}`}
+                target="_blank">
+                <Button
+                  variant="contained"
+                  color="primary"
+                >
+                  Open in Spotify
+                </Button>
+              </a>
+            </div>
             {songs.map((song, i) => (
               <div
                 className={classes.cards}
